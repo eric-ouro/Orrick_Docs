@@ -75,6 +75,10 @@
     followNotesInput: document.getElementById("followNotesInput"),
     markResolvedBtn: document.getElementById("markResolvedBtn"),
     resetLocalBtn: document.getElementById("resetLocalBtn"),
+    aiQuestionInput: document.getElementById("aiQuestionInput"),
+    askAiBtn: document.getElementById("askAiBtn"),
+    saveAiFollowUpBtn: document.getElementById("saveAiFollowUpBtn"),
+    aiResponse: document.getElementById("aiResponse"),
     exportBtn: document.getElementById("exportBtn"),
     importBtn: document.getElementById("importBtn"),
     importFile: document.getElementById("importFile"),
@@ -123,7 +127,8 @@
     typeFilter: "all",
     statusFilter: "all",
     followFilter: "all",
-    sectionFilter: "all"
+    sectionFilter: "all",
+    aiIssueId: ""
   };
 
   function loadLocalWorkspace() {
@@ -742,6 +747,7 @@
       els.changeInput.value = "";
       els.followInput.checked = false;
       els.followNotesInput.value = "";
+      clearAiResponse();
       renderActivityTrail();
       return;
     }
@@ -783,7 +789,107 @@
     els.followNotesInput.value = issue.followUpNotes;
     els.changeInput.placeholder = issue.provisionalAnswer || "";
     els.answerInput.placeholder = issue.issueType === "decision" ? "Record the selected answer and rationale." : "";
+    if (state.aiIssueId && state.aiIssueId !== issue.id) clearAiResponse();
     renderActivityTrail();
+  }
+
+  function clearAiResponse() {
+    if (!els.aiResponse) return;
+    state.aiIssueId = "";
+    els.aiResponse.dataset.raw = "";
+    els.aiResponse.innerHTML = "";
+    els.saveAiFollowUpBtn.disabled = true;
+  }
+
+  function setAiResponse(message, tone, raw) {
+    state.aiIssueId = currentIssue()?.id || state.selectedId || "";
+    els.aiResponse.dataset.raw = raw || "";
+    els.aiResponse.className = `ai-response${tone ? ` ${tone}` : ""}`;
+    els.aiResponse.innerHTML = message ? nl2br(message) : "";
+    els.saveAiFollowUpBtn.disabled = !raw;
+  }
+
+  function aiContextForIssue(issue) {
+    return {
+      project: app.currentProject?.name || seed.meta.project || "Orrick Docs",
+      question: els.aiQuestionInput.value.trim(),
+      issue: {
+        id: issue.id,
+        title: issue.title,
+        issueType: issue.issueType,
+        status: issue.status,
+        priority: issue.priority,
+        prompt: issue.prompt,
+        details: issue.details,
+        provisionalAnswer: issue.provisionalAnswer,
+        answer: els.answerInput.value,
+        proposedChange: els.changeInput.value,
+        followUpNotes: els.followNotesInput.value
+      },
+      sections: linkedSections(issue).map((section) => ({
+        id: section.id,
+        title: section.title,
+        row: section.row,
+        group: section.group,
+        body: section.body
+      }))
+    };
+  }
+
+  async function askAiAboutIssue() {
+    const issue = currentIssue();
+    const question = els.aiQuestionInput.value.trim();
+    if (!issue) {
+      setAiResponse("Select an issue first.", "error", "");
+      return;
+    }
+    if (!question) {
+      setAiResponse("Add a question before asking AI.", "error", "");
+      return;
+    }
+
+    els.askAiBtn.disabled = true;
+    setAiResponse("Asking AI...", "loading", "");
+    try {
+      const response = await fetch("/api/ask-section", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(aiContextForIssue(issue))
+      });
+      const text = await response.text();
+      let data = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (_error) {
+        data = {};
+      }
+      if (!response.ok) {
+        const endpointHint =
+          response.status === 404
+            ? "The AI endpoint is available through Vercel dev or the deployed Vercel site, not the plain Vite dev server."
+            : "";
+        throw new Error(data.error || endpointHint || `AI request failed with ${response.status}.`);
+      }
+      const answer = data.answer || "No answer was returned.";
+      setAiResponse(answer, "", answer);
+    } catch (error) {
+      console.error(error);
+      setAiResponse(error.message || "Could not ask AI.", "error", "");
+    } finally {
+      els.askAiBtn.disabled = false;
+    }
+  }
+
+  function saveAiToFollowUp() {
+    const answer = els.aiResponse.dataset.raw || "";
+    if (!answer) return;
+    const stamp = new Date().toLocaleString();
+    const existing = els.followNotesInput.value.trim();
+    const addition = `AI follow-up (${stamp})\n${answer}`;
+    els.followNotesInput.value = [existing, addition].filter(Boolean).join("\n\n");
+    els.followInput.checked = true;
+    updateAnswer({ followUp: true, followUpNotes: els.followNotesInput.value }, true);
+    clearAiResponse();
   }
 
   function renderActivityTrail() {
@@ -1473,6 +1579,9 @@
       els.followInput.checked = false;
       updateAnswer({ status: "resolved", followUp: false }, true);
     });
+
+    els.askAiBtn.addEventListener("click", askAiAboutIssue);
+    els.saveAiFollowUpBtn.addEventListener("click", saveAiToFollowUp);
 
     els.resetLocalBtn.addEventListener("click", resetWorkspace);
     els.exportBtn.addEventListener("click", exportWorkspace);

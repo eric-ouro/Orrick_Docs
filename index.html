@@ -173,6 +173,22 @@
           </div>
         </form>
 
+        <section class="ai-panel" aria-label="AI follow-up questions">
+          <div>
+            <p class="eyebrow">AI follow-up</p>
+            <h3>Ask About This Item</h3>
+          </div>
+          <label>
+            <span>Question</span>
+            <textarea id="aiQuestionInput" rows="3" placeholder="Ask about the selected issue and linked term sheet sections."></textarea>
+          </label>
+          <div class="form-actions">
+            <button id="saveAiFollowUpBtn" class="secondary-action" type="button" disabled>Save to Follow-up</button>
+            <button id="askAiBtn" type="button">Ask AI</button>
+          </div>
+          <div id="aiResponse" class="ai-response" aria-live="polite"></div>
+        </section>
+
         <div id="activityTrail" class="activity-trail"></div>
       </section>
     </main>
