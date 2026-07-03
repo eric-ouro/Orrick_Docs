@@ -10,6 +10,51 @@ Open:
 
 With `config.js` populated, the page signs users in with Supabase and stores edits in Postgres. If Supabase config is missing, the page offers a local fallback that uses browser storage.
 
+## Local Development
+
+Install dependencies once:
+
+```bash
+npm install
+```
+
+Run locally:
+
+```bash
+npm run dev
+```
+
+Build the static deploy output:
+
+```bash
+npm run build
+```
+
+The build output goes to `dist/`.
+
+## Vercel Deployment
+
+This repo includes `vercel.json`, which tells Vercel to run `npm run build` and serve `dist/`.
+
+CLI path:
+
+```bash
+npm install -g vercel
+vercel login
+vercel --prod
+```
+
+GitHub path:
+
+1. Push this repo to GitHub.
+2. In Vercel, choose `Add New Project`.
+3. Import the GitHub repo.
+4. Leave the detected build command as `npm run build`.
+5. Leave the output directory as `dist`.
+6. Deploy.
+
+The app uses the public Supabase publishable key in `config.js`; no server-side Vercel environment variable is required for the current static version.
+
 ## Supabase
 
 Project ref:
