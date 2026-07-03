@@ -96,6 +96,16 @@ Only use the public publishable/anon key in `config.js`. Never put a service-rol
 
 That creates a database-backed project from `data/seed-data.js`, including documents, sections, issues, links, initial issue states, and future audit events.
 
+## Project Access
+
+Projects are visible only to project members. Owners can click `Share`, invite another user by email, and assign a role:
+
+- `viewer`: can see the project and all associated documents, issues, answers, and activity.
+- `editor`: can also update answers, issue status, drafting notes, and follow-up flags.
+- `owner`: can manage project membership.
+
+The invited person needs to create or sign into an account once before they can be added by email.
+
 ## Seeded Sources
 
 - `sources/FORM - Venture Capital_Private Equity Fund Form Term Sheet.docx`

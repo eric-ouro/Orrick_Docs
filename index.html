@@ -17,6 +17,7 @@
           <span>Project</span>
           <select id="projectSelect"></select>
         </label>
+        <button id="shareProjectBtn" type="button">Share</button>
         <button id="newProjectBtn" type="button">New Project</button>
         <button id="seedProjectBtn" type="button">Seed Current Docs</button>
       </div>
@@ -217,6 +218,36 @@
         <div class="form-actions">
           <button value="cancel" type="submit" class="secondary-action">Cancel</button>
           <button id="createProjectBtn" value="default" type="submit">Create</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="shareProjectDialog">
+      <form method="dialog" id="shareProjectForm" class="dialog-card">
+        <div class="panel-title-row">
+          <div>
+            <p class="eyebrow">Project access</p>
+            <h2 id="shareProjectTitle">Share Project</h2>
+          </div>
+          <button value="cancel" type="submit" class="icon-button" aria-label="Close">x</button>
+        </div>
+        <div id="projectMembersList" class="member-list"></div>
+        <label>
+          <span>User email</span>
+          <input id="shareEmailInput" type="email" autocomplete="email" />
+        </label>
+        <label>
+          <span>Role</span>
+          <select id="shareRoleInput">
+            <option value="editor">Editor</option>
+            <option value="viewer">Viewer</option>
+            <option value="owner">Owner</option>
+          </select>
+        </label>
+        <p id="shareMessage" class="auth-message"></p>
+        <div class="form-actions">
+          <button value="cancel" type="submit" class="secondary-action">Close</button>
+          <button id="inviteMemberBtn" value="default" type="submit">Invite</button>
         </div>
       </form>
     </dialog>

@@ -47,6 +47,7 @@
     workspaceShell: document.getElementById("workspaceShell"),
     projectControls: document.getElementById("projectControls"),
     projectSelect: document.getElementById("projectSelect"),
+    shareProjectBtn: document.getElementById("shareProjectBtn"),
     newProjectBtn: document.getElementById("newProjectBtn"),
     seedProjectBtn: document.getElementById("seedProjectBtn"),
     userControls: document.getElementById("userControls"),
@@ -95,7 +96,15 @@
     newProjectName: document.getElementById("newProjectName"),
     newProjectDescription: document.getElementById("newProjectDescription"),
     newProjectUseSeed: document.getElementById("newProjectUseSeed"),
-    createProjectBtn: document.getElementById("createProjectBtn")
+    createProjectBtn: document.getElementById("createProjectBtn"),
+    shareProjectDialog: document.getElementById("shareProjectDialog"),
+    shareProjectForm: document.getElementById("shareProjectForm"),
+    shareProjectTitle: document.getElementById("shareProjectTitle"),
+    projectMembersList: document.getElementById("projectMembersList"),
+    shareEmailInput: document.getElementById("shareEmailInput"),
+    shareRoleInput: document.getElementById("shareRoleInput"),
+    shareMessage: document.getElementById("shareMessage"),
+    inviteMemberBtn: document.getElementById("inviteMemberBtn")
   };
 
   const app = {
@@ -111,6 +120,7 @@
     issueLinks: [],
     issueStates: new Map(),
     issueEvents: [],
+    projectMembers: [],
     profiles: new Map(),
     localWorkspace: loadLocalWorkspace()
   };
@@ -291,6 +301,15 @@
     return profile?.display_name || profile?.email || userId.slice(0, 8);
   }
 
+  function currentProjectMembership() {
+    if (!app.user || !app.currentProject) return null;
+    return app.projectMembers.find((member) => member.user_id === app.user.id) || null;
+  }
+
+  function canManageCurrentProject() {
+    return currentProjectMembership()?.role === "owner";
+  }
+
   function sectionMap() {
     return new Map(app.sections.map((section) => [section.id, section]));
   }
@@ -433,6 +452,7 @@
     app.issueLinks = [];
     app.issueStates = new Map();
     app.issueEvents = [];
+    app.projectMembers = [];
     app.profiles = new Map();
     if (!state.selectedId || !app.issues.some((issue) => issue.id === state.selectedId)) {
       state.selectedId = app.issues[0]?.id || "";
@@ -506,6 +526,7 @@
     app.issueLinks = [];
     app.issueStates = new Map();
     app.issueEvents = [];
+    app.projectMembers = [];
     state.selectedId = "";
     state.selectedSectionId = "";
   }
@@ -550,6 +571,7 @@
     }
     state.selectedSectionId = currentIssue()?.termSectionIds?.[0] || "";
     await loadProfiles();
+    await loadProjectMembers(projectId);
     await loadIssueEvents(state.selectedId);
     renderFilters();
     renderAll();
@@ -568,6 +590,18 @@
       .limit(8);
     if (error) throw error;
     app.issueEvents = data || [];
+  }
+
+  async function loadProjectMembers(projectId) {
+    app.projectMembers = [];
+    if (app.mode !== "remote" || !projectId) return;
+    const { data, error } = await db
+      .from("project_members")
+      .select("project_id,user_id,role,added_by,created_at")
+      .eq("project_id", projectId)
+      .order("created_at", { ascending: true });
+    if (error) throw error;
+    app.projectMembers = data || [];
   }
 
   async function signIn(email, password) {
@@ -620,6 +654,129 @@
       : "<option value=\"\">No projects</option>";
     els.projectSelect.value = app.currentProject?.id || app.localWorkspace.lastProjectId || app.projects[0]?.id || "";
     els.projectSelect.disabled = !app.projects.length;
+    els.shareProjectBtn.disabled = !app.currentProject || !canManageCurrentProject();
+    els.shareProjectBtn.title = canManageCurrentProject()
+      ? "Invite project members"
+      : "Only project owners can invite members";
+  }
+
+  function showShareMessage(message, type) {
+    els.shareMessage.textContent = message || "";
+    els.shareMessage.className = `auth-message ${type || ""}`;
+  }
+
+  function renderProjectMembers() {
+    if (!app.currentProject) {
+      els.projectMembersList.innerHTML = "<div class=\"empty-state\">No project selected.</div>";
+      return;
+    }
+
+    const canManage = canManageCurrentProject();
+    const rows = app.projectMembers.map((member) => {
+      const profile = app.profiles.get(member.user_id);
+      const email = profile?.email || member.user_id;
+      const label = profile?.display_name || email;
+      const isCurrentUser = app.user && member.user_id === app.user.id;
+      const roleOptions = ["owner", "editor", "viewer"]
+        .map((role) => `<option value="${role}"${member.role === role ? " selected" : ""}>${role}</option>`)
+        .join("");
+      return `
+        <div class="member-row" data-member-id="${escapeHtml(member.user_id)}">
+          <div>
+            <strong>${escapeHtml(label)}${isCurrentUser ? " (you)" : ""}</strong>
+            <span>${escapeHtml(email)}</span>
+          </div>
+          <select data-member-role="${escapeHtml(member.user_id)}"${canManage && !isCurrentUser ? "" : " disabled"}>
+            ${roleOptions}
+          </select>
+          <button class="secondary-action" data-remove-member="${escapeHtml(member.user_id)}" type="button"${canManage && !isCurrentUser ? "" : " disabled"}>Remove</button>
+        </div>
+      `;
+    });
+
+    els.projectMembersList.innerHTML = rows.length ? rows.join("") : "<div class=\"empty-state\">No members yet.</div>";
+  }
+
+  async function openShareDialog() {
+    if (!app.currentProject) return;
+    try {
+      await loadProfiles();
+      await loadProjectMembers(app.currentProject.id);
+      els.shareProjectTitle.textContent = `Share ${app.currentProject.name}`;
+      els.shareEmailInput.value = "";
+      els.shareRoleInput.value = "editor";
+      showShareMessage("", "");
+      renderProjectMembers();
+      if (els.shareProjectDialog.showModal) {
+        els.shareProjectDialog.showModal();
+      }
+    } catch (error) {
+      console.error(error);
+      window.alert(error.message || "Could not load project members.");
+    }
+  }
+
+  async function inviteProjectMember() {
+    assertRemote();
+    if (!app.currentProject) return;
+    const email = els.shareEmailInput.value.trim().toLowerCase();
+    const role = els.shareRoleInput.value || "editor";
+    if (!email) {
+      showShareMessage("Enter the user's email address.", "error");
+      return;
+    }
+    const profile = [...app.profiles.values()].find((item) => String(item.email || "").toLowerCase() === email);
+    if (!profile) {
+      showShareMessage("That user needs to create or sign into an account once before they can be invited.", "error");
+      return;
+    }
+
+    showShareMessage("Inviting...", "");
+    const { error } = await db.from("project_members").upsert(
+      {
+        project_id: app.currentProject.id,
+        user_id: profile.id,
+        role,
+        added_by: app.user.id
+      },
+      { onConflict: "project_id,user_id" }
+    );
+    if (error) throw error;
+    await loadProjectMembers(app.currentProject.id);
+    renderProjectControls();
+    renderProjectMembers();
+    els.shareEmailInput.value = "";
+    showShareMessage(`${profile.email} can now access this project.`, "success");
+  }
+
+  async function updateProjectMemberRole(userId, role) {
+    assertRemote();
+    if (!app.currentProject || userId === app.user.id) return;
+    const { error } = await db
+      .from("project_members")
+      .update({ role })
+      .eq("project_id", app.currentProject.id)
+      .eq("user_id", userId);
+    if (error) throw error;
+    await loadProjectMembers(app.currentProject.id);
+    renderProjectControls();
+    renderProjectMembers();
+    showShareMessage("Member role updated.", "success");
+  }
+
+  async function removeProjectMember(userId) {
+    assertRemote();
+    if (!app.currentProject || userId === app.user.id) return;
+    const { error } = await db
+      .from("project_members")
+      .delete()
+      .eq("project_id", app.currentProject.id)
+      .eq("user_id", userId);
+    if (error) throw error;
+    await loadProjectMembers(app.currentProject.id);
+    renderProjectControls();
+    renderProjectMembers();
+    showShareMessage("Member removed.", "success");
   }
 
   function renderFilters() {
@@ -1453,6 +1610,43 @@
     els.projectSelect.addEventListener("change", async () => {
       if (els.projectSelect.value) {
         await loadProject(els.projectSelect.value);
+      }
+    });
+
+    els.shareProjectBtn.addEventListener("click", openShareDialog);
+
+    els.shareProjectForm.addEventListener("submit", async (event) => {
+      if (event.submitter && event.submitter.id === "inviteMemberBtn") {
+        event.preventDefault();
+        try {
+          await inviteProjectMember();
+        } catch (error) {
+          console.error(error);
+          showShareMessage(error.message || "Could not invite that user.", "error");
+        }
+      }
+    });
+
+    els.projectMembersList.addEventListener("change", async (event) => {
+      const roleSelect = event.target.closest("[data-member-role]");
+      if (!roleSelect) return;
+      try {
+        await updateProjectMemberRole(roleSelect.dataset.memberRole, roleSelect.value);
+      } catch (error) {
+        console.error(error);
+        showShareMessage(error.message || "Could not update that member.", "error");
+        renderProjectMembers();
+      }
+    });
+
+    els.projectMembersList.addEventListener("click", async (event) => {
+      const removeButton = event.target.closest("[data-remove-member]");
+      if (!removeButton) return;
+      try {
+        await removeProjectMember(removeButton.dataset.removeMember);
+      } catch (error) {
+        console.error(error);
+        showShareMessage(error.message || "Could not remove that member.", "error");
       }
     });
 

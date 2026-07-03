@@ -151,7 +151,7 @@ h3 {
   align-items: end;
   display: grid;
   gap: 8px;
-  grid-template-columns: minmax(220px, 320px) auto auto;
+  grid-template-columns: minmax(220px, 320px) auto auto auto;
 }
 
 .project-controls label span {
@@ -712,6 +712,7 @@ textarea {
 .answer-form .form-actions button:first-child,
 #createIssueBtn,
 #createProjectBtn,
+#inviteMemberBtn,
 #exportBtn {
   background: var(--accent);
   border-color: var(--accent);
@@ -744,8 +745,45 @@ dialog::backdrop {
 }
 
 .dialog-card > label,
-.dialog-card > .form-actions {
+.dialog-card > .form-actions,
+.dialog-card > .auth-message {
   padding: 0 16px;
+}
+
+.member-list {
+  display: grid;
+  gap: 8px;
+  padding: 0 16px;
+}
+
+.member-row {
+  align-items: center;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(0, 1fr) 120px auto;
+  padding: 10px;
+}
+
+.member-row strong,
+.member-row span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.member-row span {
+  color: var(--muted);
+  display: block;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.member-row select {
+  min-height: 34px;
+  padding: 6px 8px;
 }
 
 .icon-button {
@@ -879,7 +917,8 @@ dialog::backdrop {
   }
 
   .filter-grid,
-  .two-col {
+  .two-col,
+  .member-row {
     grid-template-columns: 1fr;
   }
 
