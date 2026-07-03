@@ -617,6 +617,45 @@ textarea {
   margin: 0 0 12px;
 }
 
+.issue-brief {
+  display: grid;
+  gap: 12px;
+  padding-top: 12px;
+}
+
+.issue-brief h3 {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  margin: 0 0 5px;
+  text-transform: uppercase;
+}
+
+.issue-brief p {
+  margin-bottom: 0;
+}
+
+.issue-brief ul {
+  display: grid;
+  gap: 7px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.issue-brief li {
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  line-height: 1.4;
+  padding: 8px 10px;
+}
+
+.issue-updated {
+  color: var(--muted);
+  font-size: 12px;
+}
+
 .detail-label {
   color: var(--muted);
   font-size: 12px;

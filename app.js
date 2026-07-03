@@ -937,7 +937,7 @@
           .join("")}</div>`
       : "";
     const updated = issue.updatedBy
-      ? `<div class="detail-label">Last updated</div><p>${escapeHtml(profileLabel(issue.updatedBy))}${issue.updatedAt ? ` · ${escapeHtml(new Date(issue.updatedAt).toLocaleString())}` : ""}</p>`
+      ? `<p class="issue-updated">Last updated by ${escapeHtml(profileLabel(issue.updatedBy))}${issue.updatedAt ? ` · ${escapeHtml(new Date(issue.updatedAt).toLocaleString())}` : ""}</p>`
       : "";
 
     els.issueDetail.innerHTML = `
@@ -946,13 +946,20 @@
         <span class="pill status-${slugClass(issue.status)}">${escapeHtml(statusLabels[issue.status] || issue.status)}</span>
         ${issue.priority ? `<span class="pill">${escapeHtml(issue.priority)} priority</span>` : ""}
       </div>
-      <div class="memo-block">
-        <div class="detail-label">Prompt</div>
-        <p>${nl2br(issue.prompt || issue.title)}</p>
-        ${issue.details ? `<div class="detail-label">Notes</div><p>${nl2br(issue.details)}</p>` : ""}
-        ${issue.provisionalAnswer ? `<div class="detail-label">Provisional material</div><p>${nl2br(issue.provisionalAnswer)}</p>` : ""}
-        <div class="detail-label">Source</div>
-        <p>${escapeHtml(issue.source || "Workspace")}</p>
+      <div class="issue-brief">
+        <div>
+          <h3>Question</h3>
+          <p>${nl2br(issue.prompt || issue.title)}</p>
+        </div>
+        ${
+          issue.provisionalAnswer
+            ? `<div>
+                <h3>Provisional options</h3>
+                ${provisionalOptionsHtml(issue.provisionalAnswer)}
+              </div>`
+            : ""
+        }
+        ${issue.details ? `<div><h3>Notes</h3><p>${nl2br(issue.details)}</p></div>` : ""}
         ${updated}
       </div>
       ${sectionChips}
@@ -968,6 +975,28 @@
     els.answerInput.placeholder = issue.issueType === "decision" ? "Record the selected answer and rationale." : "";
     if (state.aiIssueId && state.aiIssueId !== issue.id) clearAiResponse();
     renderActivityTrail();
+  }
+
+  function provisionalOptionsHtml(value) {
+    const lines = String(value || "")
+      .split(/\n+/)
+      .map((line) => line.trim())
+      .filter(Boolean);
+    if (!lines.length) return "";
+    const optionLines = lines.filter((line) => /^Option\s+[A-Z0-9]+:/i.test(line));
+    if (optionLines.length >= 2) {
+      const options = lines
+        .map((line) => {
+          const match = line.match(/^Option\s+([A-Z0-9]+):\s*(.*)$/i);
+          if (match) {
+            return `<li><strong>Option ${escapeHtml(match[1].toUpperCase())}:</strong> ${escapeHtml(match[2])}</li>`;
+          }
+          return `<li>${escapeHtml(line.replace(/^Comment:\s*/i, "Note: "))}</li>`;
+        })
+        .join("");
+      return `<ul>${options}</ul>`;
+    }
+    return `<p>${nl2br(value)}</p>`;
   }
 
   function clearAiResponse() {
