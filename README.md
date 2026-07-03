@@ -1,6 +1,6 @@
 # Blind Pool Fund Term Sheet Workspace
 
-Local interactive tracker for reviewing the Orrick fund term sheet against the blind-pool fund open-items memo.
+Interactive tracker for reviewing fund term sheets against open-items memos. The app now supports Supabase login, shared projects, permanent issue edits, and an issue activity trail.
 
 ## Open the App
 
@@ -8,7 +8,37 @@ Open:
 
 `/Users/eholmdahl/GitHub/Orrick_Docs/index.html`
 
-The app is static and stores working answers in the browser's local storage. Use `Export` to download the working answer layer as JSON, and `Import` to restore or share it.
+With `config.js` populated, the page signs users in with Supabase and stores edits in Postgres. If Supabase config is missing, the page offers a local fallback that uses browser storage.
+
+## Supabase
+
+Project ref:
+
+`leafothtfmiozfxywmfx`
+
+Schema and RLS policies live in:
+
+`supabase/migrations/20260703173000_initial_collaboration_schema.sql`
+
+The migration has been pushed to the remote project. To check it:
+
+```bash
+supabase migration list
+```
+
+Frontend config lives in:
+
+`config.js`
+
+Only use the public publishable/anon key in `config.js`. Never put a service-role key in browser code.
+
+## First Project
+
+1. Open the app.
+2. Create or sign into a Supabase account.
+3. Click `Seed Current Docs`.
+
+That creates a database-backed project from `data/seed-data.js`, including documents, sections, issues, links, initial issue states, and future audit events.
 
 ## Seeded Sources
 
