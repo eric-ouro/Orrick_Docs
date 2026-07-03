@@ -191,6 +191,20 @@
       .slice(0, 70) || "project";
   }
 
+  function seedSectionByKey(sectionKey) {
+    return (seed.termSheet.sections || []).find((section) => section.id === sectionKey);
+  }
+
+  function summaryForSectionKey(sectionKey) {
+    return seedSectionByKey(sectionKey)?.summary || "";
+  }
+
+  function summaryForDocumentType(documentType) {
+    if (documentType === "term_sheet") return seed.termSheet.summary || "";
+    if (documentType === "memo") return seed.openItemsMemo?.summary || "";
+    return "";
+  }
+
   function setVisible(el, visible) {
     if (el) el.hidden = !visible;
   }
@@ -238,7 +252,8 @@
       group: row.group_title || "",
       isGroup: Boolean(row.is_group),
       sectionKind: row.section_kind,
-      sourceRef: row.source_ref || {}
+      sourceRef: row.source_ref || {},
+      summary: row.source_ref?.summary || summaryForSectionKey(row.stable_key)
     };
   }
 
@@ -252,7 +267,8 @@
       sourceUrl: row.source_url,
       originalFilename: row.original_filename,
       storagePath: row.storage_path,
-      extractedMetadata: row.extracted_metadata || {}
+      extractedMetadata: row.extracted_metadata || {},
+      summary: row.extracted_metadata?.summary || summaryForDocumentType(row.document_type)
     };
   }
 
@@ -419,13 +435,15 @@
       id: "local-term-sheet",
       title: seed.termSheet.title,
       documentType: "term_sheet",
-      extractedMetadata: {}
+      extractedMetadata: { summary: seed.termSheet.summary },
+      summary: seed.termSheet.summary
     };
     const memoDoc = {
       id: "local-open-items",
       title: "Blind Pool Fund Open Items",
       documentType: "memo",
-      extractedMetadata: { memo: seed.openItemsMemo }
+      extractedMetadata: { memo: seed.openItemsMemo, summary: seed.openItemsMemo.summary },
+      summary: seed.openItemsMemo.summary
     };
 
     app.currentProject = { id: "local-seed", name: seed.meta.project, description: "Local fallback" };
@@ -441,8 +459,9 @@
       body: section.body,
       group: section.group,
       isGroup: section.isGroup,
+      summary: section.summary || "",
       sectionKind: section.isGroup ? "group" : "section",
-      sourceRef: { row: section.row }
+      sourceRef: { row: section.row, summary: section.summary || "" }
     }));
     app.issues = [...seed.issues, ...app.localWorkspace.customIssues].map((issue, index) => ({
       ...issue,
@@ -1123,7 +1142,7 @@
     els.documentTitle.textContent = termDoc?.title || "Full Document";
     const sections = termSections();
     els.documentContent.innerHTML = sections.length
-      ? `<div class="section-stack">${sections.map(sectionHtml).join("")}</div>`
+      ? `${documentSummaryHtml(termDoc)}<div class="section-stack">${sections.map(sectionHtml).join("")}</div>`
       : "<div class=\"empty-state\">No sections have been loaded. Create a project with documents or click Seed Current Docs.</div>";
   }
 
@@ -1162,13 +1181,21 @@
       .join("");
 
     els.documentContent.innerHTML = memo
-      ? `${sourceNote}<div class="memo-block">${paragraphs}</div>${tables}`
+      ? `${documentSummaryHtml(memoDoc)}${sourceNote}<div class="memo-block">${paragraphs}</div>${tables}`
       : "<div class=\"empty-state\">No memo data has been loaded for this project.</div>";
+  }
+
+  function documentSummaryHtml(document) {
+    const summary = document?.summary || document?.extractedMetadata?.summary || summaryForDocumentType(document?.documentType);
+    return summary
+      ? `<section class="document-summary"><div class="detail-label">Document summary</div><p>${escapeHtml(summary)}</p></section>`
+      : "";
   }
 
   function sectionHtml(section) {
     const selected = section.id === state.selectedSectionId ? " selected" : "";
     const group = section.isGroup ? " group-row" : "";
+    const summary = section.summary || summaryForSectionKey(section.stableKey || section.id);
     return `
       <article class="term-section${selected}${group}" data-section-id="${escapeHtml(section.id)}">
         <div class="section-header">
@@ -1178,6 +1205,7 @@
           </div>
           ${section.isGroup ? "" : `<button type="button" data-use-section="${escapeHtml(section.id)}">Focus</button>`}
         </div>
+        ${summary ? `<div class="section-summary"><div class="detail-label">Summary</div><p>${escapeHtml(summary)}</p></div>` : ""}
         ${section.body ? `<p>${escapeHtml(section.body)}</p>` : ""}
       </article>
     `;
@@ -1415,7 +1443,7 @@
           document_type: "term_sheet",
           source_label: seed.meta.sourceFiles?.[0]?.label || "Term sheet",
           original_filename: "FORM - Venture Capital_Private Equity Fund Form Term Sheet.docx",
-          extracted_metadata: { sourceFiles: seed.meta.sourceFiles },
+          extracted_metadata: { sourceFiles: seed.meta.sourceFiles, summary: seed.termSheet.summary },
           created_by: app.user.id
         },
         {
@@ -1424,7 +1452,7 @@
           document_type: "memo",
           source_label: seed.meta.sourceFiles?.[1]?.label || "Open items memo",
           original_filename: "blind_pool_fund_open_items_and_drafting_changes.docx",
-          extracted_metadata: { memo: seed.openItemsMemo, sourceFiles: seed.meta.sourceFiles },
+          extracted_metadata: { memo: seed.openItemsMemo, sourceFiles: seed.meta.sourceFiles, summary: seed.openItemsMemo.summary },
           created_by: app.user.id
         }
       ])
@@ -1442,7 +1470,7 @@
       group_title: section.group || null,
       is_group: Boolean(section.isGroup),
       section_kind: section.isGroup ? "group" : "section",
-      source_ref: { row: section.row }
+      source_ref: { row: section.row, summary: section.summary || "" }
     }));
     const { data: insertedSections, error: sectionsError } = await db
       .from("document_sections")

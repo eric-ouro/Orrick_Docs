@@ -124,3 +124,9 @@ Generated files:
 
 - `data/seed-data.json`
 - `data/seed-data.js`
+
+Static document and section summaries are reapplied with:
+
+```bash
+npm run summaries
+```

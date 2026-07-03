@@ -800,6 +800,23 @@ dialog::backdrop {
   padding: 10px 12px;
 }
 
+.document-summary,
+.section-summary {
+  background: #f9f7f1;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  margin-bottom: 12px;
+  padding: 12px;
+}
+
+.document-summary p,
+.section-summary p {
+  color: var(--muted);
+  line-height: 1.45;
+  margin: 0;
+}
+
 .activity-trail {
   border-top: 1px solid var(--line);
   display: grid;
