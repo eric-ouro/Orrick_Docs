@@ -75,7 +75,7 @@ async function askAnthropic({ instructions, context }) {
     };
   }
 
-  const model = process.env.ANTHROPIC_MODEL || "claude-sonnet-5";
+  const model = process.env.ANTHROPIC_MODEL || "claude-opus-4-8";
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {

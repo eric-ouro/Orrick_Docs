@@ -64,7 +64,7 @@ The app uses the public Supabase publishable key in `config.js`. The AI follow-u
 - `OPENAI_API_KEY`: required for the OpenAI button in `/api/ask-section`
 - `OPENAI_MODEL`: optional; defaults to `gpt-5.5`
 - `ANTHROPIC_API_KEY`: required for the Claude button in `/api/ask-section`
-- `ANTHROPIC_MODEL`: optional; defaults to `claude-sonnet-5`
+- `ANTHROPIC_MODEL`: optional; defaults to `claude-opus-4-8`
 
 Do not put OpenAI or Anthropic API keys in `config.js` or any browser file.
 
