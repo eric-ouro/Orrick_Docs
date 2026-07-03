@@ -949,17 +949,19 @@
       <div class="issue-brief">
         <div>
           <h3>Question</h3>
-          <p>${nl2br(issue.prompt || issue.title)}</p>
+          <p>${nl2br(humanQuestionText(issue))}</p>
+          ${whyThisMattersHtml(issue, sections)}
         </div>
         ${
           issue.provisionalAnswer
             ? `<div>
                 <h3>Provisional options</h3>
-                ${provisionalOptionsHtml(issue.provisionalAnswer)}
+                ${provisionalOptionsHtml(issue)}
               </div>`
             : ""
         }
-        ${issue.details ? `<div><h3>Notes</h3><p>${nl2br(issue.details)}</p></div>` : ""}
+        ${considerationsHtml(issue, sections)}
+        ${issue.details ? `<div><h3>Notes</h3><p>${nl2br(cleanIssueDetails(issue.details))}</p></div>` : ""}
         ${updated}
       </div>
       ${sectionChips}
@@ -977,8 +979,79 @@
     renderActivityTrail();
   }
 
-  function provisionalOptionsHtml(value) {
-    const lines = String(value || "")
+  function humanQuestionText(issue) {
+    const prompt = String(issue.prompt || issue.title || "").trim();
+    return prompt
+      .replace(/\?: choose between the listed approaches or draft a custom answer\.$/i, "?")
+      .replace(/: choose between the listed approaches or draft a custom answer\.$/i, "?")
+      .replace(/Counsel notes \/ decisions:\s*/i, "")
+      .trim();
+  }
+
+  function issueSignal(issue) {
+    return compactText([
+      issue.title,
+      issue.prompt,
+      issue.details,
+      issue.provisionalAnswer,
+      issue.category,
+      issue.source,
+      ...(issue.tags || [])
+    ]);
+  }
+
+  function whyThisMattersHtml(issue, sections) {
+    const signal = issueSignal(issue);
+    const linked = sections
+      .filter((section) => !section.isGroup)
+      .slice(0, 4)
+      .map((section) => section.title);
+    const points = [];
+
+    if (/carryco|carry|carried interest|clawback|waterfall/.test(signal)) {
+      points.push(
+        "This decision controls where carry economics live, who can receive non-voting economics, how vesting or forfeiture would work, and who ultimately bears clawback risk."
+      );
+    }
+    if (/placement|finder|broker|capital formation|solicit/.test(signal)) {
+      points.push(
+        "This matters because LP placement compensation can affect securities-law compliance, fee and expense disclosure, management-fee offsets, and whether the economics should sit at the Fund, Manager, GP, or CarryCo level."
+      );
+    }
+    if (/management fee|fee offset|organization expense|fund expense|expense/.test(signal)) {
+      points.push(
+        "The answer changes who economically bears the cost: investors through Fund Expenses, the Manager through its management fee economics, or the GP/CarryCo through carry economics."
+      );
+    }
+    if (/side letter|mfn|special investor/.test(signal)) {
+      points.push(
+        "Special investor terms can create disclosure, MFN, consistency, and administrative issues, so the core documents should decide what flexibility is permitted before side letters are negotiated."
+      );
+    }
+    if (/investment limitation|conflict|affiliate|related/.test(signal)) {
+      points.push(
+        "This issue affects conflict controls and consent rights, especially where the GP, affiliates, placement parties, or other vehicles may receive economics or transact with the Fund."
+      );
+    }
+    if (/document|agreement|template|policy/.test(signal) && issue.issueType === "supporting-document") {
+      points.push(
+        "This document should carry the operational details that are too specific for the term sheet but still need to match the economics and authority granted in the Fund documents."
+      );
+    }
+    if (!points.length) {
+      points.push(
+        "This item should be resolved before drafting is finalized because it affects the legal authority, economic allocation, disclosure, or operating mechanics reflected elsewhere in the Fund documents."
+      );
+    }
+    if (linked.length) {
+      points.push(`It is tied to ${linked.join(", ")}, so the answer should be consistent with those sections.`);
+    }
+
+    return `<div class="issue-explainer"><strong>Why this matters:</strong> ${escapeHtml(points.join(" "))}</div>`;
+  }
+
+  function provisionalOptionsHtml(issue) {
+    const lines = String(issue.provisionalAnswer || "")
       .split(/\n+/)
       .map((line) => line.trim())
       .filter(Boolean);
@@ -989,14 +1062,115 @@
         .map((line) => {
           const match = line.match(/^Option\s+([A-Z0-9]+):\s*(.*)$/i);
           if (match) {
-            return `<li><strong>Option ${escapeHtml(match[1].toUpperCase())}:</strong> ${escapeHtml(match[2])}</li>`;
+            const optionLabel = `Option ${match[1].toUpperCase()}`;
+            const optionText = match[2];
+            const tradeoffs = optionTradeoffs(issue, optionText);
+            return `
+              <li>
+                <strong>${escapeHtml(optionLabel)}:</strong> ${escapeHtml(optionText)}
+                ${tradeoffs.length ? `<div class="option-tradeoffs">${tradeoffs.map((item) => `<p>${escapeHtml(item)}</p>`).join("")}</div>` : ""}
+              </li>
+            `;
           }
           return `<li>${escapeHtml(line.replace(/^Comment:\s*/i, "Note: "))}</li>`;
         })
         .join("");
       return `<ul>${options}</ul>`;
     }
-    return `<p>${nl2br(value)}</p>`;
+    return `
+      <p>${nl2br(issue.provisionalAnswer)}</p>
+      <div class="issue-explainer"><strong>Drafting note:</strong> Treat this as working language, not a final answer. Counsel should decide where the authority belongs, whether disclosure is enough, and whether a separate agreement is needed.</div>
+    `;
+  }
+
+  function optionTradeoffs(issue, optionText) {
+    const signal = issueSignal(issue);
+    const text = String(optionText || "").toLowerCase();
+    if (/carryco|carry|carried interest/.test(signal)) {
+      if (/no|gp llc|inside gp/.test(text)) {
+        return [
+          "Pros: fewer entities, simpler administration, and easier to keep control and economics in one GP operating agreement.",
+          "Cons: less clean if placement parties, passive participants, vesting, forfeiture, or clawback sharing need fund-specific economics."
+        ];
+      }
+      if (/yes|carryco|sponsorco|separate/.test(text)) {
+        return [
+          "Pros: cleaner for fund-specific carry splits, non-voting economics, conditional awards, vesting, forfeiture, and clawback allocation.",
+          "Cons: adds an entity or agreement, extra tax/accounting administration, and more documents to keep aligned with the Fund waterfall."
+        ];
+      }
+    }
+    if (/manager llc|management fee|manager/.test(signal)) {
+      if (/direct|you\/zeke|individual/.test(text)) {
+        return [
+          "Pros: simpler ownership and fewer entity layers.",
+          "Cons: harder to isolate fund-specific economics or keep placement/sourcing participants away from broader platform management-fee economics."
+        ];
+      }
+      if (/holdco|sponsor/.test(text)) {
+        return [
+          "Pros: cleaner platform ownership and easier separation of fund-specific economics from manager-level economics.",
+          "Cons: adds governance and tax complexity and requires careful authority documents."
+        ];
+      }
+    }
+    if (/disclosure|placement|finder|broker/.test(signal)) {
+      if (/generic/.test(text)) {
+        return [
+          "Pros: keeps the term sheet concise and preserves flexibility for deal-specific arrangements.",
+          "Cons: may be too vague for investor expectations if placement compensation is material or unusual."
+        ];
+      }
+      if (/term-sheet|specific|offset|categories/.test(text)) {
+        return [
+          "Pros: more transparent for LPs and easier to connect fee offsets, Fund Expense treatment, and carry-sharing authority.",
+          "Cons: may invite negotiation over economics that would otherwise be handled in separate agreements."
+        ];
+      }
+    }
+    return [
+      "Pros: may fit the stated business preference and keep drafting focused.",
+      "Cons: confirm knock-on effects for disclosure, economics, authority, and related documents before finalizing."
+    ];
+  }
+
+  function considerationsHtml(issue, sections) {
+    const signal = issueSignal(issue);
+    const items = [];
+    if (/placement|finder|broker|capital formation|solicit/.test(signal)) {
+      items.push("Confirm whether the compensated party must be a registered broker-dealer or whether a narrower finder/consultant path is available.");
+      items.push("Decide whether compensation is paid by the Fund, Manager, GP, CarryCo, or another affiliate.");
+      items.push("Decide whether any Fund-paid placement cost offsets management fees or is simply borne as an Organization Expense / Fund Expense.");
+    }
+    if (/carry|carryco|carried interest/.test(signal)) {
+      items.push("Confirm whether carry sharing is a direct waterfall feature or an internal GP/CarryCo allocation after the Fund pays carry to the GP.");
+      items.push("Allocate clawback obligations among ultimate carry recipients if anyone other than the principals receives carry economics.");
+    }
+    if (/fund expense|expense|organization expense|management fee|fee offset/.test(signal)) {
+      items.push("Separate investor-borne Fund Expenses from Manager/GP overhead and from economics that should be paid out of management fees or carry.");
+      items.push("Check whether the LPA, PPM, and term sheet all describe the same expense and offset treatment.");
+    }
+    if (/side letter|mfn|special investor/.test(signal)) {
+      items.push("Decide whether this belongs in the main terms, a side letter, or both, and whether MFN rights should pick it up.");
+    }
+    const sectionSummaries = sections
+      .filter((section) => section.summary && !section.isGroup)
+      .slice(0, 2)
+      .map((section) => `${section.title}: ${section.summary}`);
+    sectionSummaries.forEach((summary) => items.push(summary));
+
+    const unique = [...new Set(items)].slice(0, 5);
+    if (!unique.length) return "";
+    return `
+      <div>
+        <h3>Considerations</h3>
+        <ul class="consideration-list">${unique.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+      </div>
+    `;
+  }
+
+  function cleanIssueDetails(value) {
+    return String(value || "").replace(/^Counsel notes \/ decisions:\s*/i, "").trim();
   }
 
   function clearAiResponse() {

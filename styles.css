@@ -635,7 +635,8 @@ textarea {
   margin-bottom: 0;
 }
 
-.issue-brief ul {
+.issue-brief ul,
+.consideration-list {
   display: grid;
   gap: 7px;
   list-style: none;
@@ -643,12 +644,40 @@ textarea {
   padding: 0;
 }
 
-.issue-brief li {
+.issue-brief li,
+.consideration-list li {
   background: var(--surface-soft);
   border: 1px solid var(--line);
   border-radius: 8px;
   line-height: 1.4;
   padding: 8px 10px;
+}
+
+.issue-explainer {
+  background: #fffdf9;
+  border-left: 4px solid var(--line-strong);
+  color: var(--muted);
+  line-height: 1.45;
+  margin-top: 8px;
+  padding: 9px 10px;
+}
+
+.issue-explainer strong,
+.option-tradeoffs strong {
+  color: var(--ink);
+}
+
+.option-tradeoffs {
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  display: grid;
+  gap: 5px;
+  margin-top: 8px;
+  padding-top: 8px;
+}
+
+.option-tradeoffs p {
+  margin: 0;
 }
 
 .issue-updated {
