@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Blind Pool Fund Term Sheet Workspace</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand-block">
+        <p class="eyebrow">Orrick Docs</p>
+        <h1>Blind Pool Fund Term Sheet Workspace</h1>
+      </div>
+      <div class="top-actions">
+        <a href="sources/FORM%20-%20Venture%20Capital_Private%20Equity%20Fund%20Form%20Term%20Sheet.docx">Term Sheet</a>
+        <a href="sources/blind_pool_fund_open_items_and_drafting_changes.docx">Open Items</a>
+        <button id="exportBtn" type="button">Export</button>
+        <button id="importBtn" type="button">Import</button>
+        <input id="importFile" type="file" accept="application/json,.json" hidden />
+      </div>
+    </header>
+
+    <main class="workspace-shell">
+      <section class="queue-panel" aria-label="Issue queue">
+        <div class="metrics" id="metrics"></div>
+        <div class="queue-controls">
+          <label class="field-label" for="searchInput">Search</label>
+          <input id="searchInput" type="search" placeholder="Issue, term, section" />
+          <div class="filter-grid">
+            <label>
+              <span>Type</span>
+              <select id="typeFilter"></select>
+            </label>
+            <label>
+              <span>Status</span>
+              <select id="statusFilter"></select>
+            </label>
+            <label>
+              <span>Follow-up</span>
+              <select id="followFilter">
+                <option value="all">All</option>
+                <option value="flagged">Flagged</option>
+                <option value="not-flagged">Not flagged</option>
+              </select>
+            </label>
+            <label>
+              <span>Section</span>
+              <select id="sectionFilter"></select>
+            </label>
+          </div>
+        </div>
+        <div class="queue-heading">
+          <h2>Work Queue</h2>
+          <button id="addIssueBtn" type="button">Add Issue</button>
+        </div>
+        <div id="issueList" class="issue-list"></div>
+      </section>
+
+      <section class="document-panel" aria-label="Term sheet document">
+        <div class="panel-title-row">
+          <div>
+            <p class="eyebrow">Term sheet</p>
+            <h2 id="documentTitle">Relevant Sections</h2>
+          </div>
+          <div class="tab-row" role="tablist" aria-label="Document tabs">
+            <button class="tab-button active" data-doc-tab="relevant" type="button">Relevant</button>
+            <button class="tab-button" data-doc-tab="full" type="button">Full</button>
+            <button class="tab-button" data-doc-tab="memo" type="button">Memo</button>
+          </div>
+        </div>
+        <div id="documentContent" class="document-content"></div>
+      </section>
+
+      <section class="answer-panel" aria-label="Answer editor">
+        <div class="panel-title-row">
+          <div>
+            <p class="eyebrow">Selected item</p>
+            <h2 id="selectedTitle">Answer</h2>
+          </div>
+          <span id="saveState" class="save-state">Saved</span>
+        </div>
+
+        <div id="issueDetail" class="issue-detail"></div>
+
+        <form id="answerForm" class="answer-form">
+          <div class="two-col">
+            <label>
+              <span>Status</span>
+              <select id="statusInput">
+                <option value="open">Open</option>
+                <option value="in-progress">In progress</option>
+                <option value="drafted">Drafted</option>
+                <option value="follow-up">Needs follow-up</option>
+                <option value="resolved">Resolved</option>
+              </select>
+            </label>
+            <label>
+              <span>Owner / next reviewer</span>
+              <input id="ownerInput" type="text" />
+            </label>
+          </div>
+
+          <label>
+            <span>Answer / decision</span>
+            <textarea id="answerInput" rows="7"></textarea>
+          </label>
+
+          <label>
+            <span>Proposed term sheet change</span>
+            <textarea id="changeInput" rows="7"></textarea>
+          </label>
+
+          <label class="follow-row">
+            <input id="followInput" type="checkbox" />
+            <span>Flag for follow-up</span>
+          </label>
+
+          <label>
+            <span>Follow-up notes</span>
+            <textarea id="followNotesInput" rows="4"></textarea>
+          </label>
+
+          <div class="form-actions">
+            <button id="markResolvedBtn" type="button">Mark Resolved</button>
+            <button id="resetLocalBtn" class="secondary-action" type="button">Reset Local Answers</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <dialog id="newIssueDialog">
+      <form method="dialog" id="newIssueForm" class="dialog-card">
+        <div class="panel-title-row">
+          <div>
+            <p class="eyebrow">New item</p>
+            <h2>Add Issue</h2>
+          </div>
+          <button value="cancel" type="submit" class="icon-button" aria-label="Close">x</button>
+        </div>
+        <label>
+          <span>Title</span>
+          <input id="newIssueTitle" type="text" required />
+        </label>
+        <label>
+          <span>Type</span>
+          <select id="newIssueType">
+            <option value="question">Question</option>
+            <option value="drafting-change">Drafting change</option>
+            <option value="decision">Decision</option>
+            <option value="checklist">Checklist</option>
+          </select>
+        </label>
+        <label>
+          <span>Linked term-sheet section</span>
+          <select id="newIssueSection"></select>
+        </label>
+        <label>
+          <span>Prompt / detail</span>
+          <textarea id="newIssuePrompt" rows="5"></textarea>
+        </label>
+        <div class="form-actions">
+          <button value="cancel" type="submit" class="secondary-action">Cancel</button>
+          <button id="createIssueBtn" value="default" type="submit">Create</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="data/seed-data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
