@@ -554,8 +554,9 @@ textarea {
 
 .issue-detail {
   border-bottom: 1px solid var(--line);
-  max-height: 38%;
-  overflow: auto;
+  flex: 0 0 auto;
+  max-height: none;
+  overflow: visible;
   padding: 14px;
 }
 
@@ -579,7 +580,7 @@ textarea {
 }
 
 .answer-panel {
-  overflow: auto;
+  overflow-y: auto;
 }
 
 .two-col {
