@@ -313,6 +313,7 @@
   }
 
   function issueView(issue) {
+    if (!issue) return null;
     const answer = answerFor(issue.id);
     return {
       ...issue,
@@ -330,7 +331,7 @@
 
   function currentIssue() {
     const found = allIssues().find((issue) => issue.id === state.selectedId);
-    return found ? issueView(found) : issueView(allIssues()[0]);
+    return found ? issueView(found) : issueView(allIssues()[0]) || null;
   }
 
   function sectionTitle(sectionId) {
@@ -476,6 +477,8 @@
 
     if (!app.projects.length) {
       clearProjectData();
+      await loadProfiles();
+      renderProjectControls();
       renderAll();
       return;
     }
@@ -608,6 +611,7 @@
           .join("")
       : "<option value=\"\">No projects</option>";
     els.projectSelect.value = app.currentProject?.id || app.localWorkspace.lastProjectId || app.projects[0]?.id || "";
+    els.projectSelect.disabled = !app.projects.length;
   }
 
   function renderFilters() {
@@ -797,6 +801,11 @@
     const sections = issue ? linkedSections(issue) : [];
     els.documentTitle.textContent = "Relevant Sections";
 
+    if (!app.currentProject && app.mode === "remote") {
+      els.documentContent.innerHTML = "<div class=\"empty-state\">Create a project or click Seed Current Docs to begin.</div>";
+      return;
+    }
+
     if (!sections.length) {
       els.documentContent.innerHTML = "<div class=\"empty-state\">No term-sheet section is linked yet.</div>";
       return;
@@ -811,7 +820,7 @@
     const sections = termSections();
     els.documentContent.innerHTML = sections.length
       ? `<div class="section-stack">${sections.map(sectionHtml).join("")}</div>`
-      : "<div class=\"empty-state\">No sections have been loaded for this project.</div>";
+      : "<div class=\"empty-state\">No sections have been loaded. Create a project with documents or click Seed Current Docs.</div>";
   }
 
   function renderMemo() {
