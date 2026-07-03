@@ -58,6 +58,9 @@
     statusFilter: document.getElementById("statusFilter"),
     followFilter: document.getElementById("followFilter"),
     sectionFilter: document.getElementById("sectionFilter"),
+    queueCount: document.getElementById("queueCount"),
+    activeFilters: document.getElementById("activeFilters"),
+    clearFiltersBtn: document.getElementById("clearFiltersBtn"),
     issueList: document.getElementById("issueList"),
     documentTitle: document.getElementById("documentTitle"),
     documentContent: document.getElementById("documentContent"),
@@ -617,12 +620,12 @@
   function renderFilters() {
     const types = typeOrder.filter((type) => allIssues().some((issue) => issue.issueType === type));
     els.typeFilter.innerHTML = [
-      "<option value=\"all\">All</option>",
+      "<option value=\"all\">All types</option>",
       ...types.map((type) => `<option value="${escapeHtml(type)}">${escapeHtml(typeLabels[type] || type)}</option>`)
     ].join("");
 
     els.statusFilter.innerHTML = [
-      "<option value=\"all\">All</option>",
+      "<option value=\"all\">All statuses</option>",
       ...Object.entries(statusLabels).map(([value, label]) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`)
     ].join("");
 
@@ -636,6 +639,7 @@
     els.statusFilter.value = state.statusFilter;
     els.followFilter.value = state.followFilter;
     els.sectionFilter.value = state.sectionFilter;
+    renderQueueSummary(filteredIssues());
   }
 
   function renderMetrics() {
@@ -658,6 +662,7 @@
 
   function renderIssueList() {
     const issues = filteredIssues();
+    renderQueueSummary(issues);
     if (!issues.some((issue) => issue.id === state.selectedId) && issues.length) {
       state.selectedId = issues[0].id;
     }
@@ -688,6 +693,42 @@
         `;
       })
       .join("");
+  }
+
+  function renderQueueSummary(filtered) {
+    if (!els.queueCount || !els.activeFilters) return;
+    const total = allIssues().length;
+    els.queueCount.textContent = `Showing ${filtered.length} of ${total}`;
+
+    const chips = [];
+    if (state.query.trim()) chips.push(`Search: ${state.query.trim()}`);
+    if (state.typeFilter !== "all") chips.push(`Type: ${typeLabels[state.typeFilter] || state.typeFilter}`);
+    if (state.statusFilter !== "all") chips.push(`Status: ${statusLabels[state.statusFilter] || state.statusFilter}`);
+    if (state.followFilter === "flagged") chips.push("Follow-up: flagged");
+    if (state.followFilter === "not-flagged") chips.push("Follow-up: not flagged");
+    if (state.sectionFilter !== "all") chips.push(`Section: ${sectionTitle(state.sectionFilter)}`);
+
+    els.activeFilters.innerHTML = chips.length
+      ? chips.map((chip) => `<span class="filter-chip">${escapeHtml(chip)}</span>`).join("")
+      : "<span class=\"filter-muted\">No active filters</span>";
+    if (els.clearFiltersBtn) {
+      els.clearFiltersBtn.disabled = !chips.length;
+    }
+  }
+
+  function clearQueueFilters() {
+    state.query = "";
+    state.typeFilter = "all";
+    state.statusFilter = "all";
+    state.followFilter = "all";
+    state.sectionFilter = "all";
+    state.selectedSectionId = "";
+    els.searchInput.value = "";
+    els.typeFilter.value = "all";
+    els.statusFilter.value = "all";
+    els.followFilter.value = "all";
+    els.sectionFilter.value = "all";
+    renderAll();
   }
 
   function renderSelectedIssue() {
@@ -1371,6 +1412,8 @@
       state.selectedSectionId = state.sectionFilter === "all" ? "" : state.sectionFilter;
       renderAll();
     });
+
+    els.clearFiltersBtn.addEventListener("click", clearQueueFilters);
 
     els.issueList.addEventListener("click", async (event) => {
       const card = event.target.closest("[data-issue-id]");
