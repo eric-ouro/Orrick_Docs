@@ -14,16 +14,106 @@ function collectOutputText(response) {
     .trim();
 }
 
+function collectAnthropicText(response) {
+  if (!Array.isArray(response.content)) return "";
+  return response.content
+    .filter((part) => part && part.type === "text" && part.text)
+    .map((part) => part.text)
+    .join("\n")
+    .trim();
+}
+
+async function askOpenAi({ instructions, context }) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    return {
+      status: 500,
+      body: { error: "OPENAI_API_KEY is not configured in this Vercel project." }
+    };
+  }
+
+  const model = process.env.OPENAI_MODEL || "gpt-5.5";
+  const response = await fetch("https://api.openai.com/v1/responses", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${apiKey}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model,
+      instructions,
+      input: [
+        {
+          role: "user",
+          content: JSON.stringify(context, null, 2)
+        }
+      ],
+      max_output_tokens: 1200
+    })
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    return {
+      status: response.status,
+      body: { error: data.error?.message || `OpenAI request failed with ${response.status}.` }
+    };
+  }
+
+  return {
+    status: 200,
+    body: { answer: collectOutputText(data), provider: "openai", model, responseId: data.id || "" }
+  };
+}
+
+async function askAnthropic({ instructions, context }) {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    return {
+      status: 500,
+      body: { error: "ANTHROPIC_API_KEY is not configured in this Vercel project." }
+    };
+  }
+
+  const model = process.env.ANTHROPIC_MODEL || "claude-sonnet-5";
+  const response = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model,
+      system: instructions,
+      max_tokens: 1200,
+      messages: [
+        {
+          role: "user",
+          content: JSON.stringify(context, null, 2)
+        }
+      ]
+    })
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    return {
+      status: response.status,
+      body: { error: data.error?.message || `Anthropic request failed with ${response.status}.` }
+    };
+  }
+
+  return {
+    status: 200,
+    body: { answer: collectAnthropicText(data), provider: "anthropic", model, responseId: data.id || "" }
+  };
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     res.status(405).json({ error: "Method not allowed" });
-    return;
-  }
-
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    res.status(500).json({ error: "OPENAI_API_KEY is not configured in this Vercel project." });
     return;
   }
 
@@ -36,7 +126,7 @@ module.exports = async function handler(req, res) {
 
   const issue = body.issue || {};
   const sections = Array.isArray(body.sections) ? body.sections : [];
-  const model = process.env.OPENAI_MODEL || "gpt-5.5";
+  const provider = body.provider === "anthropic" ? "anthropic" : "openai";
   const context = {
     project: compact(body.project, 300),
     question,
@@ -70,34 +160,12 @@ module.exports = async function handler(req, res) {
   ].join(" ");
 
   try {
-    const openaiResponse = await fetch("https://api.openai.com/v1/responses", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${apiKey}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model,
-        instructions,
-        input: [
-          {
-            role: "user",
-            content: JSON.stringify(context, null, 2)
-          }
-        ],
-        max_output_tokens: 1200
-      })
-    });
-
-    const data = await openaiResponse.json().catch(() => ({}));
-    if (!openaiResponse.ok) {
-      const message = data.error?.message || `OpenAI request failed with ${openaiResponse.status}.`;
-      res.status(openaiResponse.status).json({ error: message });
-      return;
-    }
-
-    res.status(200).json({ answer: collectOutputText(data), model, responseId: data.id || "" });
+    const result =
+      provider === "anthropic"
+        ? await askAnthropic({ instructions, context })
+        : await askOpenAi({ instructions, context });
+    res.status(result.status).json(result.body);
   } catch (error) {
-    res.status(500).json({ error: error.message || "Could not reach OpenAI." });
+    res.status(500).json({ error: error.message || "Could not reach the selected AI provider." });
   }
 };

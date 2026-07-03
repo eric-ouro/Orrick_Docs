@@ -27,7 +27,7 @@ npm run dev
 The AI follow-up panel uses a Vercel serverless function. For local AI testing, run through Vercel instead of plain Vite:
 
 ```bash
-OPENAI_API_KEY=your_key_here vercel dev
+OPENAI_API_KEY=your_openai_key ANTHROPIC_API_KEY=your_anthropic_key vercel dev
 ```
 
 Build the static deploy output:
@@ -59,12 +59,14 @@ GitHub path:
 5. Leave the output directory as `dist`.
 6. Deploy.
 
-The app uses the public Supabase publishable key in `config.js`. The AI follow-up panel also needs one server-side Vercel environment variable:
+The app uses the public Supabase publishable key in `config.js`. The AI follow-up panel also uses server-side Vercel environment variables:
 
-- `OPENAI_API_KEY`: required for `/api/ask-section`
+- `OPENAI_API_KEY`: required for the OpenAI button in `/api/ask-section`
 - `OPENAI_MODEL`: optional; defaults to `gpt-5.5`
+- `ANTHROPIC_API_KEY`: required for the Claude button in `/api/ask-section`
+- `ANTHROPIC_MODEL`: optional; defaults to `claude-sonnet-5`
 
-Do not put the OpenAI API key in `config.js` or any browser file.
+Do not put OpenAI or Anthropic API keys in `config.js` or any browser file.
 
 ## Supabase
 

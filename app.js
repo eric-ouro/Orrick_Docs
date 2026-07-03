@@ -78,6 +78,7 @@
     resetLocalBtn: document.getElementById("resetLocalBtn"),
     aiQuestionInput: document.getElementById("aiQuestionInput"),
     askAiBtn: document.getElementById("askAiBtn"),
+    askClaudeBtn: document.getElementById("askClaudeBtn"),
     saveAiFollowUpBtn: document.getElementById("saveAiFollowUpBtn"),
     aiResponse: document.getElementById("aiResponse"),
     exportBtn: document.getElementById("exportBtn"),
@@ -1012,9 +1013,10 @@
     };
   }
 
-  async function askAiAboutIssue() {
+  async function askAiAboutIssue(provider) {
     const issue = currentIssue();
     const question = els.aiQuestionInput.value.trim();
+    const providerLabel = provider === "anthropic" ? "Claude" : "OpenAI";
     if (!issue) {
       setAiResponse("Select an issue first.", "error", "");
       return;
@@ -1025,12 +1027,13 @@
     }
 
     els.askAiBtn.disabled = true;
-    setAiResponse("Asking AI...", "loading", "");
+    els.askClaudeBtn.disabled = true;
+    setAiResponse(`Asking ${providerLabel}...`, "loading", "");
     try {
       const response = await fetch("/api/ask-section", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(aiContextForIssue(issue))
+        body: JSON.stringify({ ...aiContextForIssue(issue), provider })
       });
       const text = await response.text();
       let data = {};
@@ -1044,7 +1047,7 @@
           response.status === 404
             ? "The AI endpoint is available through Vercel dev or the deployed Vercel site, not the plain Vite dev server."
             : "";
-        throw new Error(data.error || endpointHint || `AI request failed with ${response.status}.`);
+        throw new Error(data.error || endpointHint || `${providerLabel} request failed with ${response.status}.`);
       }
       const answer = data.answer || "No answer was returned.";
       setAiResponse(answer, "", answer);
@@ -1053,6 +1056,7 @@
       setAiResponse(error.message || "Could not ask AI.", "error", "");
     } finally {
       els.askAiBtn.disabled = false;
+      els.askClaudeBtn.disabled = false;
     }
   }
 
@@ -1802,7 +1806,8 @@
       updateAnswer({ status: "resolved", followUp: false }, true);
     });
 
-    els.askAiBtn.addEventListener("click", askAiAboutIssue);
+    els.askAiBtn.addEventListener("click", () => askAiAboutIssue("openai"));
+    els.askClaudeBtn.addEventListener("click", () => askAiAboutIssue("anthropic"));
     els.saveAiFollowUpBtn.addEventListener("click", saveAiToFollowUp);
 
     els.resetLocalBtn.addEventListener("click", resetWorkspace);
