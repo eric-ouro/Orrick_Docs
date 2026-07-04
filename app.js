@@ -385,7 +385,6 @@
   }
 
   function linkedSections(issue) {
-    if (!isClauseScopedIssue(issue)) return [];
     const map = sectionMap();
     return (issue.termSectionIds || []).map((id) => map.get(id)).filter(Boolean);
   }
@@ -498,7 +497,7 @@
       state.selectedId = app.issues[0]?.id || "";
     }
     const selected = currentIssue();
-    state.selectedSectionId = isClauseScopedIssue(selected) ? selected?.termSectionIds?.[0] || "" : "";
+    state.selectedSectionId = selected?.termSectionIds?.[0] || "";
   }
 
   async function loadRemoteSession() {
@@ -610,7 +609,7 @@
       state.selectedId = app.issues[0]?.id || "";
     }
     const selected = currentIssue();
-    state.selectedSectionId = isClauseScopedIssue(selected) ? selected?.termSectionIds?.[0] || "" : "";
+    state.selectedSectionId = selected?.termSectionIds?.[0] || "";
     await loadProfiles();
     await loadProjectMembers(projectId);
     await loadIssueEvents(state.selectedId);
@@ -1557,7 +1556,7 @@
     state.selectedId = issueId;
     persistLocalWorkspace();
     const issue = currentIssue();
-    state.selectedSectionId = isClauseScopedIssue(issue) ? issue?.termSectionIds?.[0] || "" : "";
+    state.selectedSectionId = issue?.termSectionIds?.[0] || "";
     if (app.mode === "remote") {
       await loadIssueEvents(issueId);
     }
