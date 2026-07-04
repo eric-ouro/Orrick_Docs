@@ -90,6 +90,7 @@
     newIssueForm: document.getElementById("newIssueForm"),
     newIssueTitle: document.getElementById("newIssueTitle"),
     newIssueType: document.getElementById("newIssueType"),
+    newIssueSectionLabel: document.getElementById("newIssueSectionLabel"),
     newIssueSection: document.getElementById("newIssueSection"),
     newIssuePrompt: document.getElementById("newIssuePrompt"),
     newProjectDialog: document.getElementById("newProjectDialog"),
@@ -384,8 +385,27 @@
   }
 
   function linkedSections(issue) {
+    if (!isClauseScopedIssue(issue)) return [];
     const map = sectionMap();
     return (issue.termSectionIds || []).map((id) => map.get(id)).filter(Boolean);
+  }
+
+  function isClauseScopedIssue(issue) {
+    return issue && issue.issueType !== "decision" && issue.issueType !== "supporting-document";
+  }
+
+  function issueMentionsSection(issue, sectionId) {
+    return isClauseScopedIssue(issue) && (issue.termSectionIds || []).includes(sectionId);
+  }
+
+  function isClauseScopedIssueType(issueType) {
+    return issueType !== "decision" && issueType !== "supporting-document";
+  }
+
+  function syncNewIssueSectionControl() {
+    const shouldShowSection = isClauseScopedIssueType(els.newIssueType.value);
+    els.newIssueSectionLabel.hidden = !shouldShowSection;
+    els.newIssueSection.disabled = !shouldShowSection;
   }
 
   function compactText(parts) {
@@ -407,7 +427,7 @@
         if (state.statusFilter !== "all" && issue.status !== state.statusFilter) return false;
         if (state.followFilter === "flagged" && !isFollowUp(issue)) return false;
         if (state.followFilter === "not-flagged" && isFollowUp(issue)) return false;
-        if (state.sectionFilter !== "all" && !(issue.termSectionIds || []).includes(state.sectionFilter)) return false;
+        if (state.sectionFilter !== "all" && !issueMentionsSection(issue, state.sectionFilter)) return false;
         if (!query) return true;
         const sectionNames = (issue.termSectionIds || []).map(sectionTitle).join(" ");
         const haystack = compactText([
@@ -478,7 +498,7 @@
       state.selectedId = app.issues[0]?.id || "";
     }
     const selected = currentIssue();
-    state.selectedSectionId = selected?.termSectionIds?.[0] || "";
+    state.selectedSectionId = isClauseScopedIssue(selected) ? selected?.termSectionIds?.[0] || "" : "";
   }
 
   async function loadRemoteSession() {
@@ -589,7 +609,8 @@
     if (!state.selectedId || !app.issues.some((issue) => issue.id === state.selectedId)) {
       state.selectedId = app.issues[0]?.id || "";
     }
-    state.selectedSectionId = currentIssue()?.termSectionIds?.[0] || "";
+    const selected = currentIssue();
+    state.selectedSectionId = isClauseScopedIssue(selected) ? selected?.termSectionIds?.[0] || "" : "";
     await loadProfiles();
     await loadProjectMembers(projectId);
     await loadIssueEvents(state.selectedId);
@@ -813,8 +834,12 @@
 
     const sectionOptions = termSections()
       .filter((section) => !section.isGroup)
-      .map((section) => `<option value="${escapeHtml(section.id)}">${escapeHtml(section.title)}</option>`);
-    els.sectionFilter.innerHTML = ["<option value=\"all\">All</option>", ...sectionOptions].join("");
+      .map((section) => {
+        const count = sectionQueueCount(section.id);
+        const suffix = count ? ` (${count})` : "";
+        return `<option value="${escapeHtml(section.id)}">${escapeHtml(section.title + suffix)}</option>`;
+      });
+    els.sectionFilter.innerHTML = ["<option value=\"all\">All clauses</option>", ...sectionOptions].join("");
     els.newIssueSection.innerHTML = sectionOptions.join("");
 
     els.typeFilter.value = state.typeFilter;
@@ -850,7 +875,12 @@
     }
 
     if (!issues.length) {
-      const emptyText = app.mode === "remote" && !app.currentProject ? "Create or seed a project to begin." : "No matching items.";
+      const emptyText =
+        app.mode === "remote" && !app.currentProject
+          ? "Create or seed a project to begin."
+          : state.sectionFilter !== "all"
+            ? "No clause-specific work queue items mention this section."
+            : "No matching items.";
       els.issueList.innerHTML = `<div class="empty-state">${escapeHtml(emptyText)}</div>`;
       return;
     }
@@ -859,15 +889,18 @@
       .map((issue) => {
         const active = issue.id === state.selectedId ? " active" : "";
         const follow = isFollowUp(issue) ? "<span class=\"pill status-follow-up\">Flagged</span>" : "";
-        const sectionCount = (issue.termSectionIds || []).length;
+        const sectionCount = isClauseScopedIssue(issue) ? (issue.termSectionIds || []).length : 0;
         const updated = issue.updatedBy ? `<span class="pill">By ${escapeHtml(profileLabel(issue.updatedBy))}</span>` : "";
+        const sectionPill = isClauseScopedIssue(issue)
+          ? `<span class="pill">${sectionCount} clause${sectionCount === 1 ? "" : "s"}</span>`
+          : "<span class=\"pill\">Broad item</span>";
         return `
           <button class="issue-card${active}" data-issue-id="${escapeHtml(issue.id)}" type="button">
             <h3>${escapeHtml(issue.title)}</h3>
             <div class="issue-meta">
               <span class="pill type-${slugClass(issue.issueType)}">${escapeHtml(typeLabels[issue.issueType] || issue.issueType)}</span>
               <span class="pill status-${slugClass(issue.status)}">${escapeHtml(statusLabels[issue.status] || issue.status)}</span>
-              <span class="pill">${sectionCount} section${sectionCount === 1 ? "" : "s"}</span>
+              ${sectionPill}
               ${follow}
               ${updated}
             </div>
@@ -888,7 +921,7 @@
     if (state.statusFilter !== "all") chips.push(`Status: ${statusLabels[state.statusFilter] || state.statusFilter}`);
     if (state.followFilter === "flagged") chips.push("Follow-up: flagged");
     if (state.followFilter === "not-flagged") chips.push("Follow-up: not flagged");
-    if (state.sectionFilter !== "all") chips.push(`Section: ${sectionTitle(state.sectionFilter)}`);
+    if (state.sectionFilter !== "all") chips.push(`Clause: ${sectionTitle(state.sectionFilter)}`);
 
     els.activeFilters.innerHTML = chips.length
       ? chips.map((chip) => `<span class="filter-chip">${escapeHtml(chip)}</span>`).join("")
@@ -1399,18 +1432,27 @@
       : "";
   }
 
+  function sectionQueueCount(sectionId) {
+    return allIssues().filter((issue) => issueMentionsSection(issueView(issue), sectionId)).length;
+  }
+
   function sectionHtml(section) {
     const selected = section.id === state.selectedSectionId ? " selected" : "";
     const group = section.isGroup ? " group-row" : "";
     const summary = section.summary || summaryForSectionKey(section.stableKey || section.id);
+    const queueCount = section.isGroup ? 0 : sectionQueueCount(section.id);
     return `
-      <article class="term-section${selected}${group}" data-section-id="${escapeHtml(section.id)}">
+      <article class="term-section${selected}${group}" data-section-id="${escapeHtml(section.id)}"${section.isGroup ? "" : " tabindex=\"0\" role=\"button\""} aria-label="${escapeHtml(`Review ${section.title}`)}">
         <div class="section-header">
           <div>
             <h3>${escapeHtml(section.title)}</h3>
             <div class="section-row-label">Row ${escapeHtml(section.row)} · ${escapeHtml(section.group || "Document")}</div>
           </div>
-          ${section.isGroup ? "" : `<button type="button" data-use-section="${escapeHtml(section.id)}">Focus</button>`}
+          ${
+            section.isGroup
+              ? ""
+              : `<span class="section-action">Review Clause${queueCount ? ` (${queueCount})` : ""}</span>`
+          }
         </div>
         ${summary ? `<div class="section-summary"><div class="detail-label">Summary</div><p>${escapeHtml(summary)}</p></div>` : ""}
         ${section.body ? `<p>${escapeHtml(section.body)}</p>` : ""}
@@ -1515,7 +1557,7 @@
     state.selectedId = issueId;
     persistLocalWorkspace();
     const issue = currentIssue();
-    state.selectedSectionId = issue?.termSectionIds?.[0] || "";
+    state.selectedSectionId = isClauseScopedIssue(issue) ? issue?.termSectionIds?.[0] || "" : "";
     if (app.mode === "remote") {
       await loadIssueEvents(issueId);
     }
@@ -1534,8 +1576,9 @@
   async function createCustomIssue() {
     const title = els.newIssueTitle.value.trim();
     if (!title) return;
-    const sectionId = els.newIssueSection.value;
     const issueType = els.newIssueType.value;
+    const shouldLinkSection = isClauseScopedIssueType(issueType);
+    const sectionId = shouldLinkSection ? els.newIssueSection.value : "";
     const prompt = els.newIssuePrompt.value.trim() || title;
 
     if (app.mode === "remote") {
@@ -1964,9 +2007,18 @@
     });
 
     els.documentContent.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-use-section]");
-      if (button) {
-        setFocusedSection(button.dataset.useSection);
+      const section = event.target.closest("[data-section-id]");
+      if (section && !section.classList.contains("group-row")) {
+        setFocusedSection(section.dataset.sectionId);
+      }
+    });
+
+    els.documentContent.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      const section = event.target.closest("[data-section-id]");
+      if (section && !section.classList.contains("group-row")) {
+        event.preventDefault();
+        setFocusedSection(section.dataset.sectionId);
       }
     });
 
@@ -2026,14 +2078,18 @@
       const issue = currentIssue();
       const defaultSection =
         state.selectedSectionId ||
-        issue?.termSectionIds?.[0] ||
+        (isClauseScopedIssue(issue) ? issue?.termSectionIds?.[0] : "") ||
         termSections().find((section) => !section.isGroup)?.id ||
         "";
+      els.newIssueType.value = "question";
       els.newIssueSection.value = defaultSection;
+      syncNewIssueSectionControl();
       if (els.newIssueDialog.showModal) {
         els.newIssueDialog.showModal();
       }
     });
+
+    els.newIssueType.addEventListener("change", syncNewIssueSectionControl);
 
     els.newIssueForm.addEventListener("submit", async (event) => {
       if (event.submitter && event.submitter.id === "createIssueBtn") {

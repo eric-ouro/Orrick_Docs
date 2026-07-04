@@ -518,7 +518,12 @@ textarea {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 8px;
+  cursor: pointer;
   padding: 14px;
+}
+
+.term-section:hover {
+  border-color: var(--line-strong);
 }
 
 .term-section.selected {
@@ -528,6 +533,7 @@ textarea {
 
 .term-section.group-row {
   background: #efe9df;
+  cursor: default;
 }
 
 .section-header {
@@ -537,9 +543,21 @@ textarea {
   justify-content: space-between;
 }
 
-.section-header button {
+.section-header button,
+.section-action {
   flex: 0 0 auto;
   min-height: 32px;
+}
+
+.section-action {
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  color: var(--ink);
+  display: inline-flex;
+  font-size: 13px;
+  padding: 6px 10px;
 }
 
 .term-section p {
