@@ -503,6 +503,160 @@ textarea {
   color: #315f39;
 }
 
+.pill.tier-high-level {
+  background: #ece5f5;
+  border-color: #c3b0dd;
+  color: #4d3577;
+}
+
+.pill.tier-multi-clause {
+  background: var(--blue-soft);
+  border-color: #acc3dc;
+  color: #204b75;
+}
+
+.pill.tier-fill-in {
+  background: var(--accent-soft);
+  border-color: #a4c8bf;
+  color: #1f5951;
+}
+
+.pill.tier-addition-removal {
+  background: var(--gold-soft);
+  border-color: #dbba80;
+  color: #704a13;
+}
+
+.pill.clause-status-accepted,
+.pill.election-done {
+  background: var(--green-soft);
+  border-color: #a5c5aa;
+  color: #315f39;
+}
+
+.pill.clause-status-rejected {
+  background: var(--red-soft);
+  border-color: #d4aaa5;
+  color: #76302e;
+}
+
+.pill.clause-status-rewrite {
+  background: var(--gold-soft);
+  border-color: #dbba80;
+  color: #704a13;
+}
+
+.pill.clause-status-pending {
+  background: #f4f0e9;
+}
+
+/* Clause election editor */
+.clause-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.clause-panel label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.clause-panel label span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.clause-hint {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.clause-elections {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.election-row {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 3px solid #c9a05a;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 10px;
+}
+
+.election-row.resolved {
+  border-left-color: #5c8a63;
+}
+
+.election-context {
+  color: var(--muted);
+  font-size: 12px;
+  font-style: italic;
+}
+
+.election-row select,
+.election-row input[type="text"] {
+  width: 100%;
+}
+
+.clause-preview {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.55;
+  max-height: 340px;
+  overflow: auto;
+  padding: 12px;
+}
+
+.clause-preview .election-filled {
+  background: var(--green-soft);
+  border-radius: 3px;
+  font-weight: 700;
+  padding: 0 2px;
+}
+
+.clause-preview .election-open {
+  background: var(--gold-soft);
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+.clause-preview .clause-note {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.clause-guidance ul {
+  margin: 6px 0 0 18px;
+}
+
+.clause-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.clause-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.section-badges {
+  margin: 6px 0;
+}
+
 .empty-state {
   color: var(--muted);
   padding: 22px;

@@ -79,6 +79,10 @@
               <select id="typeFilter"></select>
             </label>
             <label>
+              <span>Tier</span>
+              <select id="tierFilter"></select>
+            </label>
+            <label>
               <span>Status</span>
               <select id="statusFilter"></select>
             </label>
@@ -134,6 +138,27 @@
 
         <div id="issueDetail" class="issue-detail"></div>
 
+        <section id="clausePanel" class="clause-panel" hidden>
+          <div id="clauseHeader" class="clause-header"></div>
+          <div id="clauseGuidance" class="clause-guidance"></div>
+          <div id="clauseElections" class="clause-elections"></div>
+          <label>
+            <span>Rewrite / requested language</span>
+            <textarea id="clauseRewriteInput" rows="5" placeholder="Describe or draft replacement language for this clause."></textarea>
+          </label>
+          <label>
+            <span>Clause notes</span>
+            <textarea id="clauseNotesInput" rows="4"></textarea>
+          </label>
+          <div class="form-actions clause-actions">
+            <button id="clauseAcceptBtn" type="button">Accept Clause</button>
+            <button id="clauseRewriteBtn" class="secondary-action" type="button">Needs Rewrite</button>
+            <button id="clauseRejectBtn" class="secondary-action" type="button">Reject Clause</button>
+            <button id="clauseReopenBtn" class="secondary-action" type="button" hidden>Reopen</button>
+          </div>
+          <div id="clausePreview" class="clause-preview"></div>
+        </section>
+
         <form id="answerForm" class="answer-form">
           <div class="two-col">
             <label>
@@ -178,7 +203,7 @@
           </div>
         </form>
 
-        <section class="ai-panel" aria-label="AI follow-up questions">
+        <section id="aiPanel" class="ai-panel" aria-label="AI follow-up questions">
           <div>
             <p class="eyebrow">AI follow-up</p>
             <h3>Ask About This Item</h3>

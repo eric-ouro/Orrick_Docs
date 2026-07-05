@@ -34,6 +34,22 @@
   const typeOrder = ["decision", "drafting-change", "question", "checklist", "supporting-document"];
   const priorityOrder = { high: 0, medium: 1, low: 2 };
 
+  // Resolution tiers: how an item gets decided.
+  const tierLabels = {
+    "high-level": "High-level",
+    "multi-clause": "Multi-clause",
+    "fill-in": "Fill-in",
+    "addition-removal": "Addition / removal"
+  };
+  const tierOrderList = ["high-level", "multi-clause", "fill-in", "addition-removal"];
+
+  const clauseStatusLabels = {
+    pending: "Pending",
+    accepted: "Accepted",
+    rejected: "Rejected",
+    rewrite: "Rewrite"
+  };
+
   const els = {
     setupShell: document.getElementById("setupShell"),
     setupMessage: document.getElementById("setupMessage"),
@@ -57,6 +73,7 @@
     searchInput: document.getElementById("searchInput"),
     topicFilter: document.getElementById("topicFilter"),
     typeFilter: document.getElementById("typeFilter"),
+    tierFilter: document.getElementById("tierFilter"),
     statusFilter: document.getElementById("statusFilter"),
     followFilter: document.getElementById("followFilter"),
     sectionFilter: document.getElementById("sectionFilter"),
@@ -69,6 +86,19 @@
     selectedTitle: document.getElementById("selectedTitle"),
     saveState: document.getElementById("saveState"),
     issueDetail: document.getElementById("issueDetail"),
+    answerForm: document.getElementById("answerForm"),
+    aiPanel: document.getElementById("aiPanel"),
+    clausePanel: document.getElementById("clausePanel"),
+    clauseHeader: document.getElementById("clauseHeader"),
+    clauseGuidance: document.getElementById("clauseGuidance"),
+    clauseElections: document.getElementById("clauseElections"),
+    clauseRewriteInput: document.getElementById("clauseRewriteInput"),
+    clauseNotesInput: document.getElementById("clauseNotesInput"),
+    clauseAcceptBtn: document.getElementById("clauseAcceptBtn"),
+    clauseRejectBtn: document.getElementById("clauseRejectBtn"),
+    clauseRewriteBtn: document.getElementById("clauseRewriteBtn"),
+    clauseReopenBtn: document.getElementById("clauseReopenBtn"),
+    clausePreview: document.getElementById("clausePreview"),
     statusInput: document.getElementById("statusInput"),
     ownerInput: document.getElementById("ownerInput"),
     answerInput: document.getElementById("answerInput"),
@@ -122,6 +152,7 @@
     issues: [],
     issueLinks: [],
     issueStates: new Map(),
+    clauseStates: new Map(),
     issueEvents: [],
     projectMembers: [],
     profiles: new Map(),
@@ -139,9 +170,12 @@
     query: "",
     topicFilter: "all",
     typeFilter: "all",
+    tierFilter: "all",
     statusFilter: "all",
     followFilter: "all",
     sectionFilter: "all",
+    rightPane: "issue",
+    selectedClauseId: "",
     aiIssueId: ""
   };
 
@@ -150,13 +184,14 @@
       const parsed = JSON.parse(localStorage.getItem(storageKey) || "{}");
       return {
         answers: parsed.answers || {},
+        clauseStates: parsed.clauseStates || {},
         customIssues: Array.isArray(parsed.customIssues) ? parsed.customIssues : [],
         lastSelectedId: parsed.lastSelectedId || "",
         lastProjectId: parsed.lastProjectId || ""
       };
     } catch (error) {
       console.warn("Could not load local workspace", error);
-      return { answers: {}, customIssues: [], lastSelectedId: "", lastProjectId: "" };
+      return { answers: {}, clauseStates: {}, customIssues: [], lastSelectedId: "", lastProjectId: "" };
     }
   }
 
@@ -257,7 +292,8 @@
       isGroup: Boolean(row.is_group),
       sectionKind: row.section_kind,
       sourceRef: row.source_ref || {},
-      summary: row.source_ref?.summary || summaryForSectionKey(row.stable_key)
+      summary: row.source_ref?.summary || summaryForSectionKey(row.stable_key),
+      guidance: seedSectionByKey(row.stable_key)?.guidance || []
     };
   }
 
@@ -294,6 +330,19 @@
       tags: Array.isArray(row.tags) ? row.tags : [],
       sortOrder: row.sort_order || 0,
       createdBy: row.created_by
+    };
+  }
+
+  function normalizeClauseState(row) {
+    return {
+      sectionId: row.section_id,
+      projectId: row.project_id,
+      status: row.status || "pending",
+      elections: row.elections || {},
+      rewriteText: row.rewrite_text || "",
+      notes: row.notes || "",
+      updatedBy: row.updated_by || "",
+      updatedAt: row.updated_at || ""
     };
   }
 
@@ -417,6 +466,10 @@
     return issue.category || "Custom items";
   }
 
+  function issueTier(issue) {
+    return (issue.tags || []).find((tag) => tierLabels[tag]) || "";
+  }
+
   function topicOrder() {
     const order = [];
     allIssues()
@@ -443,6 +496,7 @@
       .filter((issue) => {
         if (state.topicFilter !== "all" && issueTopic(issue) !== state.topicFilter) return false;
         if (state.typeFilter !== "all" && issue.issueType !== state.typeFilter) return false;
+        if (state.tierFilter !== "all" && issueTier(issue) !== state.tierFilter) return false;
         if (state.statusFilter === "not-resolved") {
           if (issue.status === "resolved") return false;
         } else if (state.statusFilter !== "all" && issue.status !== state.statusFilter) {
@@ -504,6 +558,7 @@
       group: section.group,
       isGroup: section.isGroup,
       summary: section.summary || "",
+      guidance: section.guidance || [],
       sectionKind: section.isGroup ? "group" : "section",
       sourceRef: { row: section.row, summary: section.summary || "" }
     }));
@@ -588,10 +643,13 @@
     app.issues = [];
     app.issueLinks = [];
     app.issueStates = new Map();
+    app.clauseStates = new Map();
     app.issueEvents = [];
     app.projectMembers = [];
     state.selectedId = "";
     state.selectedSectionId = "";
+    state.selectedClauseId = "";
+    state.rightPane = "issue";
   }
 
   async function loadProject(projectId) {
@@ -600,15 +658,16 @@
     app.currentProject = app.projects.find((project) => project.id === projectId) || null;
     app.localWorkspace.lastProjectId = projectId;
 
-    const [documentsResult, sectionsResult, issuesResult, linksResult, statesResult] = await Promise.all([
+    const [documentsResult, sectionsResult, issuesResult, linksResult, statesResult, clauseStatesResult] = await Promise.all([
       db.from("documents").select("*").eq("project_id", projectId).order("created_at", { ascending: true }),
       db.from("document_sections").select("*").eq("project_id", projectId).order("section_order", { ascending: true }),
       db.from("issues").select("*").eq("project_id", projectId).order("sort_order", { ascending: true }),
       db.from("issue_sections").select("*").eq("project_id", projectId).order("position", { ascending: true }),
-      db.from("issue_states").select("*").eq("project_id", projectId)
+      db.from("issue_states").select("*").eq("project_id", projectId),
+      db.from("clause_states").select("*").eq("project_id", projectId)
     ]);
 
-    for (const result of [documentsResult, sectionsResult, issuesResult, linksResult, statesResult]) {
+    for (const result of [documentsResult, sectionsResult, issuesResult, linksResult, statesResult, clauseStatesResult]) {
       if (result.error) throw result.error;
     }
 
@@ -616,6 +675,7 @@
     app.sections = (sectionsResult.data || []).map(normalizeSection);
     app.issueLinks = linksResult.data || [];
     app.issueStates = new Map((statesResult.data || []).map((row) => [row.issue_id, normalizeState(row)]));
+    app.clauseStates = new Map((clauseStatesResult.data || []).map((row) => [row.section_id, normalizeClauseState(row)]));
 
     const linksByIssue = new Map();
     app.issueLinks.forEach((link) => {
@@ -860,6 +920,16 @@
       ...types.map((type) => `<option value="${escapeHtml(type)}">${escapeHtml(typeLabels[type] || type)}</option>`)
     ].join("");
 
+    els.tierFilter.innerHTML = [
+      "<option value=\"all\">All tiers</option>",
+      ...tierOrderList
+        .filter((tier) => issueViews.some((issue) => issueTier(issue) === tier))
+        .map((tier) => {
+          const open = issueViews.filter((issue) => issueTier(issue) === tier && issue.status !== "resolved").length;
+          return `<option value="${escapeHtml(tier)}">${escapeHtml(tierLabels[tier])}${open ? ` (${open})` : ""}</option>`;
+        })
+    ].join("");
+
     els.statusFilter.innerHTML = [
       "<option value=\"all\">All statuses</option>",
       "<option value=\"not-resolved\">Not resolved</option>",
@@ -882,6 +952,11 @@
       els.topicFilter.value = "all";
     }
     els.typeFilter.value = state.typeFilter;
+    els.tierFilter.value = state.tierFilter;
+    if (els.tierFilter.value !== state.tierFilter) {
+      state.tierFilter = "all";
+      els.tierFilter.value = "all";
+    }
     els.statusFilter.value = state.statusFilter;
     els.followFilter.value = state.followFilter;
     els.sectionFilter.value = state.sectionFilter;
@@ -893,12 +968,13 @@
     const total = issues.length;
     const resolved = issues.filter((issue) => issue.status === "resolved").length;
     const flagged = issues.filter(isFollowUp).length;
-    const drafted = issues.filter((issue) => issue.status === "drafted").length;
+    const clauseSections = clauseSectionsForMetrics();
+    const clausesSettled = clauseSections.filter(clauseIsSettled).length;
     els.metrics.innerHTML = [
       metricHtml(total, "Total"),
       metricHtml(resolved, "Resolved"),
       metricHtml(flagged, "Follow-up"),
-      metricHtml(drafted, "Drafted")
+      metricHtml(`${clausesSettled}/${clauseSections.length}`, "Clauses")
     ].join("");
   }
 
@@ -938,6 +1014,8 @@
         const sectionCount = isClauseScopedIssue(issue) ? (issue.termSectionIds || []).length : 0;
         const updated = issue.updatedBy ? `<span class="pill">By ${escapeHtml(profileLabel(issue.updatedBy))}</span>` : "";
         const priorityPill = issue.priority === "high" ? "<span class=\"pill priority-high\">High</span>" : "";
+        const tier = issueTier(issue);
+        const tierPill = tier ? `<span class="pill tier-${slugClass(tier)}">${escapeHtml(tierLabels[tier])}</span>` : "";
         const sectionPill = isClauseScopedIssue(issue)
           ? `<span class="pill">${sectionCount} clause${sectionCount === 1 ? "" : "s"}</span>`
           : "<span class=\"pill\">Broad item</span>";
@@ -948,6 +1026,7 @@
             <div class="issue-meta">
               <span class="pill type-${slugClass(issue.issueType)}">${escapeHtml(typeLabels[issue.issueType] || issue.issueType)}</span>
               <span class="pill status-${slugClass(issue.status)}">${escapeHtml(statusLabels[issue.status] || issue.status)}</span>
+              ${tierPill}
               ${priorityPill}
               ${sectionPill}
               ${follow}
@@ -968,6 +1047,7 @@
     if (state.query.trim()) chips.push(`Search: ${state.query.trim()}`);
     if (state.topicFilter !== "all") chips.push(`Topic: ${state.topicFilter}`);
     if (state.typeFilter !== "all") chips.push(`Type: ${typeLabels[state.typeFilter] || state.typeFilter}`);
+    if (state.tierFilter !== "all") chips.push(`Tier: ${tierLabels[state.tierFilter] || state.tierFilter}`);
     if (state.statusFilter === "not-resolved") chips.push("Status: Not resolved");
     else if (state.statusFilter !== "all") chips.push(`Status: ${statusLabels[state.statusFilter] || state.statusFilter}`);
     if (state.followFilter === "flagged") chips.push("Follow-up: flagged");
@@ -986,6 +1066,7 @@
     state.query = "";
     state.topicFilter = "all";
     state.typeFilter = "all";
+    state.tierFilter = "all";
     state.statusFilter = "all";
     state.followFilter = "all";
     state.sectionFilter = "all";
@@ -993,6 +1074,7 @@
     els.searchInput.value = "";
     els.topicFilter.value = "all";
     els.typeFilter.value = "all";
+    els.tierFilter.value = "all";
     els.statusFilter.value = "all";
     els.followFilter.value = "all";
     els.sectionFilter.value = "all";
@@ -1030,6 +1112,7 @@
       <div class="issue-meta">
         <span class="pill type-${slugClass(issue.issueType)}">${escapeHtml(typeLabels[issue.issueType] || issue.issueType)}</span>
         <span class="pill status-${slugClass(issue.status)}">${escapeHtml(statusLabels[issue.status] || issue.status)}</span>
+        ${issueTier(issue) ? `<span class="pill tier-${slugClass(issueTier(issue))}">${escapeHtml(tierLabels[issueTier(issue)])}</span>` : ""}
         ${issue.priority ? `<span class="pill${issue.priority === "high" ? " priority-high" : ""}">${escapeHtml(issue.priority)} priority</span>` : ""}
         ${issue.category ? `<span class="pill">${escapeHtml(issue.category)}</span>` : ""}
       </div>
@@ -1269,6 +1352,402 @@
     return String(value || "").replace(/^Counsel notes \/ decisions:\s*/i, "").trim();
   }
 
+  // ---------------------------------------------------------------------------
+  // Clause elections: parse bracketed drafting options out of a clause body and
+  // render selectors so blanks/options are resolved on the clause itself.
+  // ---------------------------------------------------------------------------
+
+  const clauseTokensCache = new Map();
+
+  function splitTopLevelBrackets(body) {
+    const items = [];
+    let depth = 0;
+    let buffer = "";
+    for (const char of String(body || "")) {
+      if (char === "[") {
+        if (depth === 0) {
+          if (buffer) items.push({ kind: "text", text: buffer });
+          buffer = "";
+        } else {
+          buffer += char;
+        }
+        depth += 1;
+      } else if (char === "]" && depth > 0) {
+        depth -= 1;
+        if (depth === 0) {
+          items.push({ kind: "bracket", inner: buffer });
+          buffer = "";
+        } else {
+          buffer += char;
+        }
+      } else {
+        buffer += char;
+      }
+    }
+    if (buffer) items.push({ kind: depth > 0 ? "bracket" : "text", inner: buffer, text: buffer });
+    return items;
+  }
+
+  function isBlankInner(inner) {
+    return /^\s*_+\s*$/.test(inner);
+  }
+
+  function isNoteInner(inner) {
+    return /^\s*NTD\b/i.test(inner) || /^\s*(the above limitations|LPAC not needed)/i.test(inner);
+  }
+
+  // Tokens: text | note | election. Election kinds:
+  //   blank    - [_____] fill-in
+  //   choice   - adjacent [A][B](...) pick-one groups (incl. [A][OR][B])
+  //   optional - a lone bracketed provision to keep or omit
+  function parseClauseTokens(body) {
+    const cacheKey = String(body || "");
+    if (clauseTokensCache.has(cacheKey)) return clauseTokensCache.get(cacheKey);
+
+    const raw = splitTopLevelBrackets(cacheKey);
+    const tokens = [];
+    let electionIndex = 0;
+    let cursor = 0;
+
+    while (cursor < raw.length) {
+      const item = raw[cursor];
+      if (item.kind === "text") {
+        tokens.push({ kind: "text", text: item.text });
+        cursor += 1;
+        continue;
+      }
+      if (isNoteInner(item.inner)) {
+        tokens.push({ kind: "note", text: item.inner });
+        cursor += 1;
+        continue;
+      }
+      if (isBlankInner(item.inner)) {
+        tokens.push({ kind: "election", type: "blank", index: electionIndex, options: [] });
+        electionIndex += 1;
+        cursor += 1;
+        continue;
+      }
+      // Collect a run of adjacent option brackets (no text in between), skipping
+      // [OR] separators and stopping at blanks/notes.
+      const options = [item.inner];
+      let lookahead = cursor + 1;
+      while (lookahead < raw.length) {
+        const next = raw[lookahead];
+        if (next.kind !== "bracket" || isBlankInner(next.inner) || isNoteInner(next.inner)) break;
+        if (/^\s*OR\s*$/.test(next.inner)) {
+          lookahead += 1;
+          continue;
+        }
+        options.push(next.inner);
+        lookahead += 1;
+      }
+      if (options.length > 1) {
+        tokens.push({ kind: "election", type: "choice", index: electionIndex, options });
+      } else {
+        tokens.push({ kind: "election", type: "optional", index: electionIndex, options });
+      }
+      electionIndex += 1;
+      cursor = options.length > 1 ? lookahead : cursor + 1;
+    }
+
+    clauseTokensCache.set(cacheKey, tokens);
+    return tokens;
+  }
+
+  function electionTokens(section) {
+    return parseClauseTokens(section.body).filter((token) => token.kind === "election");
+  }
+
+  function clauseKeyFor(section) {
+    return app.mode === "remote" ? section.id : section.stableKey || section.id;
+  }
+
+  function clauseStateFor(section) {
+    if (!section) return { status: "pending", elections: {}, rewriteText: "", notes: "" };
+    const stored =
+      app.mode === "remote"
+        ? app.clauseStates.get(section.id)
+        : app.localWorkspace.clauseStates[clauseKeyFor(section)];
+    return {
+      status: stored?.status || "pending",
+      elections: stored?.elections || {},
+      rewriteText: stored?.rewriteText || "",
+      notes: stored?.notes || "",
+      updatedBy: stored?.updatedBy || "",
+      updatedAt: stored?.updatedAt || ""
+    };
+  }
+
+  function electionResolved(token, election) {
+    if (!election || !election.mode) return false;
+    if (election.mode === "omit") return true;
+    if (election.mode === "option") return election.value != null && election.value !== "";
+    if (election.mode === "custom") return String(election.value || "").trim() !== "";
+    if (election.mode === "include") return true;
+    return false;
+  }
+
+  function clauseProgress(section) {
+    const elections = electionTokens(section);
+    const clauseState = clauseStateFor(section);
+    const resolved = elections.filter((token) => electionResolved(token, clauseState.elections[token.index])).length;
+    return { total: elections.length, resolved, status: clauseState.status };
+  }
+
+  function clauseIsSettled(section) {
+    const progress = clauseProgress(section);
+    if (progress.status === "rejected" || progress.status === "rewrite") return true;
+    return progress.status === "accepted" && progress.resolved === progress.total;
+  }
+
+  function clauseSectionsForMetrics() {
+    return termSections().filter((section) => !section.isGroup && electionTokens(section).length > 0);
+  }
+
+  function selectedClauseSection() {
+    return sectionMap().get(state.selectedClauseId) || null;
+  }
+
+  const clauseSaveTimers = new Map();
+
+  function updateClauseState(section, patch) {
+    if (!section) return;
+    const current = clauseStateFor(section);
+    const next = {
+      ...current,
+      ...patch,
+      elections: patch.elections || current.elections,
+      updatedAt: new Date().toISOString()
+    };
+    if (app.mode === "remote") {
+      next.updatedBy = app.user?.id || "";
+      app.clauseStates.set(section.id, { ...next, sectionId: section.id, projectId: app.currentProject.id });
+      scheduleRemoteClauseSave(section);
+      showSaveState("Saving", "dirty");
+    } else {
+      app.localWorkspace.clauseStates[clauseKeyFor(section)] = next;
+      persistLocalWorkspace();
+      showSaveState("Saved", "saved");
+    }
+  }
+
+  function scheduleRemoteClauseSave(section) {
+    window.clearTimeout(clauseSaveTimers.get(section.id));
+    clauseSaveTimers.set(
+      section.id,
+      window.setTimeout(async () => {
+        try {
+          const next = app.clauseStates.get(section.id);
+          if (!next) return;
+          const { data, error } = await db
+            .from("clause_states")
+            .upsert(
+              {
+                section_id: section.id,
+                project_id: app.currentProject.id,
+                status: next.status || "pending",
+                elections: next.elections || {},
+                rewrite_text: next.rewriteText || null,
+                notes: next.notes || null,
+                updated_by: app.user.id
+              },
+              { onConflict: "section_id" }
+            )
+            .select()
+            .single();
+          if (error) throw error;
+          app.clauseStates.set(section.id, normalizeClauseState(data));
+          showSaveState("Synced", "saved");
+        } catch (error) {
+          console.error(error);
+          showSaveState("Save failed", "dirty");
+        }
+      }, 650)
+    );
+  }
+
+  function setClauseElection(section, index, election) {
+    const current = clauseStateFor(section);
+    const elections = { ...current.elections, [index]: election };
+    if (!election || !election.mode) delete elections[index];
+    updateClauseState(section, { elections });
+  }
+
+  function electionContext(section, token) {
+    // Short snippet of the text just before the election, for orientation.
+    const tokens = parseClauseTokens(section.body);
+    const position = tokens.indexOf(token);
+    for (let i = position - 1; i >= 0; i -= 1) {
+      if (tokens[i].kind === "text" && tokens[i].text.trim()) {
+        const text = tokens[i].text.trim();
+        return text.length > 90 ? `…${text.slice(-90)}` : text;
+      }
+    }
+    return "";
+  }
+
+  function truncateOption(text, max = 110) {
+    const clean = String(text || "").trim();
+    return clean.length > max ? `${clean.slice(0, max)}…` : clean;
+  }
+
+  function electionControlHtml(section, token, clauseState) {
+    const election = clauseState.elections[token.index] || {};
+    const resolved = electionResolved(token, election);
+    const context = electionContext(section, token);
+    const contextHtml = context
+      ? `<div class="election-context">…${escapeHtml(context)}</div>`
+      : "";
+
+    let control = "";
+    if (token.type === "blank") {
+      control = `<input type="text" data-election-input="${token.index}" value="${escapeHtml(election.value || "")}" placeholder="Fill in the blank" />`;
+    } else {
+      const optionsHtml = token.options
+        .map(
+          (option, optionIndex) =>
+            `<option value="option:${optionIndex}"${election.mode === "option" && String(election.value) === option ? " selected" : ""}>${escapeHtml(truncateOption(option))}</option>`
+        )
+        .join("");
+      const placeholderLabel = token.type === "choice" ? "Choose an option…" : "Keep or omit…";
+      const includeOption =
+        token.type === "optional"
+          ? `<option value="include"${election.mode === "include" ? " selected" : ""}>Keep: ${escapeHtml(truncateOption(token.options[0], 80))}</option>`
+          : optionsHtml;
+      control = `
+        <select data-election-select="${token.index}">
+          <option value=""${!election.mode ? " selected" : ""}>${escapeHtml(placeholderLabel)}</option>
+          ${includeOption}
+          <option value="omit"${election.mode === "omit" ? " selected" : ""}>Omit</option>
+          <option value="custom"${election.mode === "custom" ? " selected" : ""}>Write in…</option>
+        </select>
+        ${
+          election.mode === "custom"
+            ? `<input type="text" data-election-custom="${token.index}" value="${escapeHtml(election.value || "")}" placeholder="Custom language" />`
+            : ""
+        }
+      `;
+    }
+
+    const label =
+      token.type === "blank" ? "Blank" : token.type === "choice" ? `Pick one of ${token.options.length}` : "Optional text";
+    return `
+      <div class="election-row${resolved ? " resolved" : ""}">
+        <div class="election-label">
+          <span class="pill${resolved ? " election-done" : ""}">${escapeHtml(label)}</span>
+        </div>
+        ${contextHtml}
+        ${control}
+      </div>
+    `;
+  }
+
+  function clausePreviewHtml(section, clauseState) {
+    const tokens = parseClauseTokens(section.body);
+    const parts = tokens.map((token) => {
+      if (token.kind === "text") return escapeHtml(token.text);
+      if (token.kind === "note") return `<span class="clause-note">[${escapeHtml(token.text)}]</span>`;
+      const election = clauseState.elections[token.index] || {};
+      if (electionResolved(token, election)) {
+        if (election.mode === "omit") return "";
+        if (election.mode === "include" || election.mode === "option") {
+          return `<span class="election-filled">${escapeHtml(election.mode === "include" ? token.options[0] : election.value)}</span>`;
+        }
+        return `<span class="election-filled">${escapeHtml(election.value)}</span>`;
+      }
+      if (token.type === "blank") return "<mark class=\"election-open\">[_____]</mark>";
+      return `<mark class="election-open">[${escapeHtml(truncateOption(token.options.join("]["), 160))}]</mark>`;
+    });
+    return parts.join("");
+  }
+
+  function renderClausePanel() {
+    const section = selectedClauseSection();
+    if (!section) {
+      els.clauseHeader.innerHTML = "<div class=\"empty-state\">Select a clause in the document pane.</div>";
+      els.clauseGuidance.innerHTML = "";
+      els.clauseElections.innerHTML = "";
+      els.clausePreview.innerHTML = "";
+      return;
+    }
+
+    const clauseState = clauseStateFor(section);
+    const progress = clauseProgress(section);
+    els.selectedTitle.textContent = section.title;
+
+    els.clauseHeader.innerHTML = `
+      <div class="issue-meta">
+        <span class="pill clause-status-${slugClass(clauseState.status)}">${escapeHtml(clauseStatusLabels[clauseState.status] || clauseState.status)}</span>
+        <span class="pill">${progress.total ? `${progress.resolved}/${progress.total} elections resolved` : "No bracketed options"}</span>
+        <span class="pill">Row ${escapeHtml(section.row)}</span>
+      </div>
+      <p class="clause-hint">Resolve every bracketed option below, then accept the clause - or reject it / send it to rewrite.</p>
+    `;
+
+    const guidance = section.guidance || [];
+    els.clauseGuidance.innerHTML = guidance.length
+      ? `<div class="issue-explainer"><strong>How to decide:</strong><ul>${guidance
+          .map((note) => `<li>${escapeHtml(note)}</li>`)
+          .join("")}</ul></div>`
+      : "";
+
+    const elections = electionTokens(section);
+    els.clauseElections.innerHTML = elections.length
+      ? elections.map((token) => electionControlHtml(section, token, clauseState)).join("")
+      : "<p class=\"source-note\">This clause has no bracketed options. Accept it as written, reject it, or request a rewrite.</p>";
+
+    els.clauseRewriteInput.value = clauseState.rewriteText || "";
+    els.clauseNotesInput.value = clauseState.notes || "";
+
+    const settled = clauseState.status !== "pending";
+    els.clauseAcceptBtn.hidden = settled;
+    els.clauseRejectBtn.hidden = settled;
+    els.clauseRewriteBtn.hidden = settled;
+    els.clauseReopenBtn.hidden = !settled;
+    els.clauseAcceptBtn.disabled = progress.total > 0 && progress.resolved < progress.total;
+    els.clauseAcceptBtn.title =
+      progress.total > 0 && progress.resolved < progress.total
+        ? "Resolve every bracketed option before accepting."
+        : "";
+
+    els.clausePreview.innerHTML = `
+      <div class="detail-label">Clause preview with elections applied</div>
+      <p>${clausePreviewHtml(section, clauseState)}</p>
+    `;
+  }
+
+  function renderAnswerPanel() {
+    const clauseMode = state.rightPane === "clause";
+    setVisible(els.clausePanel, clauseMode);
+    setVisible(els.issueDetail, !clauseMode);
+    setVisible(els.answerForm, !clauseMode);
+    setVisible(els.aiPanel, !clauseMode);
+    setVisible(els.activityTrail, !clauseMode);
+    if (clauseMode) {
+      renderClausePanel();
+    } else {
+      renderSelectedIssue();
+    }
+  }
+
+  function openClauseEditor(sectionId) {
+    state.rightPane = "clause";
+    state.selectedClauseId = sectionId;
+    renderAnswerPanel();
+    renderMetrics();
+    renderDocument();
+  }
+
+  function refreshClausePreview() {
+    const section = selectedClauseSection();
+    if (!section) return;
+    const clauseState = clauseStateFor(section);
+    els.clausePreview.innerHTML = `
+      <div class="detail-label">Clause preview with elections applied</div>
+      <p>${clausePreviewHtml(section, clauseState)}</p>
+    `;
+  }
+
   function clearAiResponse() {
     if (!els.aiResponse) return;
     state.aiIssueId = "";
@@ -1500,10 +1979,22 @@
   }
 
   function sectionHtml(section) {
-    const selected = section.id === state.selectedSectionId ? " selected" : "";
+    const selected = section.id === state.selectedSectionId || section.id === state.selectedClauseId ? " selected" : "";
     const group = section.isGroup ? " group-row" : "";
     const summary = section.summary || summaryForSectionKey(section.stableKey || section.id);
     const queueCount = section.isGroup ? 0 : sectionQueueCount(section.id);
+    let electionBadge = "";
+    if (!section.isGroup) {
+      const progress = clauseProgress(section);
+      const statusPill =
+        progress.status !== "pending"
+          ? `<span class="pill clause-status-${slugClass(progress.status)}">${escapeHtml(clauseStatusLabels[progress.status])}</span>`
+          : "";
+      const progressPill = progress.total
+        ? `<span class="pill${progress.resolved === progress.total ? " election-done" : ""}">${progress.resolved}/${progress.total} elections</span>`
+        : "";
+      electionBadge = statusPill || progressPill ? `<div class="issue-meta section-badges">${statusPill}${progressPill}</div>` : "";
+    }
     return `
       <article class="term-section${selected}${group}" data-section-id="${escapeHtml(section.id)}"${section.isGroup ? "" : " tabindex=\"0\" role=\"button\""} aria-label="${escapeHtml(`Review ${section.title}`)}">
         <div class="section-header">
@@ -1517,6 +2008,7 @@
               : `<span class="section-action">Review Clause${queueCount ? ` (${queueCount})` : ""}</span>`
           }
         </div>
+        ${electionBadge}
         ${summary ? `<div class="section-summary"><div class="detail-label">Summary</div><p>${escapeHtml(summary)}</p></div>` : ""}
         ${section.body ? `<p>${escapeHtml(section.body)}</p>` : ""}
       </article>
@@ -1527,7 +2019,7 @@
     renderProjectControls();
     renderMetrics();
     renderIssueList();
-    renderSelectedIssue();
+    renderAnswerPanel();
     renderDocument();
   }
 
@@ -1618,6 +2110,7 @@
 
   async function setSelectedIssue(issueId) {
     state.selectedId = issueId;
+    state.rightPane = "issue";
     persistLocalWorkspace();
     const issue = currentIssue();
     state.selectedSectionId = issue?.termSectionIds?.[0] || "";
@@ -1631,9 +2124,8 @@
     state.selectedSectionId = sectionId;
     state.sectionFilter = sectionId;
     els.sectionFilter.value = sectionId;
+    openClauseEditor(sectionId);
     renderIssueList();
-    renderSelectedIssue();
-    renderDocument();
   }
 
   async function createCustomIssue() {
@@ -1921,7 +2413,7 @@
   function resetWorkspace() {
     if (!window.confirm("Clear saved local answers and custom issues from this browser?")) return;
     localStorage.removeItem(storageKey);
-    app.localWorkspace = { answers: {}, customIssues: [], lastSelectedId: "", lastProjectId: "" };
+    app.localWorkspace = { answers: {}, clauseStates: {}, customIssues: [], lastSelectedId: "", lastProjectId: "" };
     loadLocalSeed();
     renderFilters();
     renderAll();
@@ -2043,6 +2535,11 @@
       renderAll();
     });
 
+    els.tierFilter.addEventListener("change", () => {
+      state.tierFilter = els.tierFilter.value;
+      renderAll();
+    });
+
     els.statusFilter.addEventListener("change", () => {
       state.statusFilter = els.statusFilter.value;
       renderAll();
@@ -2158,6 +2655,82 @@
     });
 
     els.newIssueType.addEventListener("change", syncNewIssueSectionControl);
+
+    els.clauseElections.addEventListener("change", (event) => {
+      const section = selectedClauseSection();
+      if (!section) return;
+      const select = event.target.closest("[data-election-select]");
+      if (select) {
+        const index = Number(select.dataset.electionSelect);
+        const token = electionTokens(section).find((item) => item.index === index);
+        const value = select.value;
+        let election = null;
+        if (value.startsWith("option:")) {
+          election = { mode: "option", value: token.options[Number(value.slice(7))] };
+        } else if (value === "include") {
+          election = { mode: "include" };
+        } else if (value === "omit") {
+          election = { mode: "omit" };
+        } else if (value === "custom") {
+          const existing = clauseStateFor(section).elections[index];
+          election = { mode: "custom", value: existing?.mode === "custom" ? existing.value || "" : "" };
+        }
+        setClauseElection(section, index, election);
+        renderClausePanel();
+        renderMetrics();
+        renderDocument();
+      }
+    });
+
+    els.clauseElections.addEventListener("input", (event) => {
+      const section = selectedClauseSection();
+      if (!section) return;
+      const blank = event.target.closest("[data-election-input]");
+      const custom = event.target.closest("[data-election-custom]");
+      const target = blank || custom;
+      if (!target) return;
+      const index = Number(blank ? blank.dataset.electionInput : custom.dataset.electionCustom);
+      setClauseElection(section, index, { mode: "custom", value: target.value });
+      refreshClausePreview();
+    });
+
+    els.clauseElections.addEventListener(
+      "blur",
+      (event) => {
+        if (event.target.closest("[data-election-input],[data-election-custom]")) {
+          renderClausePanel();
+          renderMetrics();
+          renderDocument();
+        }
+      },
+      true
+    );
+
+    els.clauseRewriteInput.addEventListener("input", () => {
+      const section = selectedClauseSection();
+      if (section) updateClauseState(section, { rewriteText: els.clauseRewriteInput.value });
+    });
+
+    els.clauseNotesInput.addEventListener("input", () => {
+      const section = selectedClauseSection();
+      if (section) updateClauseState(section, { notes: els.clauseNotesInput.value });
+    });
+
+    const setClauseStatus = (status) => {
+      const section = selectedClauseSection();
+      if (!section) return;
+      updateClauseState(section, { status });
+      renderClausePanel();
+      renderMetrics();
+      renderDocument();
+    };
+    els.clauseAcceptBtn.addEventListener("click", () => setClauseStatus("accepted"));
+    els.clauseRejectBtn.addEventListener("click", () => setClauseStatus("rejected"));
+    els.clauseRewriteBtn.addEventListener("click", () => {
+      setClauseStatus("rewrite");
+      els.clauseRewriteInput.focus();
+    });
+    els.clauseReopenBtn.addEventListener("click", () => setClauseStatus("pending"));
 
     els.newIssueForm.addEventListener("submit", async (event) => {
       if (event.submitter && event.submitter.id === "createIssueBtn") {

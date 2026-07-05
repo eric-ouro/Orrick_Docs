@@ -100,6 +100,24 @@ HOLDING_VEHICLES = "Holding Vehicles; Feeder Vehicle; Alternative Investment Veh
 SUCCESSOR_FUND = "Other Competitive Activity; Successor Fund"
 
 
+# Tier tags classify how each open item gets resolved:
+#   high-level       - platform/business posture decisions made outside any one clause
+#                      (entity architecture, regulatory path, who may solicit)
+#   multi-clause     - decisions whose answer must be reflected consistently across
+#                      several clauses (waterfall structure, vehicle flexibility)
+#   fill-in          - per-clause questions resolved primarily by electing bracketed
+#                      options or filling blanks, but that still need judgment
+#   addition-removal - questions about adding, rewriting, or deleting language
+#
+# Questions marked "replaced": True are NOT extracted as issues at all: their
+# entire answer is a bracket election in a single clause, so the clause-election
+# editor replaces them and their note surfaces as guidance on that clause.
+TIER_HIGH = "high-level"
+TIER_MULTI = "multi-clause"
+TIER_FILL = "fill-in"
+TIER_ADD = "addition-removal"
+
+
 # Curated, question-level anchoring. Each memo question maps to the specific
 # term-sheet clauses its answer actually changes, plus a priority and a short
 # "how to decide" note. Keyed by the exact question text in the memo so a
@@ -506,98 +524,210 @@ QUESTION_CURATION: dict[str, dict] = {
 }
 
 
+# Tier for every memo question that remains in the queue (keyed by exact memo text).
+QUESTION_TIERS: dict[str, str] = {
+    # A. Entity structure and ownership - platform architecture
+    "Will the fund be a Delaware LP or Delaware LLC?": TIER_HIGH,
+    "Will the GP be fund-specific for each fund?": TIER_HIGH,
+    "Will there be a single platform Manager LLC across all funds?": TIER_HIGH,
+    "Will there be a Sponsor HoldCo above the Manager and GP entities?": TIER_HIGH,
+    "Do we need a fund-specific CarryCo/SponsorCo, or can carry be split in the GP LLC operating agreement?": TIER_HIGH,
+    "If CarryCo is used, does it own the GP LLC or merely receive carry economics from the GP?": TIER_HIGH,
+    "Who has voting control at each level: GP, Manager, Sponsor HoldCo, CarryCo?": TIER_HIGH,
+    "Can non-voting economic participants receive carry without governance rights?": TIER_HIGH,
+    "How are clawback obligations allocated among ultimate carry recipients?": TIER_HIGH,
+    # B. Fund economics - what survives is judgment, not blanks
+    "Will placement fees, organization expenses, transaction fees, or monitoring fees offset management fees?": TIER_FILL,
+    "European waterfall or deal-by-deal waterfall?": TIER_MULTI,
+    "What is the GP commitment, and can it be cashless, notes, warehoused securities, or fee waiver?": TIER_FILL,
+    # C. Investment mandate and whitelist - the whitelist concept is new language
+    "What counts as a late-stage private technology company?": TIER_ADD,
+    "Will the fund be limited to a Schedule A whitelist of companies?": TIER_ADD,
+    "Who can add or remove whitelist companies, and with what approval?": TIER_ADD,
+    "Can the fund invest in companies outside the whitelist with LPAC or majority LP approval?": TIER_ADD,
+    "Can the fund invest in SPV interests, tender vehicles, forward contracts, contractual rights, or secondary-access vehicles?": TIER_MULTI,
+    "Can the fund invest in non-U.S. companies or non-U.S. holding structures?": TIER_MULTI,
+    "Will the fund allow follow-on investments after the investment period?": TIER_FILL,
+    "Will there be sector exclusions or ESG/prohibited activity restrictions?": TIER_FILL,
+    "How should transfer restrictions, ROFRs, company consent, tender rules, and lockups be disclosed?": TIER_ADD,
+    # D. Capital calls, speed, and warehousing
+    "What is the emergency/special capital call notice period for time-sensitive secondary deals?": TIER_ADD,
+    "Can the GP call capital for deposits, broken-deal expenses, legal diligence, and reserves?": TIER_ADD,
+    "What default remedies apply if an LP misses a capital call?": TIER_ADD,
+    "Can the fund borrow under a bridge facility or subscription line?": TIER_FILL,
+    "Can the GP or affiliate advance funds to the fund?": TIER_ADD,
+    "Can the GP or affiliate warehouse securities and later sell them to the fund?": TIER_FILL,
+    "What approvals are needed for warehoused investments?": TIER_MULTI,
+    "How are warehousing costs, interest, legal fees, and conflict disclosures handled?": TIER_FILL,
+    # E. Buy-side placement / capital formation - regulatory posture + disclosure
+    "Who can solicit LPs?": TIER_HIGH,
+    "Must any compensated LP placement be through a registered broker-dealer?": TIER_HIGH,
+    "Can non-BD finders or consultants be used, and under what restrictions?": TIER_HIGH,
+    "Can placement compensation include cash fees, management fee sharing, carried interest, revenue share, or expense reimbursement?": TIER_MULTI,
+    "Is compensation paid by the Fund, GP, Manager, CarryCo, or affiliate?": TIER_MULTI,
+    "Is the compensation treated as Fund Expense, Manager expense, or GP/carry sharing?": TIER_MULTI,
+    "Will placement-linked carry require disclosure in the PPM and/or term sheet?": TIER_ADD,
+    "Will placement parties receive a tail on LPs introduced before termination?": TIER_ADD,
+    "Who approves offering materials and investor communications?": TIER_HIGH,
+    "How will 506(b) relationship rules or 506(c) verification rules be handled?": TIER_HIGH,
+    # F. Sell-side sourcing / origination
+    "Who can source secondary opportunities?": TIER_HIGH,
+    "Can sourcing parties receive cash fees, deal-by-deal carry, fund carry, or revenue share?": TIER_MULTI,
+    "Can a deal source negotiate terms, or only introduce opportunities?": TIER_ADD,
+    "Can a deal source also represent sellers?": TIER_ADD,
+    "Do deal-source payments create broker-dealer concerns?": TIER_HIGH,
+    "Are sourcing fees Fund Expenses or Manager/GP expenses?": TIER_FILL,
+    "Are there exclusivity, non-circumvention, or tail periods?": TIER_ADD,
+    "What disclosures are required for affiliated or related-party sourcing?": TIER_ADD,
+    "How are conflicts handled if a source also participates in another vehicle?": TIER_MULTI,
+    "Who has authority to approve sourced deals?": TIER_MULTI,
+    # G. Future funds, SPVs, and allocations
+    "When can a successor fund be launched?": TIER_FILL,
+    "What counts as a prohibited substantially similar blind-pool fund?": TIER_ADD,
+    "What carveouts are needed for co-invest vehicles, single-deal SPVs, feeders, blockers, alternative investment vehicles, holding vehicles, and overflow vehicles?": TIER_ADD,
+    "Can the Manager manage multiple funds at once?": TIER_MULTI,
+    "How are opportunities allocated among Fund I, Fund II, co-invests, parallel funds, SPVs, affiliates, and insiders?": TIER_ADD,
+    "Can LPs get co-investment rights?": TIER_MULTI,
+    "Can insiders invest personally alongside the fund?": TIER_MULTI,
+    "Can the fund invest through a vehicle that charges its own fees/carry?": TIER_FILL,
+    "Will LPAC approval be needed for certain conflicts or allocation decisions?": TIER_MULTI,
+    # H. Regulatory, compliance, and operations
+    "Will the manager rely on an investment adviser exemption or register?": TIER_HIGH,
+    "What state-level adviser requirements apply?": TIER_HIGH,
+    "Who handles AML/KYC and bad actor checks?": TIER_HIGH,
+    "Who is fund administrator?": TIER_HIGH,
+    "Who values private positions and SPV interests?": TIER_FILL,
+    "What cyber/privacy/data-room procedures are needed?": TIER_HIGH,
+    "What insurance and indemnity coverage should be maintained?": TIER_HIGH,
+    "What records must be kept for placement, sourcing, investment decisions, valuation, and conflicts?": TIER_HIGH,
+}
+
+
+# Memo questions whose entire answer is a bracket election or blank in one
+# clause. They are removed from the issue queue (the clause-election editor
+# replaces them) and their curated note becomes guidance on the named clause.
+REPLACED_BY_ELECTIONS: dict[str, str] = {
+    "What is the target fund size and hard cap?": "Capital Commitments",
+    "What is the minimum LP commitment, and can the GP waive it?": "Capital Commitments",
+    "What is the management fee rate and base: committed capital, invested capital, NAV, or stepped-down rate?": "Management Fee",
+    "Does the management fee begin at initial closing or only when capital is drawn?": "Management Fee",
+    "What is the carry percentage?": "Distributions",
+    "Is there a preferred return or hurdle?": "Distributions",
+    "Will there be GP catch-up?": "Distributions",
+    "What are single-company concentration limits?": "Investment Limitations",
+    "What percentage, if any, is drawn at closing?": "Capital Contributions",
+    "What is the standard capital call notice period?": "Capital Contributions",
+    "Will annual financials be audited?": "Reports",
+    "What reporting cadence is promised to LPs?": "Reports",
+}
+
+
+# Guidance for clauses whose fill-in gap questions were likewise replaced by
+# the clause-election editor (section title -> notes).
+CLAUSE_GUIDANCE_EXTRA: list[tuple[str, str]] = [
+    (
+        "Investment Period",
+        "The form brackets the anniversary ([fourth][fifth][sixth]) and the anchor date. The choice also controls the management-fee stepdown date. Secondaries funds often use a shorter period (2-3 years) than the venture default.",
+    ),
+    (
+        "Term",
+        "The form brackets term length and one-or-two-year extensions with GP/LPAC/LP approval options. Late-stage secondaries may exit faster than venture: consider an 8-year term with two one-year extensions.",
+    ),
+    (
+        "Time Commitment; Key Person Event",
+        "Fill in the principals' names and elect the time-commitment standard and trigger. With a two-principal sponsor, decide whether losing either principal (or only both) trips Limited Operations Mode, and whether LPs can vote to restart.",
+    ),
+    (
+        "Removal of the General Partner",
+        "Elect the removal vote threshold and the carried-interest reduction percentage (often 20-50%). The bracketed no-fault removal option is generally resisted by sponsors; the form's own note recommends avoiding it.",
+    ),
+    (
+        "Limited Partner Giveback",
+        "Elect the giveback cap ([25][50][100]% of commitment) and the sunset ([second][third] anniversary). Market practice caps givebacks at 25-50% and sunsets them 2-3 years after distribution.",
+    ),
+]
+
+
 # Questions the memo does not ask but the term sheet requires answers to.
 # Sourced from a section-by-section gap review of the form term sheet.
+# "num" keeps the stable issue key fixed even as entries are added or retired
+# (gaps 1-4 and 10 were retired in favor of clause elections; see
+# CLAUSE_GUIDANCE_EXTRA).
 GAP_QUESTIONS: list[dict] = [
     {
-        "category": "I. Fund lifecycle and governance (gap review)",
-        "title": "How long is the investment period, and what ends it early",
-        "prompt": "How long is the investment period, and what events end it early?",
-        "sections": ["Investment Period", "Management Fee"],
-        "priority": "high",
-        "note": "The form brackets the anniversary and early-termination triggers (key person event, GP removal, LP vote). The choice also controls the management-fee stepdown date. Secondaries funds often use a shorter period (2-3 years) than the venture default.",
-    },
-    {
-        "category": "I. Fund lifecycle and governance (gap review)",
-        "title": "What is the fund term, and who approves extensions",
-        "prompt": "What is the fund term, and who approves extensions (GP discretion, LPAC, or LP consent)?",
-        "sections": ["Term", "Dissolution"],
-        "priority": "high",
-        "note": "The form brackets term length and one-or-two-year extensions with GP/LPAC/LP approval options. Late-stage secondaries may exit faster than venture: consider an 8-year term with two one-year extensions.",
-    },
-    {
-        "category": "I. Fund lifecycle and governance (gap review)",
-        "title": "Who are the key persons and what happens on a key person event",
-        "prompt": "Who are the key persons, what time commitment do they promise, and what happens on a key person event?",
-        "sections": ["Time Commitment; Key Person Event", "Investment Period"],
-        "priority": "high",
-        "note": "The form suspends or terminates the investment period on a key person event. With a two-principal sponsor, decide whether losing either principal (or only both) triggers it, and whether LPs can vote to restart.",
-    },
-    {
-        "category": "I. Fund lifecycle and governance (gap review)",
-        "title": "On what standard can LPs remove the GP, and what happens to carry",
-        "prompt": "Under what standard and LP vote can the GP be removed, and what happens to carry and the GP commitment on removal?",
-        "sections": ["Removal of the General Partner", "Distributions"],
-        "priority": "medium",
-        "note": "The form allows for-cause removal with a bracketed carry reduction (often 20-50%). Decide the cause standard, the vote threshold, and whether there is any no-fault removal right.",
-    },
-    {
+        "num": 5,
         "category": "I. Fund lifecycle and governance (gap review)",
         "title": "Amendment consent thresholds",
         "prompt": "What LP consent threshold applies to amendments, and which amendments require special or affected-partner consent?",
         "sections": ["Amendments", "Limited Partner Advisory Committee"],
         "priority": "medium",
+        "tier": TIER_FILL,
         "note": "The form protects LPs from adverse amendments without consent. Confirm the general threshold (majority in interest is typical) and carve out administrative amendments the GP can make alone - important given the expected vehicle flexibility changes.",
     },
     {
+        "num": 6,
         "category": "I. Fund lifecycle and governance (gap review)",
         "title": "Side letter and MFN policy",
         "prompt": "What side letter policy and MFN (most favored nation) rights will the fund offer?",
         "sections": ["Side Letters", "Investor Qualifications"],
         "priority": "medium",
+        "tier": TIER_ADD,
         "note": "The form permits side letters including better economics. Since placement arrangements and co-invest rights will live in side letters, decide MFN scope early (commonly size-tiered) so one LP's deal doesn't propagate to everyone.",
     },
     {
+        "num": 7,
         "category": "I. Fund lifecycle and governance (gap review)",
         "title": "Subsequent-closing true-up and interest",
         "prompt": "Will subsequent-closing investors pay a true-up plus interest on their share of earlier capital calls and fees?",
         "sections": ["Closings", "Capital Contributions"],
         "priority": "medium",
+        "tier": TIER_FILL,
         "note": "The form permits later closings within a bracketed window. With early warehoused deals, later investors will be buying into appreciated positions - decide the true-up interest rate and whether late LPs share in pre-closing deals at cost.",
     },
     {
+        "num": 8,
         "category": "J. Distributions, liability, and tax (gap review)",
         "title": "Recycling and reinvestment of proceeds",
         "prompt": "May the fund recycle or reinvest disposition proceeds, and within what limits?",
         "sections": ["Distributions", "Investment Period"],
         "priority": "high",
+        "tier": TIER_ADD,
         "note": "The memo never addresses recycling, but a secondaries fund with quick flips needs it: without reinvestment rights, early exits shrink deployable capital. Typical formulation permits recycling proceeds received during the investment period up to 100-120% of commitments.",
     },
     {
+        "num": 9,
         "category": "J. Distributions, liability, and tax (gap review)",
         "title": "In-kind distributions of non-marketable private shares",
         "prompt": "Can the fund distribute non-marketable private shares in kind, and how are they valued and transferred given company ROFRs and consent rights?",
         "sections": ["In-Kind Distributions", "Valuation", "Dissolution"],
         "priority": "high",
+        "tier": TIER_ADD,
         "note": "The form only allows non-marketable in-kind distributions at dissolution. For a fund holding private secondaries, end-of-life positions may be unsaleable - the mechanics (valuation, ROFR compliance, LP election to decline) deserve real attention.",
     },
     {
-        "category": "J. Distributions, liability, and tax (gap review)",
-        "title": "LP giveback cap and time limit",
-        "prompt": "What cap and time limit apply to LP givebacks for indemnification and other fund liabilities?",
-        "sections": ["Limited Partner Giveback", "Exculpation and Indemnification"],
-        "priority": "medium",
-        "note": "The form allows the GP to recall distributions for liabilities. Market practice caps givebacks (commonly 25% of distributions or commitments) and sunsets them 2-3 years after distribution; the form leaves this to the LPA.",
-    },
-    {
+        "num": 11,
         "category": "J. Distributions, liability, and tax (gap review)",
         "title": "Tax-exempt and non-U.S. investor accommodations",
         "prompt": "Will the fund accept tax-exempt or non-U.S. LPs, and are blockers or feeders needed for UBTI/ECI concerns?",
         "sections": ["Taxation", "ERISA", HOLDING_VEHICLES],
         "priority": "medium",
+        "tier": TIER_MULTI,
         "note": "Fund-level borrowing (subscription line, bridge) can create UBTI for tax-exempt LPs; non-U.S. LPs care about ECI. Decide whether to offer a blocker/feeder or restrict the investor base, and stay under the 25% ERISA plan-asset threshold.",
     },
 ]
+
+
+# Tier tags for the immediate decisions (keyed by decision label).
+DECISION_TIERS: dict[str, str] = {
+    "Use separate CarryCo?": TIER_HIGH,
+    "Who owns Manager LLC?": TIER_HIGH,
+    "Fund exemption path?": TIER_HIGH,
+    "Offering path?": TIER_HIGH,
+    "Capital-call design?": TIER_MULTI,
+    "Vehicle flexibility?": TIER_MULTI,
+    "Placement compensation disclosure?": TIER_MULTI,
+    "Successor fund restriction?": TIER_MULTI,
+}
 
 
 # Curated anchors for the memo's immediate-decision table (keyed by decision label).
@@ -682,8 +812,16 @@ def make_issue(
     }
 
 
-def extract_detailed_questions(paragraphs: list[str], index: dict[str, str]) -> list[dict]:
+def extract_detailed_questions(
+    paragraphs: list[str], index: dict[str, str]
+) -> tuple[list[dict], dict[str, list[str]]]:
+    """Returns (issues, clause_guidance).
+
+    clause_guidance maps a section title to the notes of memo questions that
+    were replaced by clause elections (see REPLACED_BY_ELECTIONS).
+    """
     issues: list[dict] = []
+    guidance: dict[str, list[str]] = {}
     current_category = ""
     in_section = False
     question_index = 1
@@ -706,6 +844,17 @@ def extract_detailed_questions(paragraphs: list[str], index: dict[str, str]) -> 
         if curation is None:
             uncurated.append(text)
             curation = {"sections": [], "priority": "medium", "note": ""}
+        replaced_section = REPLACED_BY_ELECTIONS.get(text)
+        if replaced_section is not None:
+            # Pure fill-in question: the clause-election editor replaces it.
+            if curation["note"]:
+                guidance.setdefault(replaced_section, []).append(curation["note"])
+            question_index += 1
+            continue
+        tier = QUESTION_TIERS.get(text)
+        if tier is None:
+            uncurated.append(f"(missing tier) {text}")
+            tier = TIER_FILL
         issues.append(
             make_issue(
                 issue_id=f"q-{question_index:03d}-{slugify(title)}",
@@ -717,7 +866,7 @@ def extract_detailed_questions(paragraphs: list[str], index: dict[str, str]) -> 
                 details=curation["note"],
                 term_section_ids=anchor_ids(index, curation["sections"]),
                 priority=curation["priority"],
-                tags=[slugify(current_category.split(".", 1)[-1].strip())],
+                tags=[tier],
             )
         )
         question_index += 1
@@ -725,15 +874,15 @@ def extract_detailed_questions(paragraphs: list[str], index: dict[str, str]) -> 
         print(f"WARNING: {len(uncurated)} memo question(s) missing curation:")
         for text in uncurated:
             print(f"  - {text}")
-    return issues
+    return issues, guidance
 
 
 def build_gap_questions(index: dict[str, str]) -> list[dict]:
     issues: list[dict] = []
-    for gap_index, gap in enumerate(GAP_QUESTIONS, start=1):
+    for gap in GAP_QUESTIONS:
         issues.append(
             make_issue(
-                issue_id=f"gap-{gap_index:03d}-{slugify(gap['title'])}",
+                issue_id=f"gap-{gap['num']:03d}-{slugify(gap['title'])}",
                 issue_type="question",
                 title=gap["title"],
                 prompt=gap["prompt"],
@@ -742,7 +891,7 @@ def build_gap_questions(index: dict[str, str]) -> list[dict]:
                 details=gap["note"],
                 term_section_ids=anchor_ids(index, gap["sections"]),
                 priority=gap["priority"],
-                tags=["term-sheet-gap"],
+                tags=[gap["tier"]],
             )
         )
     return issues
@@ -767,7 +916,7 @@ def extract_decisions(tables: list[list[list[str]]], index: dict[str, str]) -> l
                 provisional_answer=provisional,
                 term_section_ids=anchor_ids(index, DECISION_CURATION.get(decision, [])),
                 priority="high",
-                tags=["immediate-decision"],
+                tags=[DECISION_TIERS.get(decision, TIER_HIGH)],
             )
         )
     return issues
@@ -823,7 +972,7 @@ def extract_drafting_changes(paragraphs: list[str], tables: list[list[list[str]]
                 provisional_answer=provision,
                 term_section_ids=anchor_ids(index, CHANGE_CURATION.get(head, [])),
                 priority="high",
-                tags=["drafting-change"],
+                tags=[TIER_ADD],
             )
         )
     return issues
@@ -863,9 +1012,26 @@ def main() -> None:
     issues = []
     issues.extend(extract_decisions(memo_tables, index))
     issues.extend(extract_drafting_changes(memo_paragraphs, memo_tables, index))
-    issues.extend(extract_detailed_questions(memo_paragraphs, index))
+    question_issues, clause_guidance = extract_detailed_questions(memo_paragraphs, index)
+    issues.extend(question_issues)
     issues.extend(build_gap_questions(index))
     issues.extend(extract_supporting_documents(memo_tables, index))
+
+    # Attach guidance (from questions replaced by clause elections) to clauses.
+    for title, note in CLAUSE_GUIDANCE_EXTRA:
+        clause_guidance.setdefault(title, []).append(note)
+    guidance_by_id = {
+        index[title.lower()]: notes
+        for title, notes in clause_guidance.items()
+        if title.lower() in index
+    }
+    missing_guidance = [t for t in clause_guidance if t.lower() not in index]
+    if missing_guidance:
+        print(f"WARNING: guidance section title(s) not found: {missing_guidance}")
+    for section in term_sections:
+        notes = guidance_by_id.get(section["id"])
+        if notes:
+            section["guidance"] = notes
 
     payload = {
         "meta": {

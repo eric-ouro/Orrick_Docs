@@ -69,8 +69,40 @@ create temporary table seed_issue_sections (
 insert into seed_issue_sections (issue_stable_key, section_stable_key, position) values
 ${linkRows};
 
--- 1. Remove seeded issues that are no longer part of the seed (the duplicate
---    Section 7 checklist items). Cascades clean up their links/states/events.
+-- 1a. Before removing retired seed issues, preserve any user answers/notes on
+--     them as clause notes on their primary linked clause (the retired
+--     fill-in questions are replaced by the clause-election editor).
+insert into public.clause_states (section_id, project_id, notes)
+select ls.section_id,
+       i.project_id,
+       string_agg(
+         'From retired question "' || i.title || '": '
+           || trim(coalesce(st.answer, '')
+           || case when coalesce(st.owner_note, '') <> '' then e'\n' || st.owner_note else '' end
+           || case when coalesce(st.follow_up_notes, '') <> '' then e'\n' || st.follow_up_notes else '' end),
+         e'\n\n'
+       )
+from public.issues i
+join public.issue_states st on st.issue_id = i.id
+join lateral (
+  select x.section_id from public.issue_sections x
+  where x.issue_id = i.id
+  order by x.position
+  limit 1
+) ls on true
+where i.stable_key ~ '${seededKeyPattern}'
+  and not exists (select 1 from seed_issues s where s.stable_key = i.stable_key)
+  and (coalesce(st.answer, '') <> '' or coalesce(st.owner_note, '') <> '' or coalesce(st.follow_up_notes, '') <> '')
+group by ls.section_id, i.project_id
+on conflict (section_id) do update
+  set notes = case
+    when coalesce(public.clause_states.notes, '') = '' then excluded.notes
+    else public.clause_states.notes || e'\n\n' || excluded.notes
+  end;
+
+-- 1b. Remove seeded issues that are no longer part of the seed (retired
+--     fill-in questions and checklist items). Cascades clean up their
+--     links/states/events.
 delete from public.issues i
 where i.stable_key ~ '${seededKeyPattern}'
   and not exists (select 1 from seed_issues s where s.stable_key = i.stable_key);

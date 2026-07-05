@@ -1,7 +1,7 @@
 window.ORRICK_SEED_DATA = {
   "meta": {
     "project": "Blind Pool Fund Term Sheet Workspace",
-    "generatedAt": "2026-07-05T10:33:43",
+    "generatedAt": "2026-07-05T16:19:27",
     "sourceFiles": [
       {
         "label": "Orrick venture capital / private equity fund form term sheet",
@@ -64,6 +64,10 @@ window.ORRICK_SEED_DATA = {
         "body": "The Fund is seeking to raise approximately $[_____] million of capital commitments (“Capital Commitments”) from investors (the “Limited Partners,” and together with the General Partner, the “Partners”); provided that in no event will the aggregate Capital Commitments of all the Partners[, inclusive of the Sponsor Commitment,] exceed $[_____]. The minimum Capital Commitment amount for each investor is $[_____] million, though the General Partner may accept subscriptions for lesser amounts in the General Partner’s sole discretion.",
         "group": "Fund",
         "isGroup": false,
+        "guidance": [
+          "Fills the blanks in Capital Commitments and drives the 3(c)(1) LP-count math, minimum commitment, and fee projections.",
+          "The form already gives the GP discretion to accept smaller subscriptions; just set the stated minimum."
+        ],
         "summary": "Sets the target fund size, maximum aggregate commitments, investor minimum commitment, GP discretion to accept smaller subscriptions, and optional sponsor commitment treatment."
       },
       {
@@ -118,6 +122,10 @@ window.ORRICK_SEED_DATA = {
         "body": "The Fund will pay to the General Partner or a designee thereof an annual “Management Fee,” quarterly in advance, equal to, on an annualized basis, [2.5][2.0]% of each Limited Partner’s Capital Commitment. Following [ the earlier of][[ the end of the Investment Period][ the beginning of the first fiscal quarter after the end of the Investment Period]][ or the date the Fund is in Limited Operations Mode], [ the annual Management Fee rate shall be reduced by [0.25][0.1] percentage points per year (but in any case will not be reduced to less than 1.5% of each Limited Partner’s Capital Commitment).][OR][ the annual Management Fee shall be reduced to [2.5][2.0]% of the difference between (a) the aggregate capital contributions made for investments in [Portfolio Companies][Portfolio Investments] that have not been disposed of by the Fund, minus (b) the aggregate amount of any permanent write-downs of such investments that have not been disposed of by the Fund.] The Management Fee will begin to accrue in respect of each Limited Partner as of the Initial Closing, regardless of when a Limited Partner is admitted to the Fund. In addition, the Management Fee may be paid out of current income, proceeds from the disposition of investments in [Portfolio Companies][Portfolio Investments], and any other sources of cash available to the Fund. The General Partner may, in its discretion, reduce or waive all or a portion of the Management Fee in respect of one or more Limited Partners.",
         "group": "Management",
         "isGroup": false,
+        "guidance": [
+          "The form offers committed-capital fee with post-investment-period stepdown options. For a whitelist secondaries fund, LPs may push for invested-capital or stepped-down fees.",
+          "Fee from initial closing is standard but interacts with how much capital is drawn upfront; also decide the subsequent-closing fee true-up."
+        ],
         "summary": "Defines the management fee rate, payment timing, fee base, post-investment-period stepdown options, limited-operations adjustments, and offsets for certain expenses or events."
       },
       {
@@ -154,6 +162,9 @@ window.ORRICK_SEED_DATA = {
         "body": "Capital contributions for all purposes under the Fund Agreement will be required from time to time after the Initial Closing through the earlier of (such time, the “Investment Period”): (a) the [fourth][fifth][sixth] anniversary of the date of the[ Initial Closing][ Final Closing][ Initial Capital Contributions]; (b) the date on which the obligation of Partners to make capital contributions for new investments is terminated pursuant to the Fund Agreement; or (c) the date the Fund is placed in Limited Operations Mode. Following the expiration or termination of the Investment Period, all Partners will be released from further obligation with respect to their undrawn Capital Commitments, except to the extent necessary for (i) operational purposes and covering expenses of the Fund, including payment of Management Fees and repayment of indebtedness, (ii) completion of transactions in process on such date, (iii) funding follow-on investments in existing [Portfolio Companies][Portfolio Investments], and (iv) as otherwise provided for in the Fund Agreement, including but not limited to, fulfillment of indemnification obligations of the Fund.",
         "group": "Fund Lifecycle",
         "isGroup": false,
+        "guidance": [
+          "The form brackets the anniversary ([fourth][fifth][sixth]) and the anchor date. The choice also controls the management-fee stepdown date. Secondaries funds often use a shorter period (2-3 years) than the venture default."
+        ],
         "summary": "Defines the investment period by anniversary, termination event, or limited-operations mode, with bracketed choices for timing and triggering dates."
       },
       {
@@ -163,6 +174,9 @@ window.ORRICK_SEED_DATA = {
         "body": "The term of the Fund will be [10] years from the date of the[ Initial Closing][ Final Closing][ Initial Capital Call Date]. The General Partner may, [in its sole discretion][with the consent of either the LPAC or a majority in interest of the Limited Partners], extend the Fund’s term for up to [two] additional consecutive one-year periods and thereafter for additional one-year periods with the consent of [a majority in interest of the Limited Partners or the LPAC].",
         "group": "Fund Lifecycle",
         "isGroup": false,
+        "guidance": [
+          "The form brackets term length and one-or-two-year extensions with GP/LPAC/LP approval options. Late-stage secondaries may exit faster than venture: consider an 8-year term with two one-year extensions."
+        ],
         "summary": "Sets the fund term and extension rights, including whether GP discretion, LPAC approval, or limited partner approval is required."
       },
       {
@@ -181,6 +195,9 @@ window.ORRICK_SEED_DATA = {
         "body": "The key persons of the General Partner are [_____], [_____] and [_____] (the “Principals”). [During the Investment Period][Throughout the Term], each Principal will[ devote such time and effort as is reasonably necessary to diligently manage the business and affairs of the Fund][ be actively involved in the business and affairs of the Fund][devote substantially all of his/her business time and attention to the business and affairs of the Fund, the General Partner, Other Funds and Affiliates, and limited industry and business development activities that do not interfere with such obligations to the Fund and generally support the business objectives of the Fund and the Management Company][ devote a majority of his/her business time and attention to the affairs of the Fund, the General Partner and Other Funds ](such requirement, the “Principal Time Commitment”). At any time if [all][at least X][one or more] Principals cease[s] to meet his/her Principal Time Commitment,[ the Fund shall automatically be placed][[ a majority in interest][ a two-thirds in interest] [of the Limited Partners may place the Fund]] in “Limited Operations Mode”, pursuant to which the Fund’s activities generally will be limited to managing its existing portfolio, and the Fund will not be permitted to make investments in new [Portfolio Companies][Portfolio Investments] (other than with respect to transactions in process prior to commencement of Limited Operations Mode).[NTD: There are numerous options in drafting the key person standard and the concept could be deleted entirely for smaller funds.] [Notwithstanding the foregoing, the Principals will be permitted to engage in outside charitable and business activities, including without limitation, management of [_____].[NTD: only to be used if used substantially all business time and attention standard]",
         "group": "Fund Lifecycle",
         "isGroup": false,
+        "guidance": [
+          "Fill in the principals' names and elect the time-commitment standard and trigger. With a two-principal sponsor, decide whether losing either principal (or only both) trips Limited Operations Mode, and whether LPs can vote to restart."
+        ],
         "summary": "Identifies key persons and describes their time commitment, key-person event triggers, and possible consequences for investment activity."
       },
       {
@@ -190,6 +207,9 @@ window.ORRICK_SEED_DATA = {
         "body": "The General Partner may be removed for “Cause” by[ a majority in interest][ a two-thirds in interest] of the Limited Partners. If the General Partner is so removed, its interest in the Carried Interest shall be reduced by [25][50][75][100]%. For this purpose, “Cause” will mean any act that, upon a final determination and subject to a non-appealable judgment, or any admission by the General Partner, the Management Company or any Principal(s), constitutes knowing and willful misconduct or bad faith by such person in relation to its duties under the Fund Agreement, fraud by such person, a felony relating to such person’s role as such, gross negligence in the management of the Fund by such person, or a knowing and willful breach of a fiduciary duty by such person arising under the Fund Agreement or applicable law. Notwithstanding the foregoing, “Cause” shall not have occurred if such person or persons that caused such Cause event have been removed as active members of the General Partner within 30 days of such judgment or admission. [The General Partner may be removed with or without “Cause” by[ a 80% in interest][ a 90% in interest] of the Limited Partners. If the General Partner is so removed, its interest in the Carried Interest shall not be reduced.] [NTD: recommend to avoid a no-fault removal]",
         "group": "Fund Lifecycle",
         "isGroup": false,
+        "guidance": [
+          "Elect the removal vote threshold and the carried-interest reduction percentage (often 20-50%). The bracketed no-fault removal option is generally resisted by sponsors; the form's own note recommends avoiding it."
+        ],
         "summary": "Allows limited partners to remove the GP for cause and sets potential carried-interest reduction percentages and cause standards."
       },
       {
@@ -208,6 +228,9 @@ window.ORRICK_SEED_DATA = {
         "body": "The Fund will not, without the consent of the [LPAC or a majority in interest of the Limited Partners]: Enter into any transaction with the General Partner, its affiliates and their related persons, other than any (a) transactions pursuant to which such person acquires a Limited Partner interest in the Fund or otherwise exercises any of its rights as a Partner; (b) transfers of interests in respect of any co-investment arrangements with the Fund; (c) transactions in connection with warehoused securities; or (d) transactions in connection with the organization or operation of any Other Funds[ or Successor Fund]. Make an initial investment in any company in which General Partner, its affiliates and their related persons has a material prior financial interest other than through the Fund or a Parallel Fund. Make an initial investment in any company which is, prior to the time of such investment, a [portfolio company][portfolio investment] of any other fund managed by the General Partner, its affiliates and their related persons. Purchase securities from, or sell securities to, any other fund managed by General Partner, its affiliates and their related persons. Purchase securities from, or sell securities to, the General Partner, its affiliates and their related persons. [the above limitations are always in the Fund Agreement] Enter into for speculative purposes any swap, forward, hedge or similar derivative financial transaction. Invest in any [blind pool] investment fund the managers of which are entitled to “carried interest” or “management fees”[; provided, however, that the Fund may invest in such blind pool investment funds if (a) any such “carried interest” or “management fees” (as such term is used in the [venture capital][private equity] industry) are offset against the Management Fee and (b) the aggregate cost basis of investment in such [Portfolio Companies][Portfolio Investments] is less than 5% of the aggregate Capital Commitments of the Partners][; provided further, that the foregoing shall not prevent the General Partner from forming and investing in a scout fund (as such term is used in the [venture capital][private equity] industry) in respect of which scouts (as such term is used in the [venture capital][private equity] industry) are paid “carried interest”. Make an initial investment in any company following the expiration of the Investment Period. Re-invest proceeds realized on the sale or disposition of the Fund’s investments in [Portfolio Companies][Portfolio Investments] following the expiration of the Investment Period. Invest more than [20]% of the aggregate Capital Commitments of the Partners in securities of any single [Portfolio Company][Portfolio Investment] or group of affiliated [Portfolio Companies][Portfolio Investments] (disregarding for this purpose any affiliation among [Portfolio Companies][Portfolio Investments] attributable to interests therein held by the Fund). Invest, over its entire term, in portfolio securities with an aggregate cost basis in excess of [120]% of the aggregate Capital Commitments of the Partners. Make a tender offer for publicly traded securities of a company whose board of directors opposes such offer, other than in connection with a bankruptcy or similar restructuring of such company. Make an initial investment in a company unless the General Partner has determined in good faith at the time of such initial investment that such company either (a) does not engage in any of the following business activities or (b) engages in such activities only in a manner that is incidental to such company’s principal business activities: Development of or investment in real estate. Investment in oil, coal or natural gas. Production, distribution or sale of tobacco or intoxicating alcohol intended for human consumption. Production or sale of modern weaponry such as firearms. Operation of gambling casinos or similar venues, online or offline. Production or sale of sexually explicit pornography. [the above limitations are optional, but it is advisable to include restrictions that otherwise won’t burden the General Partner] The foregoing restrictions will be applied in respect of any investment at the time of making the investment and will be applied based on the greater of (a) $[_____] million or (b) actual Capital Commitments, prior to the Final Closing.",
         "group": "Operations and Economics",
         "isGroup": false,
+        "guidance": [
+          "Typical range is 15-25% of commitments per issuer. A whitelist strategy may justify a higher cap; look-through SPV exposure should count toward it."
+        ],
         "summary": "Lists transactions and activities requiring LPAC or limited partner consent, especially affiliate transactions, concentration limits, successor funds, and related-party arrangements."
       },
       {
@@ -217,6 +240,10 @@ window.ORRICK_SEED_DATA = {
         "body": "[Each Partner shall contribute [_____]% of its Capital Commitment upon its admittance to the Fund.]The Partners will be required to make capital contributions to the Fund on an “as needed” basis. Capital contributions will be due upon not less than [10][15][20][ business] days’ prior written notice at such times and in such amounts as determined in the sole discretion of the General Partner. The date the initial capital contributions are due is referred to herein as the date of the “Initial Capital Call Date”.[NTD: There is no requirement to have any capital contributions due upon admission to the Fund.] Capital contributions not immediately invested in [Portfolio Companies][Portfolio Investments] or used to pay Fund Expenses (as defined below) will be held in cash or high quality short-term investments.",
         "group": "Operations and Economics",
         "isGroup": false,
+        "guidance": [
+          "The form brackets an optional initial drawdown. An upfront 10-25% draw plus reserves is the simplest way to fund fast secondary closings.",
+          "The form offers 10/15/20 business days; secondary allocations often close faster than that. Consider 10 business days standard with a shorter expedited path."
+        ],
         "summary": "Describes capital-call mechanics, optional initial contribution percentage, notice period, GP discretion over call amounts, and interest on overdue contributions."
       },
       {
@@ -244,6 +271,11 @@ window.ORRICK_SEED_DATA = {
         "body": "Distributions from the Fund will be made in cash or in-kind in marketable securities (as discussed more fully below), at such times and in such amounts as determined by the General Partner in its sole discretion. The General Partner may, in its sole discretion, withhold amounts necessary to create reserves for the payment of the Management Fee, Fund Expenses and liabilities, or reserves for anticipated expenses and liabilities. Each distribution of current income and disposition proceeds from a [Portfolio Company][Portfolio Investment] shall first be initially apportioned among the Partners (including the General Partner) in proportion to their respective percentage interests (based on capital contributions). Current income and disposition proceeds from [Portfolio Companies][Portfolio Investments] initially apportioned to the General Partner shall be distributed to the General Partner. Current income and disposition proceeds from a [Portfolio Company][Portfolio Investment] initially apportioned to each Limited Partner shall be divided between such Limited Partner and the General Partner and distributed as follows: ** ** ** [Simple 80/20] [First, 100% to such Limited Partner until the cumulative amount distributed to such Limited Partner pursuant to this paragraph is equal to such Limited Partner’s capital contributions; and Thereafter, 80% to such Limited Partner and 20% to the General Partner. (with such 20% amount referred to as “Carried Interest Distributions”)] [Ratchet; MOIC] [(a) First, 100% to such Limited Partner until the cumulative amount distributed to such Limited Partner pursuant to this paragraph (a) is equal to such Limited Partner’s capital contributions; (b) Next, as long as such Limited Partner has not received cumulative distributions pursuant to paragraphs (a) and (b) equal to at least [three times] its capital contributions, 80% to such Limited Partner and 20% to the General Partner; [(c) Next, 100% to the General Partner until the General Partner has received Carried Interest Distributions equal to 25% of the sum of (i) the distributions to such Limited Partner pursuant to paragraph (b) and (ii) the Carried Interest Distributions to the General Partner pursuant to this paragraph (c); and][General Partner catchup] (d) Thereafter, 75% to such Limited Partner and 25% to the General Partner (with such 20% and 25% amounts referred to as “Carried Interest Distributions”).] [Preferred Return] [(a) First, 100% to such Limited Partner until the cumulative amount distributed to such Limited Partner pursuant to this paragraph (a) is equal to such Limited Partner’s capital contributions; (b) Next, as long as such Limited Partner has not received a preferred return of at least 8% pursuant to this paragraph (b), 100% to such Limited Partner; [(c) Next, 100% to the General Partner until the General Partner has received Carried Interest Distributions equal to 20% of the sum of (i) the distributions to such Limited Partner pursuant to paragraph (b) and (ii) the Carried Interest Distributions to the General Partner pursuant to this paragraph (c); and][General Partner catchup] (d) Thereafter, 80% to such Limited Partner and 20% to the General Partner (with such 20% amount referred to as “Carried Interest Distributions”).] ** ** ** Each distribution of short-term investment income shall be divided among all Partners pro rata in proportion to their respective capital contributions. [NTD: These distribution methodologies are known as European waterfalls and are generally LP favorable and avoid clawbacks. The alternative is a deal by deal carry, which increase the likelihood of clawbacks and it not customary in venture capital but more common in private equity.] Notwithstanding the foregoing, the General Partner may cause the Fund to make distributions from time to time to the General Partner[ and/or the Limited Partners] in amounts sufficient to permit the payment of any estimated tax obligations. Any such distributions will be taken into account in making subsequent distributions to the [General Partner][Partners].",
         "group": "Operations and Economics",
         "isGroup": false,
+        "guidance": [
+          "Sets the waterfall's carried-interest split (typically 20%; secondaries funds sometimes vary). Everything in the CarryCo/participation discussion keys off this number.",
+          "Decide hurdle (commonly 8%) or no-hurdle. For a fast-recycling secondaries strategy the hurdle plus catch-up mechanics materially change GP economics.",
+          "If there is a preferred return, decide full, partial, or no catch-up - this is a pure economics negotiation point."
+        ],
         "summary": "Gives the GP discretion over timing and form of distributions, permits reserves, and outlines allocation of current income and disposition proceeds."
       },
       {
@@ -307,6 +339,10 @@ window.ORRICK_SEED_DATA = {
         "body": "Limited Partners will receive: (a) quarterly unaudited financial statements[ and reports summarizing the business activities of the Fund]; (b) quarterly capital account statements; (c) annual [audited] financial statements[ and reports summarizing the business activities and [Portfolio Companies][Portfolio Investments] of the Fund]; (d) information reasonably necessary for the preparation of income tax returns annually, including Schedule K-1; and (e) other such periodic reporting as provided for in the Fund Agreement.[NTD: Consider whether quarterly financials and audited (vs. unaudited) annual financials are required.]",
         "group": "Operations and Economics",
         "isGroup": false,
+        "guidance": [
+          "The form promises annual financials; institutional LPs and the custody rule (if registered) effectively require an audit. Budget it as a Fund Expense.",
+          "The form's quarterly unaudited/annual package is standard; do not promise more in side letters than the administrator can produce."
+        ],
         "summary": "Lists regular investor reporting, including quarterly unaudited statements, capital accounts, annual financials, tax information, and other fund-agreement reports."
       },
       {
@@ -379,6 +415,9 @@ window.ORRICK_SEED_DATA = {
         "body": "Subject to certain limitations set forth in the Fund Agreement, if the Fund incurs any liability, including in respect of indemnification obligations, the General Partner may cause each Limited Partner to contribute to the Fund its pro rata share of such liability (based upon the amount by which such Partner’s distributions from the Fund would have been reduced if the amount to be returned to the Fund by the Partners had not been distributed but rather had been used by the Fund to pay such liability). To the fullest extent permitted by law, the aggregate amount of such recontributions from any Limited Partner may not exceed [25][50][100]% of such Limited Partner’s Capital Commitment. In addition, to the fullest extent permitted by law, no Limited Partner will be required to return any amount distributed to it following the [second][third] anniversary of such distribution, unless notice of a pending or otherwise anticipated claim is provided to the Limited Partner prior to such anniversary date.",
         "group": "Legal & Miscellaneous",
         "isGroup": false,
+        "guidance": [
+          "Elect the giveback cap ([25][50][100]% of commitment) and the sunset ([second][third] anniversary). Market practice caps givebacks at 25-50% and sunsets them 2-3 years after distribution."
+        ],
         "summary": "Allows the GP to require limited partners to return prior distributions to fund liabilities such as indemnification obligations, subject to fund-agreement limits."
       },
       {
@@ -935,7 +974,7 @@ window.ORRICK_SEED_DATA = {
         "sec-09-sponsor-capital-commitment"
       ],
       "tags": [
-        "immediate-decision"
+        "high-level"
       ]
     },
     {
@@ -954,7 +993,7 @@ window.ORRICK_SEED_DATA = {
         "sec-10-management-fee"
       ],
       "tags": [
-        "immediate-decision"
+        "high-level"
       ]
     },
     {
@@ -972,7 +1011,7 @@ window.ORRICK_SEED_DATA = {
         "sec-06-investor-qualifications"
       ],
       "tags": [
-        "immediate-decision"
+        "high-level"
       ]
     },
     {
@@ -991,7 +1030,7 @@ window.ORRICK_SEED_DATA = {
         "sec-46-general-risks"
       ],
       "tags": [
-        "immediate-decision"
+        "high-level"
       ]
     },
     {
@@ -1011,7 +1050,7 @@ window.ORRICK_SEED_DATA = {
         "sec-23-warehoused-securities"
       ],
       "tags": [
-        "immediate-decision"
+        "multi-clause"
       ]
     },
     {
@@ -1031,7 +1070,7 @@ window.ORRICK_SEED_DATA = {
         "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall"
       ],
       "tags": [
-        "immediate-decision"
+        "multi-clause"
       ]
     },
     {
@@ -1052,7 +1091,7 @@ window.ORRICK_SEED_DATA = {
         "sec-46-general-risks"
       ],
       "tags": [
-        "immediate-decision"
+        "multi-clause"
       ]
     },
     {
@@ -1071,7 +1110,7 @@ window.ORRICK_SEED_DATA = {
         "sec-34-co-investment-opportunities"
       ],
       "tags": [
-        "immediate-decision"
+        "multi-clause"
       ]
     },
     {
@@ -1092,7 +1131,7 @@ window.ORRICK_SEED_DATA = {
         "sec-26-general-partner-clawback"
       ],
       "tags": [
-        "drafting-change"
+        "addition-removal"
       ]
     },
     {
@@ -1113,7 +1152,7 @@ window.ORRICK_SEED_DATA = {
         "sec-38-exculpation-and-indemnification"
       ],
       "tags": [
-        "drafting-change"
+        "addition-removal"
       ]
     },
     {
@@ -1132,7 +1171,7 @@ window.ORRICK_SEED_DATA = {
         "sec-20-investment-limitations"
       ],
       "tags": [
-        "drafting-change"
+        "addition-removal"
       ]
     },
     {
@@ -1151,7 +1190,7 @@ window.ORRICK_SEED_DATA = {
         "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall"
       ],
       "tags": [
-        "drafting-change"
+        "addition-removal"
       ]
     },
     {
@@ -1172,7 +1211,7 @@ window.ORRICK_SEED_DATA = {
         "sec-22-failure-to-make-capital-contributions"
       ],
       "tags": [
-        "drafting-change"
+        "addition-removal"
       ]
     },
     {
@@ -1192,7 +1231,7 @@ window.ORRICK_SEED_DATA = {
         "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall"
       ],
       "tags": [
-        "drafting-change"
+        "addition-removal"
       ]
     },
     {
@@ -1211,7 +1250,7 @@ window.ORRICK_SEED_DATA = {
         "sec-02-the-fund-agreement"
       ],
       "tags": [
-        "entity-structure-and-ownership"
+        "high-level"
       ]
     },
     {
@@ -1230,7 +1269,7 @@ window.ORRICK_SEED_DATA = {
         "sec-01-the-fund"
       ],
       "tags": [
-        "entity-structure-and-ownership"
+        "high-level"
       ]
     },
     {
@@ -1249,7 +1288,7 @@ window.ORRICK_SEED_DATA = {
         "sec-10-management-fee"
       ],
       "tags": [
-        "entity-structure-and-ownership"
+        "high-level"
       ]
     },
     {
@@ -1267,7 +1306,7 @@ window.ORRICK_SEED_DATA = {
         "sec-08-management"
       ],
       "tags": [
-        "entity-structure-and-ownership"
+        "high-level"
       ]
     },
     {
@@ -1287,7 +1326,7 @@ window.ORRICK_SEED_DATA = {
         "sec-08-management"
       ],
       "tags": [
-        "entity-structure-and-ownership"
+        "high-level"
       ]
     },
     {
@@ -1306,7 +1345,7 @@ window.ORRICK_SEED_DATA = {
         "sec-24-distributions"
       ],
       "tags": [
-        "entity-structure-and-ownership"
+        "high-level"
       ]
     },
     {
@@ -1325,7 +1364,7 @@ window.ORRICK_SEED_DATA = {
         "sec-18-removal-of-the-general-partner"
       ],
       "tags": [
-        "entity-structure-and-ownership"
+        "high-level"
       ]
     },
     {
@@ -1344,7 +1383,7 @@ window.ORRICK_SEED_DATA = {
         "sec-08-management"
       ],
       "tags": [
-        "entity-structure-and-ownership"
+        "high-level"
       ]
     },
     {
@@ -1364,81 +1403,7 @@ window.ORRICK_SEED_DATA = {
         "sec-39-limited-partner-giveback"
       ],
       "tags": [
-        "entity-structure-and-ownership"
-      ]
-    },
-    {
-      "id": "q-010-what-is-the-target-fund-size-and-hard-cap",
-      "issueType": "question",
-      "status": "open",
-      "priority": "high",
-      "category": "B. Fund economics",
-      "title": "What is the target fund size and hard cap",
-      "prompt": "What is the target fund size and hard cap?",
-      "details": "Fills the blanks in Capital Commitments and drives the 3(c)(1) LP-count math, minimum commitment, and fee projections.",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 3 detailed questions",
-      "termSectionIds": [
-        "sec-04-capital-commitments",
-        "sec-05-closings"
-      ],
-      "tags": [
-        "fund-economics"
-      ]
-    },
-    {
-      "id": "q-011-what-is-the-minimum-lp-commitment-and-can-the-gp-waive-it",
-      "issueType": "question",
-      "status": "open",
-      "priority": "medium",
-      "category": "B. Fund economics",
-      "title": "What is the minimum LP commitment, and can the GP waive it",
-      "prompt": "What is the minimum LP commitment, and can the GP waive it?",
-      "details": "The form already gives the GP discretion to accept smaller subscriptions; just set the stated minimum.",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 3 detailed questions",
-      "termSectionIds": [
-        "sec-04-capital-commitments"
-      ],
-      "tags": [
-        "fund-economics"
-      ]
-    },
-    {
-      "id": "q-012-what-is-the-management-fee-rate-and-base-committed-capital-invested-ca",
-      "issueType": "question",
-      "status": "open",
-      "priority": "high",
-      "category": "B. Fund economics",
-      "title": "What is the management fee rate and base: committed capital, invested capital, NAV, or stepped-down rate",
-      "prompt": "What is the management fee rate and base: committed capital, invested capital, NAV, or stepped-down rate?",
-      "details": "The form offers committed-capital fee with post-investment-period stepdown options. For a whitelist secondaries fund, LPs may push for invested-capital or stepped-down fees.",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 3 detailed questions",
-      "termSectionIds": [
-        "sec-10-management-fee"
-      ],
-      "tags": [
-        "fund-economics"
-      ]
-    },
-    {
-      "id": "q-013-does-the-management-fee-begin-at-initial-closing-or-only-when-capital-",
-      "issueType": "question",
-      "status": "open",
-      "priority": "medium",
-      "category": "B. Fund economics",
-      "title": "Does the management fee begin at initial closing or only when capital is drawn",
-      "prompt": "Does the management fee begin at initial closing or only when capital is drawn?",
-      "details": "Fee from initial closing is standard but interacts with how much capital is drawn upfront; also decide the subsequent-closing fee true-up.",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 3 detailed questions",
-      "termSectionIds": [
-        "sec-10-management-fee",
-        "sec-05-closings"
-      ],
-      "tags": [
-        "fund-economics"
+        "high-level"
       ]
     },
     {
@@ -1458,43 +1423,7 @@ window.ORRICK_SEED_DATA = {
         "sec-27-fund-expenses"
       ],
       "tags": [
-        "fund-economics"
-      ]
-    },
-    {
-      "id": "q-015-what-is-the-carry-percentage",
-      "issueType": "question",
-      "status": "open",
-      "priority": "high",
-      "category": "B. Fund economics",
-      "title": "What is the carry percentage",
-      "prompt": "What is the carry percentage?",
-      "details": "Sets the waterfall's carried-interest split (typically 20%; secondaries funds sometimes vary). Everything in the CarryCo/participation discussion keys off this number.",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 3 detailed questions",
-      "termSectionIds": [
-        "sec-24-distributions"
-      ],
-      "tags": [
-        "fund-economics"
-      ]
-    },
-    {
-      "id": "q-016-is-there-a-preferred-return-or-hurdle",
-      "issueType": "question",
-      "status": "open",
-      "priority": "high",
-      "category": "B. Fund economics",
-      "title": "Is there a preferred return or hurdle",
-      "prompt": "Is there a preferred return or hurdle?",
-      "details": "Decide hurdle (commonly 8%) or no-hurdle. For a fast-recycling secondaries strategy the hurdle plus catch-up mechanics materially change GP economics.",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 3 detailed questions",
-      "termSectionIds": [
-        "sec-24-distributions"
-      ],
-      "tags": [
-        "fund-economics"
+        "fill-in"
       ]
     },
     {
@@ -1513,25 +1442,7 @@ window.ORRICK_SEED_DATA = {
         "sec-26-general-partner-clawback"
       ],
       "tags": [
-        "fund-economics"
-      ]
-    },
-    {
-      "id": "q-018-will-there-be-gp-catch-up",
-      "issueType": "question",
-      "status": "open",
-      "priority": "medium",
-      "category": "B. Fund economics",
-      "title": "Will there be GP catch-up",
-      "prompt": "Will there be GP catch-up?",
-      "details": "If there is a preferred return, decide full, partial, or no catch-up - this is a pure economics negotiation point.",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 3 detailed questions",
-      "termSectionIds": [
-        "sec-24-distributions"
-      ],
-      "tags": [
-        "fund-economics"
+        "multi-clause"
       ]
     },
     {
@@ -1551,7 +1462,7 @@ window.ORRICK_SEED_DATA = {
         "sec-21-capital-contributions"
       ],
       "tags": [
-        "fund-economics"
+        "fill-in"
       ]
     },
     {
@@ -1569,7 +1480,7 @@ window.ORRICK_SEED_DATA = {
         "sec-03-investment-objectives-and-program"
       ],
       "tags": [
-        "investment-mandate-and-whitelist"
+        "addition-removal"
       ]
     },
     {
@@ -1588,7 +1499,7 @@ window.ORRICK_SEED_DATA = {
         "sec-20-investment-limitations"
       ],
       "tags": [
-        "investment-mandate-and-whitelist"
+        "addition-removal"
       ]
     },
     {
@@ -1608,7 +1519,7 @@ window.ORRICK_SEED_DATA = {
         "sec-41-amendments"
       ],
       "tags": [
-        "investment-mandate-and-whitelist"
+        "addition-removal"
       ]
     },
     {
@@ -1627,7 +1538,7 @@ window.ORRICK_SEED_DATA = {
         "sec-12-limited-partner-advisory-committee"
       ],
       "tags": [
-        "investment-mandate-and-whitelist"
+        "addition-removal"
       ]
     },
     {
@@ -1647,7 +1558,7 @@ window.ORRICK_SEED_DATA = {
         "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall"
       ],
       "tags": [
-        "investment-mandate-and-whitelist"
+        "multi-clause"
       ]
     },
     {
@@ -1667,25 +1578,7 @@ window.ORRICK_SEED_DATA = {
         "sec-45-taxation"
       ],
       "tags": [
-        "investment-mandate-and-whitelist"
-      ]
-    },
-    {
-      "id": "q-026-what-are-single-company-concentration-limits",
-      "issueType": "question",
-      "status": "open",
-      "priority": "medium",
-      "category": "C. Investment mandate and whitelist",
-      "title": "What are single-company concentration limits",
-      "prompt": "What are single-company concentration limits?",
-      "details": "Typical range is 15-25% of commitments per issuer. A whitelist strategy may justify a higher cap; look-through SPV exposure should count toward it.",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 3 detailed questions",
-      "termSectionIds": [
-        "sec-20-investment-limitations"
-      ],
-      "tags": [
-        "investment-mandate-and-whitelist"
+        "multi-clause"
       ]
     },
     {
@@ -1704,7 +1597,7 @@ window.ORRICK_SEED_DATA = {
         "sec-20-investment-limitations"
       ],
       "tags": [
-        "investment-mandate-and-whitelist"
+        "fill-in"
       ]
     },
     {
@@ -1722,7 +1615,7 @@ window.ORRICK_SEED_DATA = {
         "sec-20-investment-limitations"
       ],
       "tags": [
-        "investment-mandate-and-whitelist"
+        "fill-in"
       ]
     },
     {
@@ -1742,44 +1635,7 @@ window.ORRICK_SEED_DATA = {
         "sec-32-valuation"
       ],
       "tags": [
-        "investment-mandate-and-whitelist"
-      ]
-    },
-    {
-      "id": "q-030-what-percentage-if-any-is-drawn-at-closing",
-      "issueType": "question",
-      "status": "open",
-      "priority": "medium",
-      "category": "D. Capital calls, speed, and warehousing",
-      "title": "What percentage, if any, is drawn at closing",
-      "prompt": "What percentage, if any, is drawn at closing?",
-      "details": "The form brackets an optional initial drawdown. An upfront 10-25% draw plus reserves is the simplest way to fund fast secondary closings.",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 3 detailed questions",
-      "termSectionIds": [
-        "sec-21-capital-contributions",
-        "sec-05-closings"
-      ],
-      "tags": [
-        "capital-calls-speed-and-warehousing"
-      ]
-    },
-    {
-      "id": "q-031-what-is-the-standard-capital-call-notice-period",
-      "issueType": "question",
-      "status": "open",
-      "priority": "high",
-      "category": "D. Capital calls, speed, and warehousing",
-      "title": "What is the standard capital call notice period",
-      "prompt": "What is the standard capital call notice period?",
-      "details": "The form offers 10/15/20 business days; secondary allocations often close faster than that. Consider 10 business days standard with a shorter expedited path.",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 3 detailed questions",
-      "termSectionIds": [
-        "sec-21-capital-contributions"
-      ],
-      "tags": [
-        "capital-calls-speed-and-warehousing"
+        "addition-removal"
       ]
     },
     {
@@ -1797,7 +1653,7 @@ window.ORRICK_SEED_DATA = {
         "sec-21-capital-contributions"
       ],
       "tags": [
-        "capital-calls-speed-and-warehousing"
+        "addition-removal"
       ]
     },
     {
@@ -1816,7 +1672,7 @@ window.ORRICK_SEED_DATA = {
         "sec-27-fund-expenses"
       ],
       "tags": [
-        "capital-calls-speed-and-warehousing"
+        "addition-removal"
       ]
     },
     {
@@ -1835,7 +1691,7 @@ window.ORRICK_SEED_DATA = {
         "sec-21-capital-contributions"
       ],
       "tags": [
-        "capital-calls-speed-and-warehousing"
+        "addition-removal"
       ]
     },
     {
@@ -1854,7 +1710,7 @@ window.ORRICK_SEED_DATA = {
         "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall"
       ],
       "tags": [
-        "capital-calls-speed-and-warehousing"
+        "fill-in"
       ]
     },
     {
@@ -1873,7 +1729,7 @@ window.ORRICK_SEED_DATA = {
         "sec-28-general-partner-expenses"
       ],
       "tags": [
-        "capital-calls-speed-and-warehousing"
+        "addition-removal"
       ]
     },
     {
@@ -1892,7 +1748,7 @@ window.ORRICK_SEED_DATA = {
         "sec-09-sponsor-capital-commitment"
       ],
       "tags": [
-        "capital-calls-speed-and-warehousing"
+        "fill-in"
       ]
     },
     {
@@ -1912,7 +1768,7 @@ window.ORRICK_SEED_DATA = {
         "sec-20-investment-limitations"
       ],
       "tags": [
-        "capital-calls-speed-and-warehousing"
+        "multi-clause"
       ]
     },
     {
@@ -1931,7 +1787,7 @@ window.ORRICK_SEED_DATA = {
         "sec-27-fund-expenses"
       ],
       "tags": [
-        "capital-calls-speed-and-warehousing"
+        "fill-in"
       ]
     },
     {
@@ -1950,7 +1806,7 @@ window.ORRICK_SEED_DATA = {
         "sec-46-general-risks"
       ],
       "tags": [
-        "buy-side-placement-capital-formation"
+        "high-level"
       ]
     },
     {
@@ -1968,7 +1824,7 @@ window.ORRICK_SEED_DATA = {
         "sec-06-investor-qualifications"
       ],
       "tags": [
-        "buy-side-placement-capital-formation"
+        "high-level"
       ]
     },
     {
@@ -1986,7 +1842,7 @@ window.ORRICK_SEED_DATA = {
         "sec-06-investor-qualifications"
       ],
       "tags": [
-        "buy-side-placement-capital-formation"
+        "high-level"
       ]
     },
     {
@@ -2006,7 +1862,7 @@ window.ORRICK_SEED_DATA = {
         "sec-24-distributions"
       ],
       "tags": [
-        "buy-side-placement-capital-formation"
+        "multi-clause"
       ]
     },
     {
@@ -2026,7 +1882,7 @@ window.ORRICK_SEED_DATA = {
         "sec-11-management-fee-offset"
       ],
       "tags": [
-        "buy-side-placement-capital-formation"
+        "multi-clause"
       ]
     },
     {
@@ -2045,7 +1901,7 @@ window.ORRICK_SEED_DATA = {
         "sec-11-management-fee-offset"
       ],
       "tags": [
-        "buy-side-placement-capital-formation"
+        "multi-clause"
       ]
     },
     {
@@ -2064,7 +1920,7 @@ window.ORRICK_SEED_DATA = {
         "sec-42-side-letters"
       ],
       "tags": [
-        "buy-side-placement-capital-formation"
+        "addition-removal"
       ]
     },
     {
@@ -2082,7 +1938,7 @@ window.ORRICK_SEED_DATA = {
         "sec-27-fund-expenses"
       ],
       "tags": [
-        "buy-side-placement-capital-formation"
+        "addition-removal"
       ]
     },
     {
@@ -2101,7 +1957,7 @@ window.ORRICK_SEED_DATA = {
         "sec-06-investor-qualifications"
       ],
       "tags": [
-        "buy-side-placement-capital-formation"
+        "high-level"
       ]
     },
     {
@@ -2120,7 +1976,7 @@ window.ORRICK_SEED_DATA = {
         "sec-46-general-risks"
       ],
       "tags": [
-        "buy-side-placement-capital-formation"
+        "high-level"
       ]
     },
     {
@@ -2139,7 +1995,7 @@ window.ORRICK_SEED_DATA = {
         "sec-03-investment-objectives-and-program"
       ],
       "tags": [
-        "sell-side-sourcing-origination"
+        "high-level"
       ]
     },
     {
@@ -2159,7 +2015,7 @@ window.ORRICK_SEED_DATA = {
         "sec-11-management-fee-offset"
       ],
       "tags": [
-        "sell-side-sourcing-origination"
+        "multi-clause"
       ]
     },
     {
@@ -2177,7 +2033,7 @@ window.ORRICK_SEED_DATA = {
         "sec-08-management"
       ],
       "tags": [
-        "sell-side-sourcing-origination"
+        "addition-removal"
       ]
     },
     {
@@ -2196,7 +2052,7 @@ window.ORRICK_SEED_DATA = {
         "sec-38-exculpation-and-indemnification"
       ],
       "tags": [
-        "sell-side-sourcing-origination"
+        "addition-removal"
       ]
     },
     {
@@ -2214,7 +2070,7 @@ window.ORRICK_SEED_DATA = {
         "sec-46-general-risks"
       ],
       "tags": [
-        "sell-side-sourcing-origination"
+        "high-level"
       ]
     },
     {
@@ -2233,7 +2089,7 @@ window.ORRICK_SEED_DATA = {
         "sec-28-general-partner-expenses"
       ],
       "tags": [
-        "sell-side-sourcing-origination"
+        "fill-in"
       ]
     },
     {
@@ -2251,7 +2107,7 @@ window.ORRICK_SEED_DATA = {
         "sec-29-other-competitive-activity-successor-fund"
       ],
       "tags": [
-        "sell-side-sourcing-origination"
+        "addition-removal"
       ]
     },
     {
@@ -2270,7 +2126,7 @@ window.ORRICK_SEED_DATA = {
         "sec-46-general-risks"
       ],
       "tags": [
-        "sell-side-sourcing-origination"
+        "addition-removal"
       ]
     },
     {
@@ -2289,7 +2145,7 @@ window.ORRICK_SEED_DATA = {
         "sec-34-co-investment-opportunities"
       ],
       "tags": [
-        "sell-side-sourcing-origination"
+        "multi-clause"
       ]
     },
     {
@@ -2308,7 +2164,7 @@ window.ORRICK_SEED_DATA = {
         "sec-12-limited-partner-advisory-committee"
       ],
       "tags": [
-        "sell-side-sourcing-origination"
+        "multi-clause"
       ]
     },
     {
@@ -2326,7 +2182,7 @@ window.ORRICK_SEED_DATA = {
         "sec-29-other-competitive-activity-successor-fund"
       ],
       "tags": [
-        "future-funds-spvs-and-allocations"
+        "fill-in"
       ]
     },
     {
@@ -2344,7 +2200,7 @@ window.ORRICK_SEED_DATA = {
         "sec-29-other-competitive-activity-successor-fund"
       ],
       "tags": [
-        "future-funds-spvs-and-allocations"
+        "addition-removal"
       ]
     },
     {
@@ -2364,7 +2220,7 @@ window.ORRICK_SEED_DATA = {
         "sec-34-co-investment-opportunities"
       ],
       "tags": [
-        "future-funds-spvs-and-allocations"
+        "addition-removal"
       ]
     },
     {
@@ -2383,7 +2239,7 @@ window.ORRICK_SEED_DATA = {
         "sec-08-management"
       ],
       "tags": [
-        "future-funds-spvs-and-allocations"
+        "multi-clause"
       ]
     },
     {
@@ -2402,7 +2258,7 @@ window.ORRICK_SEED_DATA = {
         "sec-34-co-investment-opportunities"
       ],
       "tags": [
-        "future-funds-spvs-and-allocations"
+        "addition-removal"
       ]
     },
     {
@@ -2421,7 +2277,7 @@ window.ORRICK_SEED_DATA = {
         "sec-42-side-letters"
       ],
       "tags": [
-        "future-funds-spvs-and-allocations"
+        "multi-clause"
       ]
     },
     {
@@ -2440,7 +2296,7 @@ window.ORRICK_SEED_DATA = {
         "sec-20-investment-limitations"
       ],
       "tags": [
-        "future-funds-spvs-and-allocations"
+        "multi-clause"
       ]
     },
     {
@@ -2459,7 +2315,7 @@ window.ORRICK_SEED_DATA = {
         "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall"
       ],
       "tags": [
-        "future-funds-spvs-and-allocations"
+        "fill-in"
       ]
     },
     {
@@ -2478,7 +2334,7 @@ window.ORRICK_SEED_DATA = {
         "sec-20-investment-limitations"
       ],
       "tags": [
-        "future-funds-spvs-and-allocations"
+        "multi-clause"
       ]
     },
     {
@@ -2497,7 +2353,7 @@ window.ORRICK_SEED_DATA = {
         "sec-46-general-risks"
       ],
       "tags": [
-        "regulatory-compliance-and-operations"
+        "high-level"
       ]
     },
     {
@@ -2515,7 +2371,7 @@ window.ORRICK_SEED_DATA = {
         "sec-08-management"
       ],
       "tags": [
-        "regulatory-compliance-and-operations"
+        "high-level"
       ]
     },
     {
@@ -2533,7 +2389,7 @@ window.ORRICK_SEED_DATA = {
         "sec-06-investor-qualifications"
       ],
       "tags": [
-        "regulatory-compliance-and-operations"
+        "high-level"
       ]
     },
     {
@@ -2552,43 +2408,7 @@ window.ORRICK_SEED_DATA = {
         "sec-27-fund-expenses"
       ],
       "tags": [
-        "regulatory-compliance-and-operations"
-      ]
-    },
-    {
-      "id": "q-073-will-annual-financials-be-audited",
-      "issueType": "question",
-      "status": "open",
-      "priority": "medium",
-      "category": "H. Regulatory, compliance, and operations",
-      "title": "Will annual financials be audited",
-      "prompt": "Will annual financials be audited?",
-      "details": "The form promises annual financials; institutional LPs and the custody rule (if registered) effectively require an audit. Budget it as a Fund Expense.",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 3 detailed questions",
-      "termSectionIds": [
-        "sec-31-reports"
-      ],
-      "tags": [
-        "regulatory-compliance-and-operations"
-      ]
-    },
-    {
-      "id": "q-074-what-reporting-cadence-is-promised-to-lps",
-      "issueType": "question",
-      "status": "open",
-      "priority": "medium",
-      "category": "H. Regulatory, compliance, and operations",
-      "title": "What reporting cadence is promised to LPs",
-      "prompt": "What reporting cadence is promised to LPs?",
-      "details": "The form's quarterly unaudited/annual package is standard; do not promise more in side letters than the administrator can produce.",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 3 detailed questions",
-      "termSectionIds": [
-        "sec-31-reports"
-      ],
-      "tags": [
-        "regulatory-compliance-and-operations"
+        "high-level"
       ]
     },
     {
@@ -2607,7 +2427,7 @@ window.ORRICK_SEED_DATA = {
         "sec-25-in-kind-distributions"
       ],
       "tags": [
-        "regulatory-compliance-and-operations"
+        "fill-in"
       ]
     },
     {
@@ -2625,7 +2445,7 @@ window.ORRICK_SEED_DATA = {
         "sec-31-reports"
       ],
       "tags": [
-        "regulatory-compliance-and-operations"
+        "high-level"
       ]
     },
     {
@@ -2644,7 +2464,7 @@ window.ORRICK_SEED_DATA = {
         "sec-27-fund-expenses"
       ],
       "tags": [
-        "regulatory-compliance-and-operations"
+        "high-level"
       ]
     },
     {
@@ -2663,83 +2483,7 @@ window.ORRICK_SEED_DATA = {
         "sec-08-management"
       ],
       "tags": [
-        "regulatory-compliance-and-operations"
-      ]
-    },
-    {
-      "id": "gap-001-how-long-is-the-investment-period-and-what-ends-it-early",
-      "issueType": "question",
-      "status": "open",
-      "priority": "high",
-      "category": "I. Fund lifecycle and governance (gap review)",
-      "title": "How long is the investment period, and what ends it early",
-      "prompt": "How long is the investment period, and what events end it early?",
-      "details": "The form brackets the anniversary and early-termination triggers (key person event, GP removal, LP vote). The choice also controls the management-fee stepdown date. Secondaries funds often use a shorter period (2-3 years) than the venture default.",
-      "provisionalAnswer": "",
-      "source": "Term sheet gap review - not covered in the open-items memo",
-      "termSectionIds": [
-        "sec-14-investment-period",
-        "sec-10-management-fee"
-      ],
-      "tags": [
-        "term-sheet-gap"
-      ]
-    },
-    {
-      "id": "gap-002-what-is-the-fund-term-and-who-approves-extensions",
-      "issueType": "question",
-      "status": "open",
-      "priority": "high",
-      "category": "I. Fund lifecycle and governance (gap review)",
-      "title": "What is the fund term, and who approves extensions",
-      "prompt": "What is the fund term, and who approves extensions (GP discretion, LPAC, or LP consent)?",
-      "details": "The form brackets term length and one-or-two-year extensions with GP/LPAC/LP approval options. Late-stage secondaries may exit faster than venture: consider an 8-year term with two one-year extensions.",
-      "provisionalAnswer": "",
-      "source": "Term sheet gap review - not covered in the open-items memo",
-      "termSectionIds": [
-        "sec-15-term",
-        "sec-16-dissolution"
-      ],
-      "tags": [
-        "term-sheet-gap"
-      ]
-    },
-    {
-      "id": "gap-003-who-are-the-key-persons-and-what-happens-on-a-key-person-event",
-      "issueType": "question",
-      "status": "open",
-      "priority": "high",
-      "category": "I. Fund lifecycle and governance (gap review)",
-      "title": "Who are the key persons and what happens on a key person event",
-      "prompt": "Who are the key persons, what time commitment do they promise, and what happens on a key person event?",
-      "details": "The form suspends or terminates the investment period on a key person event. With a two-principal sponsor, decide whether losing either principal (or only both) triggers it, and whether LPs can vote to restart.",
-      "provisionalAnswer": "",
-      "source": "Term sheet gap review - not covered in the open-items memo",
-      "termSectionIds": [
-        "sec-17-time-commitment-key-person-event",
-        "sec-14-investment-period"
-      ],
-      "tags": [
-        "term-sheet-gap"
-      ]
-    },
-    {
-      "id": "gap-004-on-what-standard-can-lps-remove-the-gp-and-what-happens-to-carry",
-      "issueType": "question",
-      "status": "open",
-      "priority": "medium",
-      "category": "I. Fund lifecycle and governance (gap review)",
-      "title": "On what standard can LPs remove the GP, and what happens to carry",
-      "prompt": "Under what standard and LP vote can the GP be removed, and what happens to carry and the GP commitment on removal?",
-      "details": "The form allows for-cause removal with a bracketed carry reduction (often 20-50%). Decide the cause standard, the vote threshold, and whether there is any no-fault removal right.",
-      "provisionalAnswer": "",
-      "source": "Term sheet gap review - not covered in the open-items memo",
-      "termSectionIds": [
-        "sec-18-removal-of-the-general-partner",
-        "sec-24-distributions"
-      ],
-      "tags": [
-        "term-sheet-gap"
+        "high-level"
       ]
     },
     {
@@ -2758,7 +2502,7 @@ window.ORRICK_SEED_DATA = {
         "sec-12-limited-partner-advisory-committee"
       ],
       "tags": [
-        "term-sheet-gap"
+        "fill-in"
       ]
     },
     {
@@ -2777,7 +2521,7 @@ window.ORRICK_SEED_DATA = {
         "sec-06-investor-qualifications"
       ],
       "tags": [
-        "term-sheet-gap"
+        "addition-removal"
       ]
     },
     {
@@ -2796,7 +2540,7 @@ window.ORRICK_SEED_DATA = {
         "sec-21-capital-contributions"
       ],
       "tags": [
-        "term-sheet-gap"
+        "fill-in"
       ]
     },
     {
@@ -2815,7 +2559,7 @@ window.ORRICK_SEED_DATA = {
         "sec-14-investment-period"
       ],
       "tags": [
-        "term-sheet-gap"
+        "addition-removal"
       ]
     },
     {
@@ -2835,26 +2579,7 @@ window.ORRICK_SEED_DATA = {
         "sec-16-dissolution"
       ],
       "tags": [
-        "term-sheet-gap"
-      ]
-    },
-    {
-      "id": "gap-010-lp-giveback-cap-and-time-limit",
-      "issueType": "question",
-      "status": "open",
-      "priority": "medium",
-      "category": "J. Distributions, liability, and tax (gap review)",
-      "title": "LP giveback cap and time limit",
-      "prompt": "What cap and time limit apply to LP givebacks for indemnification and other fund liabilities?",
-      "details": "The form allows the GP to recall distributions for liabilities. Market practice caps givebacks (commonly 25% of distributions or commitments) and sunsets them 2-3 years after distribution; the form leaves this to the LPA.",
-      "provisionalAnswer": "",
-      "source": "Term sheet gap review - not covered in the open-items memo",
-      "termSectionIds": [
-        "sec-39-limited-partner-giveback",
-        "sec-38-exculpation-and-indemnification"
-      ],
-      "tags": [
-        "term-sheet-gap"
+        "addition-removal"
       ]
     },
     {
@@ -2874,7 +2599,7 @@ window.ORRICK_SEED_DATA = {
         "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall"
       ],
       "tags": [
-        "term-sheet-gap"
+        "multi-clause"
       ]
     },
     {

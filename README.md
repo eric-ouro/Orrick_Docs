@@ -4,19 +4,39 @@ Interactive tracker for reviewing fund term sheets against open-items memos. The
 
 ## Work Queue Structure
 
-The seed data produces 126 issues from the two source documents, organized by topic:
+The seed data produces 109 issues from the two source documents, organized by topic:
 
 - 8 immediate decisions (memo section 5)
 - 6 requested drafting changes (memo section 4)
-- 78 detailed questions (memo section 3, topics A-H)
-- 11 gap-review questions (topics I-J) covering term-sheet sections the memo skips: investment period, term/extensions, key person, GP removal, amendments, side letters/MFN, closing true-ups, recycling, in-kind distributions, LP giveback, and tax/ERISA accommodations
+- 66 detailed questions (memo section 3, topics A-H)
+- 6 gap-review questions (topics I-J): amendments, side letters/MFN, closing true-ups, recycling, in-kind distributions, and tax/ERISA accommodations
 - 23 supporting documents (memo section 1)
+
+Every decision, change, and question also carries a resolution tier tag:
+
+- `high-level`: platform/business posture decisions made outside any one clause (entity architecture, regulatory path, who may solicit)
+- `multi-clause`: decisions whose answer must land consistently across several clauses (waterfall structure, vehicle flexibility)
+- `fill-in`: per-clause questions resolved primarily by electing bracketed options, but that still need judgment
+- `addition-removal`: adding, rewriting, or deleting language
+
+Questions that were purely "fill in this blank" (fund size, minimum commitment, fee rate, carry percentage, hurdle, catch-up, concentration limits, call notice periods, fund term, key persons, GP removal thresholds, giveback caps, audited financials, and similar) are not issues at all: the clause-election editor replaces them, and their "how to decide" notes appear as guidance on the clause itself.
 
 Gap topics that overlap memo questions (LPAC mandate, clawback mechanics, expense caps, borrowing scope, indemnification standards) are folded into the notes of the corresponding A-H questions instead of appearing as separate items.
 
 Every question carries a curated set of linked term-sheet clauses (question-level, not category-level), a priority, and a short "how to decide" note shown in the detail panel. The memo's section 7 checklist is intentionally not extracted: every line duplicates a decision, question, or supporting document already in the queue.
 
-The queue is grouped by topic, and the Topic filter shows open-item counts per topic.
+The queue is grouped by topic, with Topic and Tier filters showing open-item counts.
+
+## Clause Elections
+
+The Orrick form expresses most drafting choices as brackets: blanks (`$[_____]`), pick-one option groups (`[fourth][fifth][sixth]`), and optional provisions to keep or omit. Clicking any clause in the document pane opens the clause-election editor in the right pane:
+
+- each blank gets a text input, each option group a dropdown (with write-in and omit choices), and each optional provision a keep/omit/write-in selector
+- a live preview shows the clause with elections applied; unresolved brackets stay highlighted
+- the clause can be accepted (only once every election is resolved), rejected, or sent to rewrite with requested language
+- the Clauses metric tracks how many of the 30 bracketed clauses are settled
+
+Elections persist to the `clause_states` table in Supabase (or browser storage in local mode). Guidance notes from the retired fill-in questions appear at the top of the editor for the relevant clause.
 
 ## Open the App
 
@@ -135,8 +155,10 @@ The invited person needs to create or sign into an account once before they can 
 If the source `.docx` files are replaced, regenerate the browser data with:
 
 ```bash
-/Users/eholmdahl/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 /Users/eholmdahl/GitHub/Orrick_Docs/scripts/extract_documents.py
+.venv/bin/python scripts/extract_documents.py
 ```
+
+(One-time setup: `python3 -m venv .venv && .venv/bin/pip install python-docx`.)
 
 Generated files:
 
@@ -149,7 +171,7 @@ Static document and section summaries are reapplied with:
 npm run summaries
 ```
 
-Curated question-to-clause assignments, priorities, and decision notes live in `QUESTION_CURATION`, `GAP_QUESTIONS`, `DECISION_CURATION`, `CHANGE_CURATION`, and `SUPPORTING_DOC_CURATION` inside `scripts/extract_documents.py`. The extractor prints a warning for any memo question missing a curation entry, so edits to the memo surface immediately on regeneration.
+Curated question-to-clause assignments, priorities, and decision notes live in `QUESTION_CURATION`, `QUESTION_TIERS`, `REPLACED_BY_ELECTIONS`, `CLAUSE_GUIDANCE_EXTRA`, `GAP_QUESTIONS`, `DECISION_CURATION`, `CHANGE_CURATION`, and `SUPPORTING_DOC_CURATION` inside `scripts/extract_documents.py`. The extractor prints a warning for any memo question missing a curation or tier entry, so edits to the memo surface immediately on regeneration.
 
 Run the headless render smoke test with:
 

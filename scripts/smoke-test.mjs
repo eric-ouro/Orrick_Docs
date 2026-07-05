@@ -1,5 +1,6 @@
 // Headless smoke test: boots the app in jsdom in local (no-Supabase) mode and
-// verifies the queue, filters, document panel, and detail panel all render.
+// verifies the queue, filters, document panel, detail panel, and the clause
+// election editor all render and behave.
 import fs from "node:fs";
 import { JSDOM } from "jsdom";
 
@@ -26,6 +27,7 @@ const check = (label, ok) => {
   if (!ok) failures.push(label);
   console.log(`${ok ? "ok  " : "FAIL"} ${label}`);
 };
+const changeEvent = () => new window.Event("change", { bubbles: true });
 
 check("setup shell visible", !doc.getElementById("setupShell").hidden);
 doc.getElementById("localModeBtn").click();
@@ -33,50 +35,125 @@ check("workspace visible after local mode", !doc.getElementById("workspaceShell"
 
 const issueCards = doc.querySelectorAll(".issue-card");
 const groupLabels = [...doc.querySelectorAll(".issue-group-label")].map((el) => el.textContent);
-check(`126 issue cards rendered (got ${issueCards.length})`, issueCards.length === 126);
+check(`109 issue cards rendered (got ${issueCards.length})`, issueCards.length === 109);
 check(`topic group headers rendered (got ${groupLabels.length})`, groupLabels.length === 16);
 check("first group is Immediate decisions", groupLabels[0] === "Immediate decisions");
 
 const topicFilter = doc.getElementById("topicFilter");
 check(`topic filter populated (got ${topicFilter.options.length})`, topicFilter.options.length === 17);
 
-// Filter to one topic and confirm the queue narrows.
-topicFilter.value = "B. Fund economics";
-topicFilter.dispatchEvent(new window.Event("change", { bubbles: true }));
-const filteredCards = doc.querySelectorAll(".issue-card");
-check(`topic filter narrows queue (got ${filteredCards.length})`, filteredCards.length === 10);
-check("queue count text", doc.getElementById("queueCount").textContent === "Showing 10 of 126");
+// Pure fill-in questions were retired in favor of clause elections.
+check(
+  "retired fill-in questions absent",
+  ![...issueCards].some(
+    (el) => el.textContent.includes("What is the carry percentage") || el.textContent.includes("target fund size")
+  )
+);
 
-// Select the carry-percentage question and verify curated content shows.
-const carryCard = [...filteredCards].find((el) => el.textContent.includes("carry percentage"));
-carryCard.click();
+// Tier filter and tier pills.
+const tierFilter = doc.getElementById("tierFilter");
+check(
+  `tier filter has 4 tiers (got ${tierFilter.options.length - 1})`,
+  tierFilter.options.length === 5
+);
+tierFilter.value = "fill-in";
+tierFilter.dispatchEvent(changeEvent());
+check(`fill-in tier narrows queue (got ${doc.querySelectorAll(".issue-card").length})`, doc.querySelectorAll(".issue-card").length === 13);
+check("tier pill rendered on card", Boolean(doc.querySelector(".issue-card .pill.tier-fill-in")));
+tierFilter.value = "all";
+tierFilter.dispatchEvent(changeEvent());
+
+// Filter to one topic and confirm the queue narrows (B lost its 7 pure fill-ins).
+topicFilter.value = "B. Fund economics";
+topicFilter.dispatchEvent(changeEvent());
+const filteredCards = doc.querySelectorAll(".issue-card");
+check(`topic filter narrows queue (got ${filteredCards.length})`, filteredCards.length === 3);
+check("queue count text", doc.getElementById("queueCount").textContent === "Showing 3 of 109");
+
+// Select the waterfall question and verify curated content shows.
+const waterfallCard = [...filteredCards].find((el) => el.textContent.includes("European waterfall"));
+waterfallCard.click();
 await new Promise((resolve) => setTimeout(resolve, 20));
 const detail = doc.getElementById("issueDetail").textContent;
-check("curated how-to-decide note shown", detail.includes("How to decide:") && detail.includes("waterfall"));
+check("curated how-to-decide note shown", detail.includes("How to decide:"));
 check("linked clause is Distributions", detail.includes("Distributions"));
-check("stale Capital Commitments link removed", !detail.includes("Capital Commitments"));
+check("tier pill shown in detail", Boolean(doc.querySelector("#issueDetail .pill.tier-multi-clause")));
 
 // Gap questions exist and are linked to previously-orphaned sections.
 topicFilter.value = "J. Distributions, liability, and tax (gap review)";
-topicFilter.dispatchEvent(new window.Event("change", { bubbles: true }));
-check(`gap topic renders (got ${doc.querySelectorAll(".issue-card").length})`, doc.querySelectorAll(".issue-card").length === 4);
+topicFilter.dispatchEvent(changeEvent());
+check(`gap topic renders (got ${doc.querySelectorAll(".issue-card").length})`, doc.querySelectorAll(".issue-card").length === 3);
 
 // "Not resolved" status filter shows every non-resolved item.
 topicFilter.value = "all";
-topicFilter.dispatchEvent(new window.Event("change", { bubbles: true }));
+topicFilter.dispatchEvent(changeEvent());
 const statusFilter = doc.getElementById("statusFilter");
 check(
   "status filter has Not resolved option",
   [...statusFilter.options].some((o) => o.value === "not-resolved")
 );
 statusFilter.value = "not-resolved";
-statusFilter.dispatchEvent(new window.Event("change", { bubbles: true }));
-// Local seed has no resolved issues, so all 126 should remain.
-check(`not-resolved shows all non-resolved (got ${doc.querySelectorAll(".issue-card").length})`, doc.querySelectorAll(".issue-card").length === 126);
+statusFilter.dispatchEvent(changeEvent());
+// Local seed has no resolved issues, so all 109 should remain.
+check(`not-resolved shows all non-resolved (got ${doc.querySelectorAll(".issue-card").length})`, doc.querySelectorAll(".issue-card").length === 109);
 
 // Clear filters restores the full queue.
 doc.getElementById("clearFiltersBtn").click();
-check("clear filters restores queue", doc.querySelectorAll(".issue-card").length === 126);
+check("clear filters restores queue", doc.querySelectorAll(".issue-card").length === 109);
+
+// ---------------------------------------------------------------------------
+// Clause election editor
+// ---------------------------------------------------------------------------
+
+// Clauses metric starts at 0/N.
+const clausesMetric = [...doc.querySelectorAll("#metrics .metric")].find((el) => el.textContent.includes("Clauses"));
+check("clauses metric rendered", Boolean(clausesMetric));
+const metricStart = clausesMetric.querySelector("strong").textContent;
+check(`clauses metric starts unsettled (got ${metricStart})`, /^0\/\d+$/.test(metricStart));
+
+// Open the full term sheet and click the LP giveback clause.
+[...doc.querySelectorAll("[data-doc-tab]")].find((el) => el.dataset.docTab === "full").click();
+const givebackSection = doc.querySelector('[data-section-id="sec-39-limited-partner-giveback"]');
+check("LP giveback clause rendered in full view", Boolean(givebackSection));
+givebackSection.click();
+
+const clausePanel = doc.getElementById("clausePanel");
+check("clause panel visible after clicking a clause", !clausePanel.hidden);
+check("answer form hidden in clause mode", doc.getElementById("answerForm").hidden);
+check("clause guidance shows retired-question note", doc.getElementById("clauseGuidance").textContent.includes("giveback cap"));
+
+const electionSelects = doc.querySelectorAll("#clauseElections [data-election-select]");
+check(`giveback clause has 2 elections (got ${electionSelects.length})`, electionSelects.length === 2);
+
+const acceptBtn = doc.getElementById("clauseAcceptBtn");
+check("accept disabled until elections resolved", acceptBtn.disabled);
+
+// Resolve both elections by picking the first option of each group.
+for (let i = 0; i < 2; i += 1) {
+  const select = doc.querySelectorAll("#clauseElections [data-election-select]")[i];
+  select.value = "option:0";
+  select.dispatchEvent(changeEvent());
+}
+check("clause header shows 2/2 resolved", doc.getElementById("clauseHeader").textContent.includes("2/2 elections resolved"));
+check("preview shows filled election", Boolean(doc.querySelector("#clausePreview .election-filled")));
+check("accept enabled once resolved", !doc.getElementById("clauseAcceptBtn").disabled);
+
+doc.getElementById("clauseAcceptBtn").click();
+check("clause marked accepted", doc.getElementById("clauseHeader").textContent.includes("Accepted"));
+const metricAfter = [...doc.querySelectorAll("#metrics .metric")]
+  .find((el) => el.textContent.includes("Clauses"))
+  .querySelector("strong").textContent;
+check(`clauses metric advanced (got ${metricAfter})`, /^1\/\d+$/.test(metricAfter));
+
+// Elections persist to local storage.
+const stored = JSON.parse(window.localStorage.getItem("orrick.blindPoolFund.workspace.v2"));
+const storedClause = stored.clauseStates["sec-39-limited-partner-giveback"];
+check("clause state persisted locally", storedClause?.status === "accepted" && Object.keys(storedClause.elections).length === 2);
+
+// Selecting an issue switches the right pane back to the issue editor.
+doc.querySelector(".issue-card").click();
+await new Promise((resolve) => setTimeout(resolve, 20));
+check("issue editor restored after selecting issue", doc.getElementById("clausePanel").hidden && !doc.getElementById("answerForm").hidden);
 
 if (failures.length) {
   console.error(`\n${failures.length} check(s) failed`);
