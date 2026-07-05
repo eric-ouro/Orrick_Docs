@@ -1,6 +1,20 @@
 # Blind Pool Fund Term Sheet Workspace
 
-Interactive tracker for reviewing fund term sheets against open-items memos. The app now supports Supabase login, shared projects, permanent issue edits, and an issue activity trail.
+Interactive tracker for reviewing fund term sheets against open-items memos. The app supports Supabase login, shared projects, permanent issue edits, and an issue activity trail.
+
+## Work Queue Structure
+
+The seed data produces 131 issues from the two source documents, organized by topic:
+
+- 8 immediate decisions (memo section 5)
+- 6 requested drafting changes (memo section 4)
+- 78 detailed questions (memo section 3, topics A-H)
+- 16 gap-review questions (topics I-J) covering term-sheet sections the memo skips: investment period, term/extensions, key person, GP removal, LPAC mandate, amendments, side letters/MFN, closing true-ups, recycling, in-kind distributions, clawback mechanics, LP giveback, expense caps, borrowing scope, tax/ERISA accommodations, and indemnification standards
+- 23 supporting documents (memo section 1)
+
+Every question carries a curated set of linked term-sheet clauses (question-level, not category-level), a priority, and a short "how to decide" note shown in the detail panel. The memo's section 7 checklist is intentionally not extracted: every line duplicates a decision, question, or supporting document already in the queue.
+
+The queue is grouped by topic, and the Topic filter shows open-item counts per topic.
 
 ## Open the App
 
@@ -132,3 +146,13 @@ Static document and section summaries are reapplied with:
 ```bash
 npm run summaries
 ```
+
+Curated question-to-clause assignments, priorities, and decision notes live in `QUESTION_CURATION`, `GAP_QUESTIONS`, `DECISION_CURATION`, `CHANGE_CURATION`, and `SUPPORTING_DOC_CURATION` inside `scripts/extract_documents.py`. The extractor prints a warning for any memo question missing a curation entry, so edits to the memo surface immediately on regeneration.
+
+Run the headless render smoke test with:
+
+```bash
+npm test
+```
+
+Existing Supabase projects keep the issue set they were seeded with. To pick up a regenerated queue, create a new project with `Seed Current Docs` (no schema change is required).

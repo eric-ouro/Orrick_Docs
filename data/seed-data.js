@@ -1,15 +1,15 @@
 window.ORRICK_SEED_DATA = {
   "meta": {
     "project": "Blind Pool Fund Term Sheet Workspace",
-    "generatedAt": "2026-07-03T10:04:38",
+    "generatedAt": "2026-07-05T10:20:31",
     "sourceFiles": [
       {
         "label": "Orrick venture capital / private equity fund form term sheet",
-        "path": "/Users/eholmdahl/Orrick_Docs/sources/FORM - Venture Capital_Private Equity Fund Form Term Sheet.docx"
+        "path": "/Users/eholmdahl/GitHub/Orrick_Docs/sources/FORM - Venture Capital_Private Equity Fund Form Term Sheet.docx"
       },
       {
         "label": "Blind pool fund open items and drafting changes",
-        "path": "/Users/eholmdahl/Orrick_Docs/sources/blind_pool_fund_open_items_and_drafting_changes.docx"
+        "path": "/Users/eholmdahl/GitHub/Orrick_Docs/sources/blind_pool_fund_open_items_and_drafting_changes.docx"
       },
       {
         "label": "Shared ChatGPT conversation",
@@ -922,7 +922,7 @@ window.ORRICK_SEED_DATA = {
       "issueType": "decision",
       "status": "open",
       "priority": "high",
-      "category": "",
+      "category": "Immediate decisions",
       "title": "Use separate CarryCo?",
       "prompt": "Use separate CarryCo?: choose between the listed approaches or draft a custom answer.",
       "details": "Pick based on complexity of carry allocations and future placement/sourcing partners.",
@@ -930,10 +930,9 @@ window.ORRICK_SEED_DATA = {
       "source": "Open-items memo - Section 5 immediate decisions",
       "termSectionIds": [
         "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment",
+        "sec-26-general-partner-clawback",
         "sec-08-management",
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-34-co-investment-opportunities"
+        "sec-09-sponsor-capital-commitment"
       ],
       "tags": [
         "immediate-decision"
@@ -944,18 +943,15 @@ window.ORRICK_SEED_DATA = {
       "issueType": "decision",
       "status": "open",
       "priority": "high",
-      "category": "",
+      "category": "Immediate decisions",
       "title": "Who owns Manager LLC?",
       "prompt": "Who owns Manager LLC?: choose between the listed approaches or draft a custom answer.",
       "details": "Do not give fund-specific placement parties platform-wide management fee economics unless intended.",
       "provisionalAnswer": "Option A: You/Zeke directly.\nOption B: Sponsor HoldCo owns Manager.\nComment: Do not give fund-specific placement parties platform-wide management fee economics unless intended.",
       "source": "Open-items memo - Section 5 immediate decisions",
       "termSectionIds": [
-        "sec-10-management-fee",
-        "sec-11-management-fee-offset",
-        "sec-27-fund-expenses",
-        "sec-09-sponsor-capital-commitment",
-        "sec-08-management"
+        "sec-08-management",
+        "sec-10-management-fee"
       ],
       "tags": [
         "immediate-decision"
@@ -966,15 +962,14 @@ window.ORRICK_SEED_DATA = {
       "issueType": "decision",
       "status": "open",
       "priority": "high",
-      "category": "",
+      "category": "Immediate decisions",
       "title": "Fund exemption path?",
       "prompt": "Fund exemption path?: choose between the listed approaches or draft a custom answer.",
       "details": "Depends on LP count and QP status.",
       "provisionalAnswer": "Option A: 3(c)(1).\nOption B: 3(c)(7).\nComment: Depends on LP count and QP status.",
       "source": "Open-items memo - Section 5 immediate decisions",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
-        "sec-46-general-risks"
+        "sec-06-investor-qualifications"
       ],
       "tags": [
         "immediate-decision"
@@ -985,7 +980,7 @@ window.ORRICK_SEED_DATA = {
       "issueType": "decision",
       "status": "open",
       "priority": "high",
-      "category": "",
+      "category": "Immediate decisions",
       "title": "Offering path?",
       "prompt": "Offering path?: choose between the listed approaches or draft a custom answer.",
       "details": "Depends on whether there is general solicitation and verification tolerance.",
@@ -1004,21 +999,16 @@ window.ORRICK_SEED_DATA = {
       "issueType": "decision",
       "status": "open",
       "priority": "high",
-      "category": "",
+      "category": "Immediate decisions",
       "title": "Capital-call design?",
       "prompt": "Capital-call design?: choose between the listed approaches or draft a custom answer.",
       "details": "Secondary strategy likely needs the faster version.",
       "provisionalAnswer": "Option A: Normal 10-20 business days.\nOption B: Fast 3-5 business days plus emergency calls/reserves.\nComment: Secondary strategy likely needs the faster version.",
       "source": "Open-items memo - Section 5 immediate decisions",
       "termSectionIds": [
-        "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
         "sec-21-capital-contributions",
         "sec-30-borrowing",
-        "sec-27-fund-expenses",
-        "sec-09-sponsor-capital-commitment"
+        "sec-23-warehoused-securities"
       ],
       "tags": [
         "immediate-decision"
@@ -1029,7 +1019,7 @@ window.ORRICK_SEED_DATA = {
       "issueType": "decision",
       "status": "open",
       "priority": "high",
-      "category": "",
+      "category": "Immediate decisions",
       "title": "Vehicle flexibility?",
       "prompt": "Vehicle flexibility?: choose between the listed approaches or draft a custom answer.",
       "details": "Need broad flexibility for weird vehicles.",
@@ -1038,10 +1028,7 @@ window.ORRICK_SEED_DATA = {
       "termSectionIds": [
         "sec-03-investment-objectives-and-program",
         "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-34-co-investment-opportunities"
+        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall"
       ],
       "tags": [
         "immediate-decision"
@@ -1052,13 +1039,18 @@ window.ORRICK_SEED_DATA = {
       "issueType": "decision",
       "status": "open",
       "priority": "high",
-      "category": "",
+      "category": "Immediate decisions",
       "title": "Placement compensation disclosure?",
       "prompt": "Placement compensation disclosure?: choose between the listed approaches or draft a custom answer.",
       "details": "Likely disclose categories in main docs; specifics in separate agreements.",
       "provisionalAnswer": "Option A: Generic disclosure only.\nOption B: Generic disclosure plus term-sheet disclosure of categories and offsets.\nComment: Likely disclose categories in main docs; specifics in separate agreements.",
       "source": "Open-items memo - Section 5 immediate decisions",
-      "termSectionIds": [],
+      "termSectionIds": [
+        "sec-11-management-fee-offset",
+        "sec-27-fund-expenses",
+        "sec-42-side-letters",
+        "sec-46-general-risks"
+      ],
       "tags": [
         "immediate-decision"
       ]
@@ -1068,17 +1060,13 @@ window.ORRICK_SEED_DATA = {
       "issueType": "decision",
       "status": "open",
       "priority": "high",
-      "category": "",
+      "category": "Immediate decisions",
       "title": "Successor fund restriction?",
       "prompt": "Successor fund restriction?: choose between the listed approaches or draft a custom answer.",
       "details": "Need carveouts and allocation policy.",
       "provisionalAnswer": "Option A: Standard restriction until fully invested.\nOption B: Carveouts for SPVs, feeders, co-invests, parallel vehicles, future vintages.\nComment: Need carveouts and allocation policy.",
       "source": "Open-items memo - Section 5 immediate decisions",
       "termSectionIds": [
-        "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
         "sec-29-other-competitive-activity-successor-fund",
         "sec-34-co-investment-opportunities"
       ],
@@ -1091,18 +1079,17 @@ window.ORRICK_SEED_DATA = {
       "issueType": "drafting-change",
       "status": "open",
       "priority": "high",
-      "category": "",
+      "category": "Requested drafting changes",
       "title": "Ability to give conditional carry or incentive payments",
       "prompt": "Add a general authorization/disclosure provision.",
       "details": "Counsel notes / decisions: Need counsel to decide whether specific arrangements are Fund Expenses, Manager expenses, GP/carry sharing, management fee offsets, or side-letter matters. Also need broker-dealer/finder analysis for transaction-based or commitment-based compensation.",
       "provisionalAnswer": "The Fund, General Partner, Manager, or their affiliates may enter into placement, referral, capital introduction, revenue-sharing, or carry-sharing arrangements with registered broker-dealers, placement agents, finders, consultants, strategic partners, or other persons, subject to applicable law. Such arrangements may include cash fees, expense reimbursements, management fee sharing, carried interest participation, or other economics, and may differ among placement parties.",
       "source": "Open-items memo - Section 4 requested drafting changes",
       "termSectionIds": [
-        "sec-10-management-fee",
+        "sec-24-distributions",
         "sec-11-management-fee-offset",
         "sec-27-fund-expenses",
-        "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment"
+        "sec-26-general-partner-clawback"
       ],
       "tags": [
         "drafting-change"
@@ -1113,13 +1100,18 @@ window.ORRICK_SEED_DATA = {
       "issueType": "drafting-change",
       "status": "open",
       "priority": "high",
-      "category": "",
+      "category": "Requested drafting changes",
       "title": "Sourcing, origination, and strategic relationship arrangements",
       "prompt": "Add a general authorization/disclosure provision.",
       "details": "Counsel notes / decisions: Need separate form agreements for buy-side capital formation and sell-side investment sourcing. Each agreement should specify authority limits, compensation, tail, confidentiality, conflicts, and securities-law compliance.",
       "provisionalAnswer": "The Manager, GP, or affiliates may enter into sourcing, origination, consulting, brokerage, referral, or strategic relationship agreements with third parties in connection with identifying, sourcing, diligencing, acquiring, selling, or disposing of investments.",
       "source": "Open-items memo - Section 4 requested drafting changes",
-      "termSectionIds": [],
+      "termSectionIds": [
+        "sec-08-management",
+        "sec-27-fund-expenses",
+        "sec-29-other-competitive-activity-successor-fund",
+        "sec-38-exculpation-and-indemnification"
+      ],
       "tags": [
         "drafting-change"
       ]
@@ -1129,7 +1121,7 @@ window.ORRICK_SEED_DATA = {
       "issueType": "drafting-change",
       "status": "open",
       "priority": "high",
-      "category": "",
+      "category": "Requested drafting changes",
       "title": "Investment objectives and permitted investments",
       "prompt": "Revise the generic investment objective to cover these categories.",
       "details": "Counsel notes / decisions: The mandate should be broad enough to handle private secondary-market mechanics but narrow enough that LPs understand the strategy. Include a whitelist schedule and a process for adding/removing companies.",
@@ -1137,13 +1129,7 @@ window.ORRICK_SEED_DATA = {
       "source": "Open-items memo - Section 4 requested drafting changes",
       "termSectionIds": [
         "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
-        "sec-12-limited-partner-advisory-committee",
-        "sec-41-amendments",
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-34-co-investment-opportunities"
+        "sec-20-investment-limitations"
       ],
       "tags": [
         "drafting-change"
@@ -1154,19 +1140,15 @@ window.ORRICK_SEED_DATA = {
       "issueType": "drafting-change",
       "status": "open",
       "priority": "high",
-      "category": "",
+      "category": "Requested drafting changes",
       "title": "Restriction on blind-pool fund investments - carveouts for weird vehicles",
       "prompt": "Modify the blind-pool or fee-bearing vehicle restriction to preserve execution flexibility.",
       "details": "Counsel notes / decisions: Keep the LP-protective goal of avoiding fee layering into unrelated blind pools, but carve out normal secondary-access vehicles and structures needed to acquire private-company exposure.",
       "provisionalAnswer": "Single-asset SPVs; co-investment vehicles; secondary-access vehicles; tender-offer vehicles; alternative investment vehicles; holding vehicles; feeder/blocker vehicles; vehicles formed to hold one or more specified whitelisted companies.",
       "source": "Open-items memo - Section 4 requested drafting changes",
       "termSectionIds": [
-        "sec-03-investment-objectives-and-program",
         "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-34-co-investment-opportunities"
+        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall"
       ],
       "tags": [
         "drafting-change"
@@ -1177,21 +1159,17 @@ window.ORRICK_SEED_DATA = {
       "issueType": "drafting-change",
       "status": "open",
       "priority": "high",
-      "category": "",
+      "category": "Requested drafting changes",
       "title": "Capital call timing and fast execution mechanics",
       "prompt": "Revise capital-call and funding mechanics to allow faster execution.",
       "details": "Counsel notes / decisions: The standard 10/15/20 business day capital call options may be too slow for secondary allocations. Need a practical process for LOIs, deposits, proof of funds, and warehoused positions.",
       "provisionalAnswer": "Initial drawdown at closing, e.g. 10-25%; short capital-call period, e.g. 3-5 business days; emergency/special call period for time-sensitive deals; bridge facility or subscription line; GP advance rights; warehousing rights; reserves for deposits and broken-deal expenses.",
       "source": "Open-items memo - Section 4 requested drafting changes",
       "termSectionIds": [
-        "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
         "sec-21-capital-contributions",
         "sec-30-borrowing",
-        "sec-27-fund-expenses",
-        "sec-09-sponsor-capital-commitment"
+        "sec-23-warehoused-securities",
+        "sec-22-failure-to-make-capital-contributions"
       ],
       "tags": [
         "drafting-change"
@@ -1202,19 +1180,16 @@ window.ORRICK_SEED_DATA = {
       "issueType": "drafting-change",
       "status": "open",
       "priority": "high",
-      "category": "",
+      "category": "Requested drafting changes",
       "title": "Successor funds, parallel funds, co-invests, and SPV carveouts",
       "prompt": "Revise the successor-fund restriction and pair it with allocation rules.",
       "details": "Counsel notes / decisions: Need to balance LP protection against the need to move quickly and structure around specific secondary opportunities. Also pair this with a clear allocation policy.",
       "provisionalAnswer": "Permit feeder vehicles, blocker vehicles, alternative investment vehicles, holding vehicles, parallel funds, co-investment vehicles, single-deal SPVs, overflow vehicles, and vehicles formed for tax, regulatory, business, allocation, or deal-execution reasons.",
       "source": "Open-items memo - Section 4 requested drafting changes",
       "termSectionIds": [
-        "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
         "sec-29-other-competitive-activity-successor-fund",
-        "sec-34-co-investment-opportunities"
+        "sec-34-co-investment-opportunities",
+        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall"
       ],
       "tags": [
         "drafting-change"
@@ -1224,17 +1199,16 @@ window.ORRICK_SEED_DATA = {
       "id": "q-001-will-the-fund-be-a-delaware-lp-or-delaware-llc",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "A. Entity structure and ownership",
       "title": "Will the fund be a Delaware LP or Delaware LLC",
       "prompt": "Will the fund be a Delaware LP or Delaware LLC?",
-      "details": "",
+      "details": "The Orrick form assumes a Delaware LP governed by an LPA with a GP LLC. Choosing an LLC fund instead changes governance, tax boilerplate, and every Partner/Partnership reference, so settle this before any other drafting.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
         "sec-01-the-fund",
-        "sec-08-management",
-        "sec-09-sponsor-capital-commitment"
+        "sec-02-the-fund-agreement"
       ],
       "tags": [
         "entity-structure-and-ownership"
@@ -1248,13 +1222,12 @@ window.ORRICK_SEED_DATA = {
       "category": "A. Entity structure and ownership",
       "title": "Will the GP be fund-specific for each fund",
       "prompt": "Will the GP be fund-specific for each fund?",
-      "details": "",
+      "details": "A fund-specific GP is market standard: it isolates liability and carry per vintage and simplifies Fund II. A shared GP saves one entity but entangles the funds' economics and liabilities.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-01-the-fund",
         "sec-08-management",
-        "sec-09-sponsor-capital-commitment"
+        "sec-01-the-fund"
       ],
       "tags": [
         "entity-structure-and-ownership"
@@ -1268,13 +1241,12 @@ window.ORRICK_SEED_DATA = {
       "category": "A. Entity structure and ownership",
       "title": "Will there be a single platform Manager LLC across all funds",
       "prompt": "Will there be a single platform Manager LLC across all funds?",
-      "details": "",
+      "details": "A single platform Manager is the usual pattern: it is the registered/exempt adviser and collects the management fee from each fund under an investment management agreement.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-01-the-fund",
         "sec-08-management",
-        "sec-09-sponsor-capital-commitment"
+        "sec-10-management-fee"
       ],
       "tags": [
         "entity-structure-and-ownership"
@@ -1284,17 +1256,15 @@ window.ORRICK_SEED_DATA = {
       "id": "q-004-will-there-be-a-sponsor-holdco-above-the-manager-and-gp-entities",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "low",
       "category": "A. Entity structure and ownership",
       "title": "Will there be a Sponsor HoldCo above the Manager and GP entities",
       "prompt": "Will there be a Sponsor HoldCo above the Manager and GP entities?",
-      "details": "",
+      "details": "A HoldCo mainly helps if outside owners or several principals need platform-level economics. For a two-principal Fund I it usually just adds an entity.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-01-the-fund",
-        "sec-08-management",
-        "sec-09-sponsor-capital-commitment"
+        "sec-08-management"
       ],
       "tags": [
         "entity-structure-and-ownership"
@@ -1304,18 +1274,17 @@ window.ORRICK_SEED_DATA = {
       "id": "q-005-do-we-need-a-fund-specific-carryco-sponsorco-or-can-carry-be-split-in-",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "A. Entity structure and ownership",
       "title": "Do we need a fund-specific CarryCo/SponsorCo, or can carry be split in the GP LLC operating agreement",
       "prompt": "Do we need a fund-specific CarryCo/SponsorCo, or can carry be split in the GP LLC operating agreement?",
-      "details": "",
+      "details": "Carry can be split inside the GP LLC operating agreement. A separate CarryCo is cleaner when non-voting participants, conditional/vested awards, or clawback sharing among recipients are expected - all likely here given placement and sourcing carry.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-01-the-fund",
-        "sec-08-management",
-        "sec-09-sponsor-capital-commitment",
-        "sec-24-distributions"
+        "sec-24-distributions",
+        "sec-26-general-partner-clawback",
+        "sec-08-management"
       ],
       "tags": [
         "entity-structure-and-ownership"
@@ -1329,13 +1298,11 @@ window.ORRICK_SEED_DATA = {
       "category": "A. Entity structure and ownership",
       "title": "If CarryCo is used, does it own the GP LLC or merely receive carry economics from the GP",
       "prompt": "If CarryCo is used, does it own the GP LLC or merely receive carry economics from the GP?",
-      "details": "",
+      "details": "Economics-only participation keeps control with the principals; ownership of the GP moves governance too. Most sponsors keep CarryCo as an economics vehicle only.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-01-the-fund",
         "sec-08-management",
-        "sec-09-sponsor-capital-commitment",
         "sec-24-distributions"
       ],
       "tags": [
@@ -1350,14 +1317,12 @@ window.ORRICK_SEED_DATA = {
       "category": "A. Entity structure and ownership",
       "title": "Who has voting control at each level: GP, Manager, Sponsor HoldCo, CarryCo",
       "prompt": "Who has voting control at each level: GP, Manager, Sponsor HoldCo, CarryCo?",
-      "details": "",
+      "details": "Map control before granting anyone economics. LPs will also care: the removal-of-GP clause interacts with who actually controls the GP entity.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-01-the-fund",
         "sec-08-management",
-        "sec-09-sponsor-capital-commitment",
-        "sec-24-distributions"
+        "sec-18-removal-of-the-general-partner"
       ],
       "tags": [
         "entity-structure-and-ownership"
@@ -1371,14 +1336,12 @@ window.ORRICK_SEED_DATA = {
       "category": "A. Entity structure and ownership",
       "title": "Can non-voting economic participants receive carry without governance rights",
       "prompt": "Can non-voting economic participants receive carry without governance rights?",
-      "details": "",
+      "details": "Yes, if the GP LLC or CarryCo agreement creates a non-voting economic class. Confirm securities-law treatment of granting those interests, especially to placement parties.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-01-the-fund",
-        "sec-08-management",
-        "sec-09-sponsor-capital-commitment",
-        "sec-24-distributions"
+        "sec-24-distributions",
+        "sec-08-management"
       ],
       "tags": [
         "entity-structure-and-ownership"
@@ -1388,18 +1351,17 @@ window.ORRICK_SEED_DATA = {
       "id": "q-009-how-are-clawback-obligations-allocated-among-ultimate-carry-recipients",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "A. Entity structure and ownership",
       "title": "How are clawback obligations allocated among ultimate carry recipients",
       "prompt": "How are clawback obligations allocated among ultimate carry recipients?",
-      "details": "",
+      "details": "The Fund-level clawback sits on the GP; the GP/CarryCo agreement must push it through to every carry recipient (escrow, holdback, or several guarantee), or the principals end up covering departed participants' share.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-01-the-fund",
-        "sec-08-management",
-        "sec-09-sponsor-capital-commitment",
-        "sec-24-distributions"
+        "sec-26-general-partner-clawback",
+        "sec-24-distributions",
+        "sec-39-limited-partner-giveback"
       ],
       "tags": [
         "entity-structure-and-ownership"
@@ -1409,19 +1371,16 @@ window.ORRICK_SEED_DATA = {
       "id": "q-010-what-is-the-target-fund-size-and-hard-cap",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "B. Fund economics",
       "title": "What is the target fund size and hard cap",
       "prompt": "What is the target fund size and hard cap?",
-      "details": "",
+      "details": "Fills the blanks in Capital Commitments and drives the 3(c)(1) LP-count math, minimum commitment, and fee projections.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
         "sec-04-capital-commitments",
-        "sec-10-management-fee",
-        "sec-11-management-fee-offset",
-        "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment"
+        "sec-05-closings"
       ],
       "tags": [
         "fund-economics"
@@ -1435,15 +1394,11 @@ window.ORRICK_SEED_DATA = {
       "category": "B. Fund economics",
       "title": "What is the minimum LP commitment, and can the GP waive it",
       "prompt": "What is the minimum LP commitment, and can the GP waive it?",
-      "details": "",
+      "details": "The form already gives the GP discretion to accept smaller subscriptions; just set the stated minimum.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-04-capital-commitments",
-        "sec-10-management-fee",
-        "sec-11-management-fee-offset",
-        "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment"
+        "sec-04-capital-commitments"
       ],
       "tags": [
         "fund-economics"
@@ -1453,19 +1408,15 @@ window.ORRICK_SEED_DATA = {
       "id": "q-012-what-is-the-management-fee-rate-and-base-committed-capital-invested-ca",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "B. Fund economics",
       "title": "What is the management fee rate and base: committed capital, invested capital, NAV, or stepped-down rate",
       "prompt": "What is the management fee rate and base: committed capital, invested capital, NAV, or stepped-down rate?",
-      "details": "",
+      "details": "The form offers committed-capital fee with post-investment-period stepdown options. For a whitelist secondaries fund, LPs may push for invested-capital or stepped-down fees.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-04-capital-commitments",
-        "sec-10-management-fee",
-        "sec-11-management-fee-offset",
-        "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment"
+        "sec-10-management-fee"
       ],
       "tags": [
         "fund-economics"
@@ -1479,15 +1430,12 @@ window.ORRICK_SEED_DATA = {
       "category": "B. Fund economics",
       "title": "Does the management fee begin at initial closing or only when capital is drawn",
       "prompt": "Does the management fee begin at initial closing or only when capital is drawn?",
-      "details": "",
+      "details": "Fee from initial closing is standard but interacts with how much capital is drawn upfront; also decide the subsequent-closing fee true-up.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-04-capital-commitments",
         "sec-10-management-fee",
-        "sec-11-management-fee-offset",
-        "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment"
+        "sec-05-closings"
       ],
       "tags": [
         "fund-economics"
@@ -1501,15 +1449,13 @@ window.ORRICK_SEED_DATA = {
       "category": "B. Fund economics",
       "title": "Will placement fees, organization expenses, transaction fees, or monitoring fees offset management fees",
       "prompt": "Will placement fees, organization expenses, transaction fees, or monitoring fees offset management fees?",
-      "details": "",
+      "details": "The offset section is optional in the form. Decide offsets now because they determine whether placement and sourcing costs are ultimately borne by LPs or by the Manager.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-04-capital-commitments",
-        "sec-10-management-fee",
         "sec-11-management-fee-offset",
-        "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment"
+        "sec-10-management-fee",
+        "sec-27-fund-expenses"
       ],
       "tags": [
         "fund-economics"
@@ -1519,19 +1465,15 @@ window.ORRICK_SEED_DATA = {
       "id": "q-015-what-is-the-carry-percentage",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "B. Fund economics",
       "title": "What is the carry percentage",
       "prompt": "What is the carry percentage?",
-      "details": "",
+      "details": "Sets the waterfall's carried-interest split (typically 20%; secondaries funds sometimes vary). Everything in the CarryCo/participation discussion keys off this number.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-04-capital-commitments",
-        "sec-10-management-fee",
-        "sec-11-management-fee-offset",
-        "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment"
+        "sec-24-distributions"
       ],
       "tags": [
         "fund-economics"
@@ -1541,19 +1483,15 @@ window.ORRICK_SEED_DATA = {
       "id": "q-016-is-there-a-preferred-return-or-hurdle",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "B. Fund economics",
       "title": "Is there a preferred return or hurdle",
       "prompt": "Is there a preferred return or hurdle?",
-      "details": "",
+      "details": "Decide hurdle (commonly 8%) or no-hurdle. For a fast-recycling secondaries strategy the hurdle plus catch-up mechanics materially change GP economics.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-04-capital-commitments",
-        "sec-10-management-fee",
-        "sec-11-management-fee-offset",
-        "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment"
+        "sec-24-distributions"
       ],
       "tags": [
         "fund-economics"
@@ -1563,19 +1501,16 @@ window.ORRICK_SEED_DATA = {
       "id": "q-017-european-waterfall-or-deal-by-deal-waterfall",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "B. Fund economics",
       "title": "European waterfall or deal-by-deal waterfall",
       "prompt": "European waterfall or deal-by-deal waterfall?",
-      "details": "",
+      "details": "Deal-by-deal pays carry earlier but makes the clawback provision do real work; whole-fund (European) is more LP-friendly and simpler to administer.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-04-capital-commitments",
-        "sec-10-management-fee",
-        "sec-11-management-fee-offset",
         "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment"
+        "sec-26-general-partner-clawback"
       ],
       "tags": [
         "fund-economics"
@@ -1589,15 +1524,11 @@ window.ORRICK_SEED_DATA = {
       "category": "B. Fund economics",
       "title": "Will there be GP catch-up",
       "prompt": "Will there be GP catch-up?",
-      "details": "",
+      "details": "If there is a preferred return, decide full, partial, or no catch-up - this is a pure economics negotiation point.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-04-capital-commitments",
-        "sec-10-management-fee",
-        "sec-11-management-fee-offset",
-        "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment"
+        "sec-24-distributions"
       ],
       "tags": [
         "fund-economics"
@@ -1607,19 +1538,17 @@ window.ORRICK_SEED_DATA = {
       "id": "q-019-what-is-the-gp-commitment-and-can-it-be-cashless-notes-warehoused-secu",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "B. Fund economics",
       "title": "What is the GP commitment, and can it be cashless, notes, warehoused securities, or fee waiver",
       "prompt": "What is the GP commitment, and can it be cashless, notes, warehoused securities, or fee waiver?",
-      "details": "",
+      "details": "The form's Sponsor Capital Commitment already brackets cash, cashless, warehoused securities, and notes. Confirm the percentage (1-2% is common) and which funding forms LPs will accept.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-04-capital-commitments",
-        "sec-10-management-fee",
-        "sec-11-management-fee-offset",
-        "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment"
+        "sec-09-sponsor-capital-commitment",
+        "sec-23-warehoused-securities",
+        "sec-21-capital-contributions"
       ],
       "tags": [
         "fund-economics"
@@ -1629,19 +1558,15 @@ window.ORRICK_SEED_DATA = {
       "id": "q-020-what-counts-as-a-late-stage-private-technology-company",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "C. Investment mandate and whitelist",
       "title": "What counts as a late-stage private technology company",
       "prompt": "What counts as a late-stage private technology company?",
-      "details": "",
+      "details": "Define objectively (e.g., minimum valuation, revenue stage, or named-list approach) so compliance with the mandate is checkable at deal time.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
-        "sec-46-general-risks"
+        "sec-03-investment-objectives-and-program"
       ],
       "tags": [
         "investment-mandate-and-whitelist"
@@ -1651,19 +1576,16 @@ window.ORRICK_SEED_DATA = {
       "id": "q-021-will-the-fund-be-limited-to-a-schedule-a-whitelist-of-companies",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "C. Investment mandate and whitelist",
       "title": "Will the fund be limited to a Schedule A whitelist of companies",
       "prompt": "Will the fund be limited to a Schedule A whitelist of companies?",
-      "details": "",
+      "details": "A whitelist makes the blind pool much easier to market but constrains execution; pair it with a defined process to amend the schedule.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
         "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
-        "sec-46-general-risks"
+        "sec-20-investment-limitations"
       ],
       "tags": [
         "investment-mandate-and-whitelist"
@@ -1677,15 +1599,13 @@ window.ORRICK_SEED_DATA = {
       "category": "C. Investment mandate and whitelist",
       "title": "Who can add or remove whitelist companies, and with what approval",
       "prompt": "Who can add or remove whitelist companies, and with what approval?",
-      "details": "",
+      "details": "Typical design: GP proposes, LPAC approves additions; removals unrestricted. Avoid requiring full LP amendment consent for routine list changes.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-03-investment-objectives-and-program",
         "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
-        "sec-46-general-risks"
+        "sec-12-limited-partner-advisory-committee",
+        "sec-41-amendments"
       ],
       "tags": [
         "investment-mandate-and-whitelist"
@@ -1699,15 +1619,12 @@ window.ORRICK_SEED_DATA = {
       "category": "C. Investment mandate and whitelist",
       "title": "Can the fund invest in companies outside the whitelist with LPAC or majority LP approval",
       "prompt": "Can the fund invest in companies outside the whitelist with LPAC or majority LP approval?",
-      "details": "",
+      "details": "An LPAC-approved exception path preserves flexibility without an amendment; decide the approval threshold and any basket size.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-03-investment-objectives-and-program",
         "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
-        "sec-46-general-risks"
+        "sec-12-limited-partner-advisory-committee"
       ],
       "tags": [
         "investment-mandate-and-whitelist"
@@ -1717,19 +1634,17 @@ window.ORRICK_SEED_DATA = {
       "id": "q-024-can-the-fund-invest-in-spv-interests-tender-vehicles-forward-contracts",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "C. Investment mandate and whitelist",
       "title": "Can the fund invest in SPV interests, tender vehicles, forward contracts, contractual rights, or secondary-access vehicles",
       "prompt": "Can the fund invest in SPV interests, tender vehicles, forward contracts, contractual rights, or secondary-access vehicles?",
-      "details": "",
+      "details": "Core to the strategy: the mandate and the investment limitations must both expressly permit indirect exposure instruments, or every secondary deal risks a consent process.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
         "sec-03-investment-objectives-and-program",
         "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
-        "sec-46-general-risks"
+        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall"
       ],
       "tags": [
         "investment-mandate-and-whitelist"
@@ -1743,15 +1658,13 @@ window.ORRICK_SEED_DATA = {
       "category": "C. Investment mandate and whitelist",
       "title": "Can the fund invest in non-U.S. companies or non-U.S. holding structures",
       "prompt": "Can the fund invest in non-U.S. companies or non-U.S. holding structures?",
-      "details": "",
+      "details": "If yes, the vehicles section should permit blockers/feeders for tax reasons and the PPM needs non-U.S. risk and withholding disclosure.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
         "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
         "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
-        "sec-46-general-risks"
+        "sec-45-taxation"
       ],
       "tags": [
         "investment-mandate-and-whitelist"
@@ -1765,15 +1678,11 @@ window.ORRICK_SEED_DATA = {
       "category": "C. Investment mandate and whitelist",
       "title": "What are single-company concentration limits",
       "prompt": "What are single-company concentration limits?",
-      "details": "",
+      "details": "Typical range is 15-25% of commitments per issuer. A whitelist strategy may justify a higher cap; look-through SPV exposure should count toward it.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
-        "sec-46-general-risks"
+        "sec-20-investment-limitations"
       ],
       "tags": [
         "investment-mandate-and-whitelist"
@@ -1787,15 +1696,12 @@ window.ORRICK_SEED_DATA = {
       "category": "C. Investment mandate and whitelist",
       "title": "Will the fund allow follow-on investments after the investment period",
       "prompt": "Will the fund allow follow-on investments after the investment period?",
-      "details": "",
+      "details": "The Investment Period section should carve out follow-ons and pending transactions; decide any cap on post-period follow-on capital.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
-        "sec-46-general-risks"
+        "sec-14-investment-period",
+        "sec-20-investment-limitations"
       ],
       "tags": [
         "investment-mandate-and-whitelist"
@@ -1805,19 +1711,15 @@ window.ORRICK_SEED_DATA = {
       "id": "q-028-will-there-be-sector-exclusions-or-esg-prohibited-activity-restriction",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "low",
       "category": "C. Investment mandate and whitelist",
       "title": "Will there be sector exclusions or ESG/prohibited activity restrictions",
       "prompt": "Will there be sector exclusions or ESG/prohibited activity restrictions?",
-      "details": "",
+      "details": "Often handled in side letters rather than fund-wide restrictions; decide the baseline now so side-letter asks are manageable.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
-        "sec-46-general-risks"
+        "sec-20-investment-limitations"
       ],
       "tags": [
         "investment-mandate-and-whitelist"
@@ -1831,15 +1733,13 @@ window.ORRICK_SEED_DATA = {
       "category": "C. Investment mandate and whitelist",
       "title": "How should transfer restrictions, ROFRs, company consent, tender rules, and lockups be disclosed",
       "prompt": "How should transfer restrictions, ROFRs, company consent, tender rules, and lockups be disclosed?",
-      "details": "",
+      "details": "These are portfolio-level execution risks unique to secondaries: disclose in the PPM risk factors and reflect in the valuation policy, since ROFRs and consent rights can break signed deals.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
+        "sec-46-general-risks",
         "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
-        "sec-46-general-risks"
+        "sec-32-valuation"
       ],
       "tags": [
         "investment-mandate-and-whitelist"
@@ -1853,15 +1753,12 @@ window.ORRICK_SEED_DATA = {
       "category": "D. Capital calls, speed, and warehousing",
       "title": "What percentage, if any, is drawn at closing",
       "prompt": "What percentage, if any, is drawn at closing?",
-      "details": "",
+      "details": "The form brackets an optional initial drawdown. An upfront 10-25% draw plus reserves is the simplest way to fund fast secondary closings.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
         "sec-21-capital-contributions",
-        "sec-30-borrowing",
-        "sec-27-fund-expenses",
-        "sec-09-sponsor-capital-commitment",
-        "sec-20-investment-limitations"
+        "sec-05-closings"
       ],
       "tags": [
         "capital-calls-speed-and-warehousing"
@@ -1871,19 +1768,15 @@ window.ORRICK_SEED_DATA = {
       "id": "q-031-what-is-the-standard-capital-call-notice-period",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "D. Capital calls, speed, and warehousing",
       "title": "What is the standard capital call notice period",
       "prompt": "What is the standard capital call notice period?",
-      "details": "",
+      "details": "The form offers 10/15/20 business days; secondary allocations often close faster than that. Consider 10 business days standard with a shorter expedited path.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-21-capital-contributions",
-        "sec-30-borrowing",
-        "sec-27-fund-expenses",
-        "sec-09-sponsor-capital-commitment",
-        "sec-20-investment-limitations"
+        "sec-21-capital-contributions"
       ],
       "tags": [
         "capital-calls-speed-and-warehousing"
@@ -1893,21 +1786,15 @@ window.ORRICK_SEED_DATA = {
       "id": "q-032-what-is-the-emergency-special-capital-call-notice-period-for-time-sens",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "D. Capital calls, speed, and warehousing",
       "title": "What is the emergency/special capital call notice period for time-sensitive secondary deals",
       "prompt": "What is the emergency/special capital call notice period for time-sensitive secondary deals?",
-      "details": "",
+      "details": "Add an expedited call (e.g., 3-5 business days) for identified transactions, paired with the bridge facility and GP-advance mechanics as a backstop.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-21-capital-contributions",
-        "sec-30-borrowing",
-        "sec-27-fund-expenses",
-        "sec-09-sponsor-capital-commitment",
-        "sec-20-investment-limitations",
-        "sec-03-investment-objectives-and-program",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall"
+        "sec-21-capital-contributions"
       ],
       "tags": [
         "capital-calls-speed-and-warehousing"
@@ -1921,15 +1808,12 @@ window.ORRICK_SEED_DATA = {
       "category": "D. Capital calls, speed, and warehousing",
       "title": "Can the GP call capital for deposits, broken-deal expenses, legal diligence, and reserves",
       "prompt": "Can the GP call capital for deposits, broken-deal expenses, legal diligence, and reserves?",
-      "details": "",
+      "details": "Make sure the call mechanics and the Fund Expenses definition both cover deposits and broken-deal costs, which are routine in competitive secondary processes.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
         "sec-21-capital-contributions",
-        "sec-30-borrowing",
-        "sec-27-fund-expenses",
-        "sec-09-sponsor-capital-commitment",
-        "sec-20-investment-limitations"
+        "sec-27-fund-expenses"
       ],
       "tags": [
         "capital-calls-speed-and-warehousing"
@@ -1943,15 +1827,12 @@ window.ORRICK_SEED_DATA = {
       "category": "D. Capital calls, speed, and warehousing",
       "title": "What default remedies apply if an LP misses a capital call",
       "prompt": "What default remedies apply if an LP misses a capital call?",
-      "details": "",
+      "details": "The form leaves remedies to the fund agreement. Standard menu: interest on late amounts, dilution/forfeiture up to 50%, forced transfer, and loss of voting rights.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-21-capital-contributions",
-        "sec-30-borrowing",
-        "sec-27-fund-expenses",
-        "sec-09-sponsor-capital-commitment",
-        "sec-20-investment-limitations"
+        "sec-22-failure-to-make-capital-contributions",
+        "sec-21-capital-contributions"
       ],
       "tags": [
         "capital-calls-speed-and-warehousing"
@@ -1965,15 +1846,11 @@ window.ORRICK_SEED_DATA = {
       "category": "D. Capital calls, speed, and warehousing",
       "title": "Can the fund borrow under a bridge facility or subscription line",
       "prompt": "Can the fund borrow under a bridge facility or subscription line?",
-      "details": "",
+      "details": "The form permits borrowing subject to a bracketed cap. Pick the cap (commonly 20-30% of commitments) and confirm guarantees and SPV-level debt count against it.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-21-capital-contributions",
-        "sec-30-borrowing",
-        "sec-27-fund-expenses",
-        "sec-09-sponsor-capital-commitment",
-        "sec-20-investment-limitations"
+        "sec-30-borrowing"
       ],
       "tags": [
         "capital-calls-speed-and-warehousing"
@@ -1987,15 +1864,12 @@ window.ORRICK_SEED_DATA = {
       "category": "D. Capital calls, speed, and warehousing",
       "title": "Can the GP or affiliate advance funds to the fund",
       "prompt": "Can the GP or affiliate advance funds to the fund?",
-      "details": "",
+      "details": "GP advances are the fastest bridge for a closing deadline. Authorize them expressly, with interest at cost and repayment from the next call to avoid a conflicts fight later.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-21-capital-contributions",
         "sec-30-borrowing",
-        "sec-27-fund-expenses",
-        "sec-09-sponsor-capital-commitment",
-        "sec-20-investment-limitations"
+        "sec-28-general-partner-expenses"
       ],
       "tags": [
         "capital-calls-speed-and-warehousing"
@@ -2005,19 +1879,16 @@ window.ORRICK_SEED_DATA = {
       "id": "q-037-can-the-gp-or-affiliate-warehouse-securities-and-later-sell-them-to-th",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "D. Capital calls, speed, and warehousing",
       "title": "Can the GP or affiliate warehouse securities and later sell them to the fund",
       "prompt": "Can the GP or affiliate warehouse securities and later sell them to the fund?",
-      "details": "",
+      "details": "The form's optional Warehoused Securities clause permits transfers at cost plus expenses. Keep it - warehousing is core to executing before the fund closes - and decide whether warehoused positions can satisfy the GP commitment.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-21-capital-contributions",
-        "sec-30-borrowing",
-        "sec-27-fund-expenses",
-        "sec-09-sponsor-capital-commitment",
-        "sec-20-investment-limitations"
+        "sec-23-warehoused-securities",
+        "sec-09-sponsor-capital-commitment"
       ],
       "tags": [
         "capital-calls-speed-and-warehousing"
@@ -2031,14 +1902,12 @@ window.ORRICK_SEED_DATA = {
       "category": "D. Capital calls, speed, and warehousing",
       "title": "What approvals are needed for warehoused investments",
       "prompt": "What approvals are needed for warehoused investments?",
-      "details": "",
+      "details": "Affiliate sales to the fund are classic conflict territory: decide whether cost-plus-expenses transfers within a set window are pre-authorized or need LPAC sign-off.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-21-capital-contributions",
-        "sec-30-borrowing",
-        "sec-27-fund-expenses",
-        "sec-09-sponsor-capital-commitment",
+        "sec-23-warehoused-securities",
+        "sec-12-limited-partner-advisory-committee",
         "sec-20-investment-limitations"
       ],
       "tags": [
@@ -2053,15 +1922,12 @@ window.ORRICK_SEED_DATA = {
       "category": "D. Capital calls, speed, and warehousing",
       "title": "How are warehousing costs, interest, legal fees, and conflict disclosures handled",
       "prompt": "How are warehousing costs, interest, legal fees, and conflict disclosures handled?",
-      "details": "",
+      "details": "Define the transfer price formula (cost plus carrying costs at a stated rate) and disclose the arrangement in the PPM conflicts section.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-21-capital-contributions",
-        "sec-30-borrowing",
-        "sec-27-fund-expenses",
-        "sec-09-sponsor-capital-commitment",
-        "sec-20-investment-limitations"
+        "sec-23-warehoused-securities",
+        "sec-27-fund-expenses"
       ],
       "tags": [
         "capital-calls-speed-and-warehousing"
@@ -2071,18 +1937,15 @@ window.ORRICK_SEED_DATA = {
       "id": "q-040-who-can-solicit-lps",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "E. Buy-side placement / capital formation",
       "title": "Who can solicit LPs",
       "prompt": "Who can solicit LPs?",
-      "details": "",
+      "details": "Principals and Manager personnel can solicit under the issuer exemption; anyone compensated for raising capital raises broker-dealer issues. Inventory the expected placement parties before signing anything.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
         "sec-06-investor-qualifications",
-        "sec-11-management-fee-offset",
-        "sec-27-fund-expenses",
-        "sec-42-side-letters",
         "sec-46-general-risks"
       ],
       "tags": [
@@ -2093,19 +1956,15 @@ window.ORRICK_SEED_DATA = {
       "id": "q-041-must-any-compensated-lp-placement-be-through-a-registered-broker-deale",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "E. Buy-side placement / capital formation",
       "title": "Must any compensated LP placement be through a registered broker-dealer",
       "prompt": "Must any compensated LP placement be through a registered broker-dealer?",
-      "details": "",
+      "details": "Transaction-based compensation to an unregistered finder is the classic foot-fault; the safe default is BD-only for success-fee arrangements.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
-        "sec-11-management-fee-offset",
-        "sec-27-fund-expenses",
-        "sec-42-side-letters",
-        "sec-46-general-risks"
+        "sec-06-investor-qualifications"
       ],
       "tags": [
         "buy-side-placement-capital-formation"
@@ -2119,15 +1978,11 @@ window.ORRICK_SEED_DATA = {
       "category": "E. Buy-side placement / capital formation",
       "title": "Can non-BD finders or consultants be used, and under what restrictions",
       "prompt": "Can non-BD finders or consultants be used, and under what restrictions?",
-      "details": "",
+      "details": "Only with flat-fee/consulting structures that avoid transaction-based pay, no negotiation role, and counsel sign-off. Document the analysis per relationship.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
-        "sec-11-management-fee-offset",
-        "sec-27-fund-expenses",
-        "sec-42-side-letters",
-        "sec-46-general-risks"
+        "sec-06-investor-qualifications"
       ],
       "tags": [
         "buy-side-placement-capital-formation"
@@ -2141,16 +1996,13 @@ window.ORRICK_SEED_DATA = {
       "category": "E. Buy-side placement / capital formation",
       "title": "Can placement compensation include cash fees, management fee sharing, carried interest, revenue share, or expense reimbursement",
       "prompt": "Can placement compensation include cash fees, management fee sharing, carried interest, revenue share, or expense reimbursement?",
-      "details": "",
+      "details": "Carry-sharing is usually the cleanest for non-BD parties because it is an internal GP/CarryCo split rather than a fund-paid fee, but it still needs conflicts disclosure and BD analysis if tied to commitments raised.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
         "sec-11-management-fee-offset",
         "sec-27-fund-expenses",
-        "sec-42-side-letters",
-        "sec-46-general-risks",
-        "sec-10-management-fee"
+        "sec-24-distributions"
       ],
       "tags": [
         "buy-side-placement-capital-formation"
@@ -2164,16 +2016,13 @@ window.ORRICK_SEED_DATA = {
       "category": "E. Buy-side placement / capital formation",
       "title": "Is compensation paid by the Fund, GP, Manager, CarryCo, or affiliate",
       "prompt": "Is compensation paid by the Fund, GP, Manager, CarryCo, or affiliate?",
-      "details": "",
+      "details": "Who pays determines who bears the cost: Fund-paid placement fees are LP money (and often trigger a fee offset); Manager/GP-paid comes out of sponsor economics.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
-        "sec-11-management-fee-offset",
         "sec-27-fund-expenses",
-        "sec-42-side-letters",
-        "sec-46-general-risks",
-        "sec-24-distributions"
+        "sec-28-general-partner-expenses",
+        "sec-11-management-fee-offset"
       ],
       "tags": [
         "buy-side-placement-capital-formation"
@@ -2187,16 +2036,12 @@ window.ORRICK_SEED_DATA = {
       "category": "E. Buy-side placement / capital formation",
       "title": "Is the compensation treated as Fund Expense, Manager expense, or GP/carry sharing",
       "prompt": "Is the compensation treated as Fund Expense, Manager expense, or GP/carry sharing?",
-      "details": "",
+      "details": "Keep the term sheet, LPA expense section, and offset provision consistent - LPs read all three, and mismatches invite negotiation.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
-        "sec-11-management-fee-offset",
         "sec-27-fund-expenses",
-        "sec-42-side-letters",
-        "sec-46-general-risks",
-        "sec-24-distributions"
+        "sec-11-management-fee-offset"
       ],
       "tags": [
         "buy-side-placement-capital-formation"
@@ -2210,16 +2055,12 @@ window.ORRICK_SEED_DATA = {
       "category": "E. Buy-side placement / capital formation",
       "title": "Will placement-linked carry require disclosure in the PPM and/or term sheet",
       "prompt": "Will placement-linked carry require disclosure in the PPM and/or term sheet?",
-      "details": "",
+      "details": "Disclose the category of arrangement (carry sharing with placement parties) in the PPM conflicts/fees sections; specific splits can stay in the separate agreements.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
-        "sec-11-management-fee-offset",
-        "sec-27-fund-expenses",
-        "sec-42-side-letters",
         "sec-46-general-risks",
-        "sec-24-distributions"
+        "sec-42-side-letters"
       ],
       "tags": [
         "buy-side-placement-capital-formation"
@@ -2229,19 +2070,15 @@ window.ORRICK_SEED_DATA = {
       "id": "q-047-will-placement-parties-receive-a-tail-on-lps-introduced-before-termina",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "low",
       "category": "E. Buy-side placement / capital formation",
       "title": "Will placement parties receive a tail on LPs introduced before termination",
       "prompt": "Will placement parties receive a tail on LPs introduced before termination?",
-      "details": "",
+      "details": "A tail is a placement-agreement term, not a fund-document term; decide the standard tail (commonly 6-12 months) for the form agreement.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
-        "sec-11-management-fee-offset",
-        "sec-27-fund-expenses",
-        "sec-42-side-letters",
-        "sec-46-general-risks"
+        "sec-27-fund-expenses"
       ],
       "tags": [
         "buy-side-placement-capital-formation"
@@ -2251,19 +2088,16 @@ window.ORRICK_SEED_DATA = {
       "id": "q-048-who-approves-offering-materials-and-investor-communications",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "low",
       "category": "E. Buy-side placement / capital formation",
       "title": "Who approves offering materials and investor communications",
       "prompt": "Who approves offering materials and investor communications?",
-      "details": "",
+      "details": "The Manager should have sole authority over offering materials, with placement parties contractually barred from creating their own.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
-        "sec-11-management-fee-offset",
-        "sec-27-fund-expenses",
-        "sec-42-side-letters",
-        "sec-46-general-risks"
+        "sec-08-management",
+        "sec-06-investor-qualifications"
       ],
       "tags": [
         "buy-side-placement-capital-formation"
@@ -2273,18 +2107,15 @@ window.ORRICK_SEED_DATA = {
       "id": "q-049-how-will-506-b-relationship-rules-or-506-c-verification-rules-be-handl",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "E. Buy-side placement / capital formation",
       "title": "How will 506(b) relationship rules or 506(c) verification rules be handled",
       "prompt": "How will 506(b) relationship rules or 506(c) verification rules be handled?",
-      "details": "",
+      "details": "506(b) requires pre-existing relationships and no general solicitation; 506(c) allows solicitation but requires accreditation verification. Placement-party outreach practices must match whichever path is chosen.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
         "sec-06-investor-qualifications",
-        "sec-11-management-fee-offset",
-        "sec-27-fund-expenses",
-        "sec-42-side-letters",
         "sec-46-general-risks"
       ],
       "tags": [
@@ -2299,17 +2130,12 @@ window.ORRICK_SEED_DATA = {
       "category": "F. Sell-side sourcing / origination",
       "title": "Who can source secondary opportunities",
       "prompt": "Who can source secondary opportunities?",
-      "details": "",
+      "details": "Anyone can introduce deals; the design question is who may be compensated and how. Keep investment authority with the GP regardless of source.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-27-fund-expenses",
-        "sec-20-investment-limitations",
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-38-exculpation-and-indemnification",
-        "sec-03-investment-objectives-and-program",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals"
+        "sec-08-management",
+        "sec-03-investment-objectives-and-program"
       ],
       "tags": [
         "sell-side-sourcing-origination"
@@ -2319,20 +2145,17 @@ window.ORRICK_SEED_DATA = {
       "id": "q-051-can-sourcing-parties-receive-cash-fees-deal-by-deal-carry-fund-carry-o",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "F. Sell-side sourcing / origination",
       "title": "Can sourcing parties receive cash fees, deal-by-deal carry, fund carry, or revenue share",
       "prompt": "Can sourcing parties receive cash fees, deal-by-deal carry, fund carry, or revenue share?",
-      "details": "",
+      "details": "Deal-by-deal carry to a source is a fund-economics event that needs waterfall or GP-split plumbing; cash success fees raise BD issues if tied to securities transactions.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
         "sec-27-fund-expenses",
-        "sec-20-investment-limitations",
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-38-exculpation-and-indemnification",
         "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment"
+        "sec-11-management-fee-offset"
       ],
       "tags": [
         "sell-side-sourcing-origination"
@@ -2346,14 +2169,11 @@ window.ORRICK_SEED_DATA = {
       "category": "F. Sell-side sourcing / origination",
       "title": "Can a deal source negotiate terms, or only introduce opportunities",
       "prompt": "Can a deal source negotiate terms, or only introduce opportunities?",
-      "details": "",
+      "details": "Introduction-only keeps the source on the safer side of the broker-dealer line; negotiation authority plus success comp looks like brokerage.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-27-fund-expenses",
-        "sec-20-investment-limitations",
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-38-exculpation-and-indemnification"
+        "sec-08-management"
       ],
       "tags": [
         "sell-side-sourcing-origination"
@@ -2367,12 +2187,10 @@ window.ORRICK_SEED_DATA = {
       "category": "F. Sell-side sourcing / origination",
       "title": "Can a deal source also represent sellers",
       "prompt": "Can a deal source also represent sellers?",
-      "details": "",
+      "details": "Dual representation is a live conflict: require disclosure, and decide whether LPAC consent is needed when a compensated source is on both sides.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-27-fund-expenses",
-        "sec-20-investment-limitations",
         "sec-29-other-competitive-activity-successor-fund",
         "sec-38-exculpation-and-indemnification"
       ],
@@ -2384,18 +2202,15 @@ window.ORRICK_SEED_DATA = {
       "id": "q-054-do-deal-source-payments-create-broker-dealer-concerns",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "F. Sell-side sourcing / origination",
       "title": "Do deal-source payments create broker-dealer concerns",
       "prompt": "Do deal-source payments create broker-dealer concerns?",
-      "details": "",
+      "details": "Yes if compensation is transaction-based and the source effects securities transactions. This is a counsel sign-off item for each sourcing agreement, not a one-time decision.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-27-fund-expenses",
-        "sec-20-investment-limitations",
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-38-exculpation-and-indemnification"
+        "sec-46-general-risks"
       ],
       "tags": [
         "sell-side-sourcing-origination"
@@ -2409,14 +2224,12 @@ window.ORRICK_SEED_DATA = {
       "category": "F. Sell-side sourcing / origination",
       "title": "Are sourcing fees Fund Expenses or Manager/GP expenses",
       "prompt": "Are sourcing fees Fund Expenses or Manager/GP expenses?",
-      "details": "",
+      "details": "The form's GP Expenses section brackets whether investment-sourcing costs sit with the sponsor. Decide the default and mirror it in the sourcing form agreement.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
         "sec-27-fund-expenses",
-        "sec-20-investment-limitations",
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-38-exculpation-and-indemnification"
+        "sec-28-general-partner-expenses"
       ],
       "tags": [
         "sell-side-sourcing-origination"
@@ -2426,18 +2239,15 @@ window.ORRICK_SEED_DATA = {
       "id": "q-056-are-there-exclusivity-non-circumvention-or-tail-periods",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "low",
       "category": "F. Sell-side sourcing / origination",
       "title": "Are there exclusivity, non-circumvention, or tail periods",
       "prompt": "Are there exclusivity, non-circumvention, or tail periods?",
-      "details": "",
+      "details": "These live in the sourcing agreement; set house-standard positions (no exclusivity, narrow non-circumvention, short tail) for the template.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-27-fund-expenses",
-        "sec-20-investment-limitations",
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-38-exculpation-and-indemnification"
+        "sec-29-other-competitive-activity-successor-fund"
       ],
       "tags": [
         "sell-side-sourcing-origination"
@@ -2451,14 +2261,12 @@ window.ORRICK_SEED_DATA = {
       "category": "F. Sell-side sourcing / origination",
       "title": "What disclosures are required for affiliated or related-party sourcing",
       "prompt": "What disclosures are required for affiliated or related-party sourcing?",
-      "details": "",
+      "details": "Affiliate-sourced deals should be disclosed in the PPM conflicts section and may need LPAC consent under the investment limitations.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-27-fund-expenses",
         "sec-20-investment-limitations",
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-38-exculpation-and-indemnification"
+        "sec-46-general-risks"
       ],
       "tags": [
         "sell-side-sourcing-origination"
@@ -2472,14 +2280,12 @@ window.ORRICK_SEED_DATA = {
       "category": "F. Sell-side sourcing / origination",
       "title": "How are conflicts handled if a source also participates in another vehicle",
       "prompt": "How are conflicts handled if a source also participates in another vehicle?",
-      "details": "",
+      "details": "Combine allocation-policy treatment with LPAC disclosure: a source with its own SPV competing for the same allocation is the main real-world scenario.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-27-fund-expenses",
-        "sec-20-investment-limitations",
         "sec-29-other-competitive-activity-successor-fund",
-        "sec-38-exculpation-and-indemnification"
+        "sec-34-co-investment-opportunities"
       ],
       "tags": [
         "sell-side-sourcing-origination"
@@ -2493,14 +2299,12 @@ window.ORRICK_SEED_DATA = {
       "category": "F. Sell-side sourcing / origination",
       "title": "Who has authority to approve sourced deals",
       "prompt": "Who has authority to approve sourced deals?",
-      "details": "",
+      "details": "The GP's investment committee approves all deals; sources never hold approval rights. Only conflicted deals escalate to the LPAC.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-27-fund-expenses",
-        "sec-20-investment-limitations",
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-38-exculpation-and-indemnification"
+        "sec-08-management",
+        "sec-12-limited-partner-advisory-committee"
       ],
       "tags": [
         "sell-side-sourcing-origination"
@@ -2510,20 +2314,15 @@ window.ORRICK_SEED_DATA = {
       "id": "q-060-when-can-a-successor-fund-be-launched",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "G. Future funds, SPVs, and allocations",
       "title": "When can a successor fund be launched",
       "prompt": "When can a successor fund be launched?",
-      "details": "",
+      "details": "The form restricts successor blind pools during the investment period until a deployment threshold (often 70-75% invested/reserved). Pick the threshold and confirm SPVs don't count as successor funds.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-34-co-investment-opportunities",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-20-investment-limitations",
-        "sec-03-investment-objectives-and-program",
-        "sec-33-transfers-of-interests-and-withdrawals"
+        "sec-29-other-competitive-activity-successor-fund"
       ],
       "tags": [
         "future-funds-spvs-and-allocations"
@@ -2537,16 +2336,11 @@ window.ORRICK_SEED_DATA = {
       "category": "G. Future funds, SPVs, and allocations",
       "title": "What counts as a prohibited substantially similar blind-pool fund",
       "prompt": "What counts as a prohibited substantially similar blind-pool fund?",
-      "details": "",
+      "details": "Define narrowly: a multi-investor blind pool with a substantially overlapping mandate. Single-deal SPVs, co-invests, and feeders should be expressly excluded.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-34-co-investment-opportunities",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-20-investment-limitations",
-        "sec-03-investment-objectives-and-program",
-        "sec-33-transfers-of-interests-and-withdrawals"
+        "sec-29-other-competitive-activity-successor-fund"
       ],
       "tags": [
         "future-funds-spvs-and-allocations"
@@ -2556,20 +2350,17 @@ window.ORRICK_SEED_DATA = {
       "id": "q-062-what-carveouts-are-needed-for-co-invest-vehicles-single-deal-spvs-feed",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "G. Future funds, SPVs, and allocations",
       "title": "What carveouts are needed for co-invest vehicles, single-deal SPVs, feeders, blockers, alternative investment vehicles, holding vehicles, and overflow vehicles",
       "prompt": "What carveouts are needed for co-invest vehicles, single-deal SPVs, feeders, blockers, alternative investment vehicles, holding vehicles, and overflow vehicles?",
-      "details": "",
+      "details": "List every execution-vehicle type as an express carveout from the successor-fund restriction; this is the memo's core drafting request and the biggest execution risk if missed.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
         "sec-29-other-competitive-activity-successor-fund",
-        "sec-34-co-investment-opportunities",
         "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-20-investment-limitations",
-        "sec-03-investment-objectives-and-program",
-        "sec-33-transfers-of-interests-and-withdrawals"
+        "sec-34-co-investment-opportunities"
       ],
       "tags": [
         "future-funds-spvs-and-allocations"
@@ -2583,16 +2374,12 @@ window.ORRICK_SEED_DATA = {
       "category": "G. Future funds, SPVs, and allocations",
       "title": "Can the Manager manage multiple funds at once",
       "prompt": "Can the Manager manage multiple funds at once?",
-      "details": "",
+      "details": "The form already permits other competitive activity; make sure the Manager's other mandates only trip the restriction if they are substantially similar blind pools.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
         "sec-29-other-competitive-activity-successor-fund",
-        "sec-34-co-investment-opportunities",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-20-investment-limitations",
-        "sec-03-investment-objectives-and-program",
-        "sec-33-transfers-of-interests-and-withdrawals"
+        "sec-08-management"
       ],
       "tags": [
         "future-funds-spvs-and-allocations"
@@ -2602,20 +2389,16 @@ window.ORRICK_SEED_DATA = {
       "id": "q-064-how-are-opportunities-allocated-among-fund-i-fund-ii-co-invests-parall",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "G. Future funds, SPVs, and allocations",
       "title": "How are opportunities allocated among Fund I, Fund II, co-invests, parallel funds, SPVs, affiliates, and insiders",
       "prompt": "How are opportunities allocated among Fund I, Fund II, co-invests, parallel funds, SPVs, affiliates, and insiders?",
-      "details": "",
+      "details": "Adopt a written allocation policy (fund-first with capacity-based overflow to co-invest/SPVs is typical) and reference it in the PPM; regulators and LPs both ask for it.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
         "sec-29-other-competitive-activity-successor-fund",
-        "sec-34-co-investment-opportunities",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-20-investment-limitations",
-        "sec-03-investment-objectives-and-program",
-        "sec-33-transfers-of-interests-and-withdrawals"
+        "sec-34-co-investment-opportunities"
       ],
       "tags": [
         "future-funds-spvs-and-allocations"
@@ -2629,16 +2412,12 @@ window.ORRICK_SEED_DATA = {
       "category": "G. Future funds, SPVs, and allocations",
       "title": "Can LPs get co-investment rights",
       "prompt": "Can LPs get co-investment rights?",
-      "details": "",
+      "details": "The form keeps co-invest offers discretionary. Hold that line in the LPA and grant any priority rights through side letters so MFN exposure is controlled.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-29-other-competitive-activity-successor-fund",
         "sec-34-co-investment-opportunities",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-20-investment-limitations",
-        "sec-03-investment-objectives-and-program",
-        "sec-33-transfers-of-interests-and-withdrawals"
+        "sec-42-side-letters"
       ],
       "tags": [
         "future-funds-spvs-and-allocations"
@@ -2652,16 +2431,12 @@ window.ORRICK_SEED_DATA = {
       "category": "G. Future funds, SPVs, and allocations",
       "title": "Can insiders invest personally alongside the fund",
       "prompt": "Can insiders invest personally alongside the fund?",
-      "details": "",
+      "details": "Permit only after the fund takes its full allocation, with conflicts disclosure; unconstrained insider co-investment is a common LP diligence objection.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-29-other-competitive-activity-successor-fund",
         "sec-34-co-investment-opportunities",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-20-investment-limitations",
-        "sec-03-investment-objectives-and-program",
-        "sec-33-transfers-of-interests-and-withdrawals"
+        "sec-20-investment-limitations"
       ],
       "tags": [
         "future-funds-spvs-and-allocations"
@@ -2675,16 +2450,12 @@ window.ORRICK_SEED_DATA = {
       "category": "G. Future funds, SPVs, and allocations",
       "title": "Can the fund invest through a vehicle that charges its own fees/carry",
       "prompt": "Can the fund invest through a vehicle that charges its own fees/carry?",
-      "details": "",
+      "details": "Secondary access often requires buying into fee-bearing SPVs. Permit it with a cap or LPAC consent, and disclose the fee layering; a flat prohibition would block core strategy deals.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-34-co-investment-opportunities",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
         "sec-20-investment-limitations",
-        "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment"
+        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall"
       ],
       "tags": [
         "future-funds-spvs-and-allocations"
@@ -2698,16 +2469,12 @@ window.ORRICK_SEED_DATA = {
       "category": "G. Future funds, SPVs, and allocations",
       "title": "Will LPAC approval be needed for certain conflicts or allocation decisions",
       "prompt": "Will LPAC approval be needed for certain conflicts or allocation decisions?",
-      "details": "",
+      "details": "Reserve LPAC approval for genuine conflicts (affiliate transactions, warehousing outside pre-agreed terms, allocation exceptions) and keep routine execution GP-discretionary.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-34-co-investment-opportunities",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-20-investment-limitations",
-        "sec-03-investment-objectives-and-program",
-        "sec-33-transfers-of-interests-and-withdrawals"
+        "sec-12-limited-partner-advisory-committee",
+        "sec-20-investment-limitations"
       ],
       "tags": [
         "future-funds-spvs-and-allocations"
@@ -2717,21 +2484,16 @@ window.ORRICK_SEED_DATA = {
       "id": "q-069-will-the-manager-rely-on-an-investment-adviser-exemption-or-register",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "H. Regulatory, compliance, and operations",
       "title": "Will the manager rely on an investment adviser exemption or register",
       "prompt": "Will the manager rely on an investment adviser exemption or register?",
-      "details": "",
+      "details": "Most sub-$150M private fund managers use the SEC private fund adviser exemption (ERA status) plus state rules. The answer drives compliance obligations across the platform.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
-        "sec-31-reports",
-        "sec-32-valuation",
-        "sec-27-fund-expenses",
-        "sec-28-general-partner-expenses",
-        "sec-38-exculpation-and-indemnification",
-        "sec-40-erisa"
+        "sec-08-management",
+        "sec-46-general-risks"
       ],
       "tags": [
         "regulatory-compliance-and-operations"
@@ -2745,17 +2507,11 @@ window.ORRICK_SEED_DATA = {
       "category": "H. Regulatory, compliance, and operations",
       "title": "What state-level adviser requirements apply",
       "prompt": "What state-level adviser requirements apply?",
-      "details": "",
+      "details": "Check the manager's home state: some states require investment adviser registration even for exempt-reporting advisers.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
-        "sec-31-reports",
-        "sec-32-valuation",
-        "sec-27-fund-expenses",
-        "sec-28-general-partner-expenses",
-        "sec-38-exculpation-and-indemnification",
-        "sec-40-erisa"
+        "sec-08-management"
       ],
       "tags": [
         "regulatory-compliance-and-operations"
@@ -2769,17 +2525,11 @@ window.ORRICK_SEED_DATA = {
       "category": "H. Regulatory, compliance, and operations",
       "title": "Who handles AML/KYC and bad actor checks",
       "prompt": "Who handles AML/KYC and bad actor checks?",
-      "details": "",
+      "details": "Usually the fund administrator runs AML/KYC on subscriptions; Rule 506(d) bad-actor checks must also cover placement parties and beneficial owners of the GP.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
-        "sec-31-reports",
-        "sec-32-valuation",
-        "sec-27-fund-expenses",
-        "sec-28-general-partner-expenses",
-        "sec-38-exculpation-and-indemnification",
-        "sec-40-erisa"
+        "sec-06-investor-qualifications"
       ],
       "tags": [
         "regulatory-compliance-and-operations"
@@ -2793,17 +2543,12 @@ window.ORRICK_SEED_DATA = {
       "category": "H. Regulatory, compliance, and operations",
       "title": "Who is fund administrator",
       "prompt": "Who is fund administrator?",
-      "details": "",
+      "details": "Select early - the administrator drives capital-call logistics, reporting cadence, and AML/KYC workflow, and admin fees are a named Fund Expense.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
         "sec-31-reports",
-        "sec-32-valuation",
-        "sec-27-fund-expenses",
-        "sec-28-general-partner-expenses",
-        "sec-38-exculpation-and-indemnification",
-        "sec-40-erisa"
+        "sec-27-fund-expenses"
       ],
       "tags": [
         "regulatory-compliance-and-operations"
@@ -2817,17 +2562,11 @@ window.ORRICK_SEED_DATA = {
       "category": "H. Regulatory, compliance, and operations",
       "title": "Will annual financials be audited",
       "prompt": "Will annual financials be audited?",
-      "details": "",
+      "details": "The form promises annual financials; institutional LPs and the custody rule (if registered) effectively require an audit. Budget it as a Fund Expense.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
-        "sec-31-reports",
-        "sec-32-valuation",
-        "sec-27-fund-expenses",
-        "sec-28-general-partner-expenses",
-        "sec-38-exculpation-and-indemnification",
-        "sec-40-erisa"
+        "sec-31-reports"
       ],
       "tags": [
         "regulatory-compliance-and-operations"
@@ -2841,17 +2580,11 @@ window.ORRICK_SEED_DATA = {
       "category": "H. Regulatory, compliance, and operations",
       "title": "What reporting cadence is promised to LPs",
       "prompt": "What reporting cadence is promised to LPs?",
-      "details": "",
+      "details": "The form's quarterly unaudited/annual package is standard; do not promise more in side letters than the administrator can produce.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
-        "sec-31-reports",
-        "sec-32-valuation",
-        "sec-27-fund-expenses",
-        "sec-28-general-partner-expenses",
-        "sec-38-exculpation-and-indemnification",
-        "sec-40-erisa"
+        "sec-31-reports"
       ],
       "tags": [
         "regulatory-compliance-and-operations"
@@ -2861,22 +2594,16 @@ window.ORRICK_SEED_DATA = {
       "id": "q-075-who-values-private-positions-and-spv-interests",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "high",
       "category": "H. Regulatory, compliance, and operations",
       "title": "Who values private positions and SPV interests",
       "prompt": "Who values private positions and SPV interests?",
-      "details": "",
+      "details": "The GP values assets in good faith under the form, but stale secondary marks are a known regulator focus; adopt a written valuation policy covering indirect SPV positions and in-kind distributions.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
-        "sec-31-reports",
         "sec-32-valuation",
-        "sec-27-fund-expenses",
-        "sec-28-general-partner-expenses",
-        "sec-38-exculpation-and-indemnification",
-        "sec-40-erisa",
-        "sec-03-investment-objectives-and-program"
+        "sec-25-in-kind-distributions"
       ],
       "tags": [
         "regulatory-compliance-and-operations"
@@ -2886,21 +2613,15 @@ window.ORRICK_SEED_DATA = {
       "id": "q-076-what-cyber-privacy-data-room-procedures-are-needed",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "low",
       "category": "H. Regulatory, compliance, and operations",
       "title": "What cyber/privacy/data-room procedures are needed",
       "prompt": "What cyber/privacy/data-room procedures are needed?",
-      "details": "",
+      "details": "Operational item: data-room access controls and investor-data handling belong in the compliance manual, not the fund documents.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
-        "sec-31-reports",
-        "sec-32-valuation",
-        "sec-27-fund-expenses",
-        "sec-28-general-partner-expenses",
-        "sec-38-exculpation-and-indemnification",
-        "sec-40-erisa"
+        "sec-31-reports"
       ],
       "tags": [
         "regulatory-compliance-and-operations"
@@ -2914,17 +2635,12 @@ window.ORRICK_SEED_DATA = {
       "category": "H. Regulatory, compliance, and operations",
       "title": "What insurance and indemnity coverage should be maintained",
       "prompt": "What insurance and indemnity coverage should be maintained?",
-      "details": "",
+      "details": "GP/Manager D&O and E&O coverage backstops the fund indemnity; the form lets the fund bear the premium as a Fund Expense.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
-        "sec-31-reports",
-        "sec-32-valuation",
-        "sec-27-fund-expenses",
-        "sec-28-general-partner-expenses",
         "sec-38-exculpation-and-indemnification",
-        "sec-40-erisa"
+        "sec-27-fund-expenses"
       ],
       "tags": [
         "regulatory-compliance-and-operations"
@@ -2934,428 +2650,323 @@ window.ORRICK_SEED_DATA = {
       "id": "q-078-what-records-must-be-kept-for-placement-sourcing-investment-decisions-",
       "issueType": "question",
       "status": "open",
-      "priority": "medium",
+      "priority": "low",
       "category": "H. Regulatory, compliance, and operations",
       "title": "What records must be kept for placement, sourcing, investment decisions, valuation, and conflicts",
       "prompt": "What records must be kept for placement, sourcing, investment decisions, valuation, and conflicts?",
-      "details": "",
+      "details": "Keep contemporaneous files for solicitation, allocation, valuation, and conflicts decisions - these are the first documents requested in an exam or LP dispute.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
         "sec-31-reports",
-        "sec-32-valuation",
-        "sec-27-fund-expenses",
-        "sec-28-general-partner-expenses",
-        "sec-38-exculpation-and-indemnification",
-        "sec-40-erisa"
+        "sec-08-management"
       ],
       "tags": [
         "regulatory-compliance-and-operations"
       ]
     },
     {
-      "id": "check-001-decide-fund-specific-carryco-vs-gp-level-carry-split",
-      "issueType": "checklist",
+      "id": "gap-001-how-long-is-the-investment-period-and-what-ends-it-early",
+      "issueType": "question",
       "status": "open",
-      "priority": "medium",
-      "category": "",
-      "title": "Decide fund-specific CarryCo vs GP-level carry split",
-      "prompt": "Decide fund-specific CarryCo vs GP-level carry split",
-      "details": "",
+      "priority": "high",
+      "category": "I. Fund lifecycle and governance (gap review)",
+      "title": "How long is the investment period, and what ends it early",
+      "prompt": "How long is the investment period, and what events end it early?",
+      "details": "The form brackets the anniversary and early-termination triggers (key person event, GP removal, LP vote). The choice also controls the management-fee stepdown date. Secondaries funds often use a shorter period (2-3 years) than the venture default.",
       "provisionalAnswer": "",
-      "source": "Open-items memo - Section 7 current open items checklist",
+      "source": "Term sheet gap review - not covered in the open-items memo",
       "termSectionIds": [
-        "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment"
+        "sec-14-investment-period",
+        "sec-10-management-fee"
       ],
       "tags": [
-        "checklist"
+        "term-sheet-gap"
       ]
     },
     {
-      "id": "check-002-decide-whether-to-use-sponsor-holdco-above-manager-gp-entities",
-      "issueType": "checklist",
+      "id": "gap-002-what-is-the-fund-term-and-who-approves-extensions",
+      "issueType": "question",
       "status": "open",
-      "priority": "medium",
-      "category": "",
-      "title": "Decide whether to use Sponsor HoldCo above Manager/GP entities",
-      "prompt": "Decide whether to use Sponsor HoldCo above Manager/GP entities",
-      "details": "",
+      "priority": "high",
+      "category": "I. Fund lifecycle and governance (gap review)",
+      "title": "What is the fund term, and who approves extensions",
+      "prompt": "What is the fund term, and who approves extensions (GP discretion, LPAC, or LP consent)?",
+      "details": "The form brackets term length and one-or-two-year extensions with GP/LPAC/LP approval options. Late-stage secondaries may exit faster than venture: consider an 8-year term with two one-year extensions.",
       "provisionalAnswer": "",
-      "source": "Open-items memo - Section 7 current open items checklist",
+      "source": "Term sheet gap review - not covered in the open-items memo",
       "termSectionIds": [
-        "sec-09-sponsor-capital-commitment",
-        "sec-08-management"
+        "sec-15-term",
+        "sec-16-dissolution"
       ],
       "tags": [
-        "checklist"
+        "term-sheet-gap"
       ]
     },
     {
-      "id": "check-003-decide-manager-llc-ownership-and-whether-it-is-platform-wide",
-      "issueType": "checklist",
+      "id": "gap-003-who-are-the-key-persons-and-what-happens-on-a-key-person-event",
+      "issueType": "question",
       "status": "open",
-      "priority": "medium",
-      "category": "",
-      "title": "Decide Manager LLC ownership and whether it is platform-wide",
-      "prompt": "Decide Manager LLC ownership and whether it is platform-wide",
-      "details": "",
+      "priority": "high",
+      "category": "I. Fund lifecycle and governance (gap review)",
+      "title": "Who are the key persons and what happens on a key person event",
+      "prompt": "Who are the key persons, what time commitment do they promise, and what happens on a key person event?",
+      "details": "The form suspends or terminates the investment period on a key person event. With a two-principal sponsor, decide whether losing either principal (or only both) triggers it, and whether LPs can vote to restart.",
       "provisionalAnswer": "",
-      "source": "Open-items memo - Section 7 current open items checklist",
-      "termSectionIds": [],
-      "tags": [
-        "checklist"
-      ]
-    },
-    {
-      "id": "check-004-select-3-c-1-vs-3-c-7",
-      "issueType": "checklist",
-      "status": "open",
-      "priority": "medium",
-      "category": "",
-      "title": "Select 3(c)(1) vs 3(c)(7)",
-      "prompt": "Select 3(c)(1) vs 3(c)(7)",
-      "details": "",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 7 current open items checklist",
+      "source": "Term sheet gap review - not covered in the open-items memo",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
-        "sec-46-general-risks"
+        "sec-17-time-commitment-key-person-event",
+        "sec-14-investment-period"
       ],
       "tags": [
-        "checklist"
+        "term-sheet-gap"
       ]
     },
     {
-      "id": "check-005-select-506-b-vs-506-c",
-      "issueType": "checklist",
+      "id": "gap-004-on-what-standard-can-lps-remove-the-gp-and-what-happens-to-carry",
+      "issueType": "question",
       "status": "open",
       "priority": "medium",
-      "category": "",
-      "title": "Select 506(b) vs 506(c)",
-      "prompt": "Select 506(b) vs 506(c)",
-      "details": "",
+      "category": "I. Fund lifecycle and governance (gap review)",
+      "title": "On what standard can LPs remove the GP, and what happens to carry",
+      "prompt": "Under what standard and LP vote can the GP be removed, and what happens to carry and the GP commitment on removal?",
+      "details": "The form allows for-cause removal with a bracketed carry reduction (often 20-50%). Decide the cause standard, the vote threshold, and whether there is any no-fault removal right.",
       "provisionalAnswer": "",
-      "source": "Open-items memo - Section 7 current open items checklist",
+      "source": "Term sheet gap review - not covered in the open-items memo",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
-        "sec-46-general-risks"
+        "sec-18-removal-of-the-general-partner",
+        "sec-24-distributions"
       ],
       "tags": [
-        "checklist"
+        "term-sheet-gap"
       ]
     },
     {
-      "id": "check-006-define-target-fund-size-hard-cap-minimum-commitment-gp-commitment",
-      "issueType": "checklist",
+      "id": "gap-005-lpac-size-appointment-and-mandate",
+      "issueType": "question",
       "status": "open",
       "priority": "medium",
-      "category": "",
-      "title": "Define target fund size, hard cap, minimum commitment, GP commitment",
-      "prompt": "Define target fund size, hard cap, minimum commitment, GP commitment",
-      "details": "",
+      "category": "I. Fund lifecycle and governance (gap review)",
+      "title": "LPAC size, appointment, and mandate",
+      "prompt": "How many LPAC members will there be, who appoints them, and which matters require LPAC approval?",
+      "details": "The form brackets member count and appointment mechanics. The LPAC will carry real weight here (whitelist changes, warehousing, conflicts, allocation exceptions), so keep it small (3-5) and define its approvals precisely.",
       "provisionalAnswer": "",
-      "source": "Open-items memo - Section 7 current open items checklist",
+      "source": "Term sheet gap review - not covered in the open-items memo",
       "termSectionIds": [
-        "sec-04-capital-commitments",
-        "sec-09-sponsor-capital-commitment",
-        "sec-08-management"
-      ],
-      "tags": [
-        "checklist"
-      ]
-    },
-    {
-      "id": "check-007-define-management-fee-carry-percentage-hurdle-waterfall-and-clawback",
-      "issueType": "checklist",
-      "status": "open",
-      "priority": "medium",
-      "category": "",
-      "title": "Define management fee, carry percentage, hurdle, waterfall, and clawback",
-      "prompt": "Define management fee, carry percentage, hurdle, waterfall, and clawback",
-      "details": "",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 7 current open items checklist",
-      "termSectionIds": [
-        "sec-10-management-fee",
-        "sec-11-management-fee-offset",
-        "sec-27-fund-expenses",
-        "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment"
-      ],
-      "tags": [
-        "checklist"
-      ]
-    },
-    {
-      "id": "check-008-define-whitelist-and-process-to-change-whitelist",
-      "issueType": "checklist",
-      "status": "open",
-      "priority": "medium",
-      "category": "",
-      "title": "Define whitelist and process to change whitelist",
-      "prompt": "Define whitelist and process to change whitelist",
-      "details": "",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 7 current open items checklist",
-      "termSectionIds": [
-        "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals"
-      ],
-      "tags": [
-        "checklist"
-      ]
-    },
-    {
-      "id": "check-009-confirm-permitted-instruments-and-vehicles-direct-secondaries-spvs-ten",
-      "issueType": "checklist",
-      "status": "open",
-      "priority": "medium",
-      "category": "",
-      "title": "Confirm permitted instruments and vehicles: direct secondaries, SPVs, tender vehicles, blockers, forwards/contractual interests",
-      "prompt": "Confirm permitted instruments and vehicles: direct secondaries, SPVs, tender vehicles, blockers, forwards/contractual interests",
-      "details": "",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 7 current open items checklist",
-      "termSectionIds": [
-        "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-34-co-investment-opportunities"
-      ],
-      "tags": [
-        "checklist"
-      ]
-    },
-    {
-      "id": "check-010-decide-capital-call-timing-initial-drawdown-emergency-call-rights-and-",
-      "issueType": "checklist",
-      "status": "open",
-      "priority": "medium",
-      "category": "",
-      "title": "Decide capital call timing, initial drawdown, emergency call rights, and default penalties",
-      "prompt": "Decide capital call timing, initial drawdown, emergency call rights, and default penalties",
-      "details": "",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 7 current open items checklist",
-      "termSectionIds": [
-        "sec-21-capital-contributions",
-        "sec-30-borrowing",
-        "sec-27-fund-expenses",
-        "sec-09-sponsor-capital-commitment"
-      ],
-      "tags": [
-        "checklist"
-      ]
-    },
-    {
-      "id": "check-011-decide-borrowing-subscription-line-authority-and-gp-advance-rights",
-      "issueType": "checklist",
-      "status": "open",
-      "priority": "medium",
-      "category": "",
-      "title": "Decide borrowing/subscription line authority and GP advance rights",
-      "prompt": "Decide borrowing/subscription line authority and GP advance rights",
-      "details": "",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 7 current open items checklist",
-      "termSectionIds": [
-        "sec-21-capital-contributions",
-        "sec-30-borrowing",
-        "sec-27-fund-expenses",
-        "sec-09-sponsor-capital-commitment"
-      ],
-      "tags": [
-        "checklist"
-      ]
-    },
-    {
-      "id": "check-012-decide-warehousing-rights-and-approval-process",
-      "issueType": "checklist",
-      "status": "open",
-      "priority": "medium",
-      "category": "",
-      "title": "Decide warehousing rights and approval process",
-      "prompt": "Decide warehousing rights and approval process",
-      "details": "",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 7 current open items checklist",
-      "termSectionIds": [
-        "sec-21-capital-contributions",
-        "sec-30-borrowing",
-        "sec-27-fund-expenses",
-        "sec-09-sponsor-capital-commitment",
         "sec-12-limited-partner-advisory-committee",
-        "sec-41-amendments"
+        "sec-20-investment-limitations"
       ],
       "tags": [
-        "checklist"
+        "term-sheet-gap"
       ]
     },
     {
-      "id": "check-013-decide-whether-placement-fees-carry-sharing-are-fund-expenses-gp-expen",
-      "issueType": "checklist",
+      "id": "gap-006-amendment-consent-thresholds",
+      "issueType": "question",
       "status": "open",
       "priority": "medium",
-      "category": "",
-      "title": "Decide whether placement fees/carry-sharing are Fund Expenses, GP expenses, Manager expenses, or carry reallocations",
-      "prompt": "Decide whether placement fees/carry-sharing are Fund Expenses, GP expenses, Manager expenses, or carry reallocations",
-      "details": "",
+      "category": "I. Fund lifecycle and governance (gap review)",
+      "title": "Amendment consent thresholds",
+      "prompt": "What LP consent threshold applies to amendments, and which amendments require special or affected-partner consent?",
+      "details": "The form protects LPs from adverse amendments without consent. Confirm the general threshold (majority in interest is typical) and carve out administrative amendments the GP can make alone - important given the expected vehicle flexibility changes.",
       "provisionalAnswer": "",
-      "source": "Open-items memo - Section 7 current open items checklist",
+      "source": "Term sheet gap review - not covered in the open-items memo",
       "termSectionIds": [
-        "sec-10-management-fee",
-        "sec-11-management-fee-offset",
-        "sec-27-fund-expenses",
+        "sec-41-amendments",
+        "sec-12-limited-partner-advisory-committee"
+      ],
+      "tags": [
+        "term-sheet-gap"
+      ]
+    },
+    {
+      "id": "gap-007-side-letter-and-mfn-policy",
+      "issueType": "question",
+      "status": "open",
+      "priority": "medium",
+      "category": "I. Fund lifecycle and governance (gap review)",
+      "title": "Side letter and MFN policy",
+      "prompt": "What side letter policy and MFN (most favored nation) rights will the fund offer?",
+      "details": "The form permits side letters including better economics. Since placement arrangements and co-invest rights will live in side letters, decide MFN scope early (commonly size-tiered) so one LP's deal doesn't propagate to everyone.",
+      "provisionalAnswer": "",
+      "source": "Term sheet gap review - not covered in the open-items memo",
+      "termSectionIds": [
+        "sec-42-side-letters",
+        "sec-06-investor-qualifications"
+      ],
+      "tags": [
+        "term-sheet-gap"
+      ]
+    },
+    {
+      "id": "gap-008-subsequent-closing-true-up-and-interest",
+      "issueType": "question",
+      "status": "open",
+      "priority": "medium",
+      "category": "I. Fund lifecycle and governance (gap review)",
+      "title": "Subsequent-closing true-up and interest",
+      "prompt": "Will subsequent-closing investors pay a true-up plus interest on their share of earlier capital calls and fees?",
+      "details": "The form permits later closings within a bracketed window. With early warehoused deals, later investors will be buying into appreciated positions - decide the true-up interest rate and whether late LPs share in pre-closing deals at cost.",
+      "provisionalAnswer": "",
+      "source": "Term sheet gap review - not covered in the open-items memo",
+      "termSectionIds": [
+        "sec-05-closings",
+        "sec-21-capital-contributions"
+      ],
+      "tags": [
+        "term-sheet-gap"
+      ]
+    },
+    {
+      "id": "gap-009-recycling-and-reinvestment-of-proceeds",
+      "issueType": "question",
+      "status": "open",
+      "priority": "high",
+      "category": "J. Distributions, liability, and tax (gap review)",
+      "title": "Recycling and reinvestment of proceeds",
+      "prompt": "May the fund recycle or reinvest disposition proceeds, and within what limits?",
+      "details": "The memo never addresses recycling, but a secondaries fund with quick flips needs it: without reinvestment rights, early exits shrink deployable capital. Typical formulation permits recycling proceeds received during the investment period up to 100-120% of commitments.",
+      "provisionalAnswer": "",
+      "source": "Term sheet gap review - not covered in the open-items memo",
+      "termSectionIds": [
         "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment",
-        "sec-29-other-competitive-activity-successor-fund"
+        "sec-14-investment-period"
       ],
       "tags": [
-        "checklist"
+        "term-sheet-gap"
       ]
     },
     {
-      "id": "check-014-decide-whether-non-bd-finders-consultants-are-permitted-at-all",
-      "issueType": "checklist",
+      "id": "gap-010-in-kind-distributions-of-non-marketable-private-shares",
+      "issueType": "question",
       "status": "open",
-      "priority": "medium",
-      "category": "",
-      "title": "Decide whether non-BD finders/consultants are permitted at all",
-      "prompt": "Decide whether non-BD finders/consultants are permitted at all",
-      "details": "",
+      "priority": "high",
+      "category": "J. Distributions, liability, and tax (gap review)",
+      "title": "In-kind distributions of non-marketable private shares",
+      "prompt": "Can the fund distribute non-marketable private shares in kind, and how are they valued and transferred given company ROFRs and consent rights?",
+      "details": "The form only allows non-marketable in-kind distributions at dissolution. For a fund holding private secondaries, end-of-life positions may be unsaleable - the mechanics (valuation, ROFR compliance, LP election to decline) deserve real attention.",
       "provisionalAnswer": "",
-      "source": "Open-items memo - Section 7 current open items checklist",
-      "termSectionIds": [],
-      "tags": [
-        "checklist"
-      ]
-    },
-    {
-      "id": "check-015-draft-generic-buy-side-capital-formation-agreement",
-      "issueType": "checklist",
-      "status": "open",
-      "priority": "medium",
-      "category": "",
-      "title": "Draft generic buy-side capital formation agreement",
-      "prompt": "Draft generic buy-side capital formation agreement",
-      "details": "",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 7 current open items checklist",
-      "termSectionIds": [],
-      "tags": [
-        "checklist"
-      ]
-    },
-    {
-      "id": "check-016-draft-generic-sell-side-sourcing-origination-agreement",
-      "issueType": "checklist",
-      "status": "open",
-      "priority": "medium",
-      "category": "",
-      "title": "Draft generic sell-side sourcing/origination agreement",
-      "prompt": "Draft generic sell-side sourcing/origination agreement",
-      "details": "",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 7 current open items checklist",
-      "termSectionIds": [],
-      "tags": [
-        "checklist"
-      ]
-    },
-    {
-      "id": "check-017-draft-allocation-policy-across-fund-spvs-co-invests-parallel-funds-aff",
-      "issueType": "checklist",
-      "status": "open",
-      "priority": "medium",
-      "category": "",
-      "title": "Draft allocation policy across Fund, SPVs, co-invests, parallel funds, affiliates, and future funds",
-      "prompt": "Draft allocation policy across Fund, SPVs, co-invests, parallel funds, affiliates, and future funds",
-      "details": "",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 7 current open items checklist",
+      "source": "Term sheet gap review - not covered in the open-items memo",
       "termSectionIds": [
-        "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-34-co-investment-opportunities"
+        "sec-25-in-kind-distributions",
+        "sec-32-valuation",
+        "sec-16-dissolution"
       ],
       "tags": [
-        "checklist"
+        "term-sheet-gap"
       ]
     },
     {
-      "id": "check-018-revise-successor-fund-restrictions-and-carveouts",
-      "issueType": "checklist",
+      "id": "gap-011-gp-clawback-mechanics",
+      "issueType": "question",
       "status": "open",
       "priority": "medium",
-      "category": "",
-      "title": "Revise successor-fund restrictions and carveouts",
-      "prompt": "Revise successor-fund restrictions and carveouts",
-      "details": "",
+      "category": "J. Distributions, liability, and tax (gap review)",
+      "title": "GP clawback mechanics",
+      "prompt": "Is the GP clawback interim or end-of-fund only, is it calculated after-tax, and is it secured by escrow or personal guarantees?",
+      "details": "The form has an end-of-fund clawback. If the waterfall is deal-by-deal, LPs will push for interim clawback tests, an escrow/holdback, and guarantees from carry recipients - which feeds directly into the CarryCo design.",
       "provisionalAnswer": "",
-      "source": "Open-items memo - Section 7 current open items checklist",
+      "source": "Term sheet gap review - not covered in the open-items memo",
       "termSectionIds": [
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-34-co-investment-opportunities",
+        "sec-26-general-partner-clawback",
+        "sec-24-distributions"
+      ],
+      "tags": [
+        "term-sheet-gap"
+      ]
+    },
+    {
+      "id": "gap-012-lp-giveback-cap-and-time-limit",
+      "issueType": "question",
+      "status": "open",
+      "priority": "medium",
+      "category": "J. Distributions, liability, and tax (gap review)",
+      "title": "LP giveback cap and time limit",
+      "prompt": "What cap and time limit apply to LP givebacks for indemnification and other fund liabilities?",
+      "details": "The form allows the GP to recall distributions for liabilities. Market practice caps givebacks (commonly 25% of distributions or commitments) and sunsets them 2-3 years after distribution; the form leaves this to the LPA.",
+      "provisionalAnswer": "",
+      "source": "Term sheet gap review - not covered in the open-items memo",
+      "termSectionIds": [
+        "sec-39-limited-partner-giveback",
+        "sec-38-exculpation-and-indemnification"
+      ],
+      "tags": [
+        "term-sheet-gap"
+      ]
+    },
+    {
+      "id": "gap-013-organizational-expense-cap",
+      "issueType": "question",
+      "status": "open",
+      "priority": "medium",
+      "category": "J. Distributions, liability, and tax (gap review)",
+      "title": "Organizational expense cap",
+      "prompt": "Is there a cap on organizational and offering expenses borne by the fund?",
+      "details": "The form charges formation costs to the fund without a stated cap. LPs expect one (often $250k-$1M depending on size), with excess borne by the Manager - this also disciplines how much placement/structuring cost can be pushed to the fund.",
+      "provisionalAnswer": "",
+      "source": "Term sheet gap review - not covered in the open-items memo",
+      "termSectionIds": [
+        "sec-27-fund-expenses"
+      ],
+      "tags": [
+        "term-sheet-gap"
+      ]
+    },
+    {
+      "id": "gap-014-borrowing-cap-scope",
+      "issueType": "question",
+      "status": "open",
+      "priority": "medium",
+      "category": "J. Distributions, liability, and tax (gap review)",
+      "title": "Borrowing cap scope",
+      "prompt": "What is the borrowing cap, and does it cover guarantees and debt at SPV or holding-vehicle level?",
+      "details": "The form brackets a cap tied to commitments or uncalled commitments. With deals executed through SPVs, decide whether vehicle-level leverage and fund guarantees count toward the cap, or the cap is meaningless.",
+      "provisionalAnswer": "",
+      "source": "Term sheet gap review - not covered in the open-items memo",
+      "termSectionIds": [
+        "sec-30-borrowing",
         "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall"
       ],
       "tags": [
-        "checklist"
+        "term-sheet-gap"
       ]
     },
     {
-      "id": "check-019-establish-fund-admin-tax-audit-banking-aml-kyc-and-reporting-providers",
-      "issueType": "checklist",
+      "id": "gap-015-tax-exempt-and-non-u-s-investor-accommodations",
+      "issueType": "question",
       "status": "open",
       "priority": "medium",
-      "category": "",
-      "title": "Establish fund admin, tax, audit, banking, AML/KYC, and reporting providers",
-      "prompt": "Establish fund admin, tax, audit, banking, AML/KYC, and reporting providers",
-      "details": "",
+      "category": "J. Distributions, liability, and tax (gap review)",
+      "title": "Tax-exempt and non-U.S. investor accommodations",
+      "prompt": "Will the fund accept tax-exempt or non-U.S. LPs, and are blockers or feeders needed for UBTI/ECI concerns?",
+      "details": "Fund-level borrowing (subscription line, bridge) can create UBTI for tax-exempt LPs; non-U.S. LPs care about ECI. Decide whether to offer a blocker/feeder or restrict the investor base, and stay under the 25% ERISA plan-asset threshold.",
       "provisionalAnswer": "",
-      "source": "Open-items memo - Section 7 current open items checklist",
+      "source": "Term sheet gap review - not covered in the open-items memo",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
-        "sec-31-reports",
-        "sec-32-valuation",
-        "sec-38-exculpation-and-indemnification",
-        "sec-40-erisa"
+        "sec-45-taxation",
+        "sec-40-erisa",
+        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall"
       ],
       "tags": [
-        "checklist"
+        "term-sheet-gap"
       ]
     },
     {
-      "id": "check-020-prepare-ppm-risk-factors-for-secondary-market-strategy-illiquidity-tra",
-      "issueType": "checklist",
+      "id": "gap-016-exculpation-and-indemnification-standard",
+      "issueType": "question",
       "status": "open",
       "priority": "medium",
-      "category": "",
-      "title": "Prepare PPM risk factors for secondary-market strategy, illiquidity, transfer restrictions, ROFR/company consent, valuation, fees, conflicts, and broken-deal risk",
-      "prompt": "Prepare PPM risk factors for secondary-market strategy, illiquidity, transfer restrictions, ROFR/company consent, valuation, fees, conflicts, and broken-deal risk",
-      "details": "",
+      "category": "J. Distributions, liability, and tax (gap review)",
+      "title": "Exculpation and indemnification standard",
+      "prompt": "What conduct standard applies to exculpation and indemnification (gross negligence vs ordinary negligence), and which persons are covered?",
+      "details": "The form exculpates absent material misconduct. Confirm the precise standard and whether covered persons extend to sourcing or placement parties - LPs will resist indemnifying compensated third parties.",
       "provisionalAnswer": "",
-      "source": "Open-items memo - Section 7 current open items checklist",
+      "source": "Term sheet gap review - not covered in the open-items memo",
       "termSectionIds": [
-        "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
-        "sec-12-limited-partner-advisory-committee",
-        "sec-41-amendments",
-        "sec-06-investor-qualifications",
-        "sec-31-reports"
+        "sec-38-exculpation-and-indemnification"
       ],
       "tags": [
-        "checklist"
+        "term-sheet-gap"
       ]
     },
     {
@@ -3363,19 +2974,14 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: core fund document",
       "title": "Core Fund Document: Fund LPA / Fund Agreement",
       "prompt": "Full governing agreement for the Fund LP.",
       "details": "Must authorize secondary strategy, capital calls, expenses, additional vehicles, conflicts, fees, carry, borrowing, and investment limitations.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 1 additional documents needed",
       "termSectionIds": [
-        "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment",
-        "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals"
+        "sec-02-the-fund-agreement"
       ],
       "tags": [
         "supporting-document",
@@ -3387,7 +2993,7 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: core fund document",
       "title": "Core Fund Document: Subscription Agreement",
       "prompt": "Investor commitments and representations.",
       "details": "Accredited investor / qualified purchaser status, bad actor, AML/KYC, tax forms, ERISA reps, side letter integration.",
@@ -3395,11 +3001,7 @@ window.ORRICK_SEED_DATA = {
       "source": "Open-items memo - Section 1 additional documents needed",
       "termSectionIds": [
         "sec-06-investor-qualifications",
-        "sec-46-general-risks",
-        "sec-31-reports",
-        "sec-32-valuation",
-        "sec-38-exculpation-and-indemnification",
-        "sec-40-erisa"
+        "sec-05-closings"
       ],
       "tags": [
         "supporting-document",
@@ -3411,19 +3013,15 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: core fund document",
       "title": "Core Fund Document: PPM / Offering Memorandum",
       "prompt": "Main disclosure document.",
       "details": "Should disclose strategy, secondary risks, placement/sourcing arrangements, conflicts, fees, carry, transfer restrictions, valuation uncertainty.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 1 additional documents needed",
       "termSectionIds": [
-        "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment",
-        "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals"
+        "sec-46-general-risks",
+        "sec-03-investment-objectives-and-program"
       ],
       "tags": [
         "supporting-document",
@@ -3435,17 +3033,14 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: core fund document",
       "title": "Core Fund Document: Form D and state blue-sky filings",
       "prompt": "Securities notice filings after first sale.",
       "details": "Coordinate with counsel immediately after first investor becomes contractually committed.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 1 additional documents needed",
       "termSectionIds": [
-        "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals"
+        "sec-06-investor-qualifications"
       ],
       "tags": [
         "supporting-document",
@@ -3457,19 +3052,14 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: core fund document",
       "title": "Core Fund Document: Side Letter Template",
       "prompt": "Special investor terms.",
       "details": "MFN, fee/carry discounts, reporting, transfer, co-investment, excuse rights, confidentiality.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 1 additional documents needed",
       "termSectionIds": [
-        "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment",
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-34-co-investment-opportunities",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-06-investor-qualifications"
+        "sec-42-side-letters"
       ],
       "tags": [
         "supporting-document",
@@ -3481,15 +3071,16 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: sponsor / management document",
       "title": "Sponsor / Management Document: GP LLC Operating Agreement",
       "prompt": "Creates legal control of the fund and carry recipient if no CarryCo is used.",
       "details": "Must separate voting/control from economics if non-control parties receive carry.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 1 additional documents needed",
       "termSectionIds": [
+        "sec-08-management",
         "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment"
+        "sec-26-general-partner-clawback"
       ],
       "tags": [
         "supporting-document",
@@ -3501,21 +3092,15 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: sponsor / management document",
       "title": "Sponsor / Management Document: Manager LLC Operating Agreement",
       "prompt": "Ongoing management/advisory business.",
       "details": "Defines ownership of management fee profits, authority, expenses, employment/consulting, adviser registration implications.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 1 additional documents needed",
       "termSectionIds": [
-        "sec-10-management-fee",
-        "sec-11-management-fee-offset",
-        "sec-27-fund-expenses",
-        "sec-06-investor-qualifications",
-        "sec-31-reports",
-        "sec-32-valuation",
-        "sec-38-exculpation-and-indemnification",
-        "sec-40-erisa"
+        "sec-08-management",
+        "sec-10-management-fee"
       ],
       "tags": [
         "supporting-document",
@@ -3527,18 +3112,15 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: sponsor / management document",
       "title": "Sponsor / Management Document: Investment Management Agreement",
       "prompt": "Fund/GP engages Manager to provide advisory/admin services.",
       "details": "Defines delegated authority, fees, reimbursements, termination, indemnity, compliance obligations.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 1 additional documents needed",
       "termSectionIds": [
-        "sec-06-investor-qualifications",
-        "sec-31-reports",
-        "sec-32-valuation",
-        "sec-38-exculpation-and-indemnification",
-        "sec-40-erisa"
+        "sec-08-management",
+        "sec-10-management-fee"
       ],
       "tags": [
         "supporting-document",
@@ -3550,14 +3132,13 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: sponsor / management document",
       "title": "Sponsor / Management Document: Sponsor HoldCo Agreement, if used",
       "prompt": "Platform-level ownership above Manager and possibly GP entities.",
       "details": "Only use if useful for long-term platform economics; avoid giving fund-specific economics accidentally across all funds.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 1 additional documents needed",
       "termSectionIds": [
-        "sec-09-sponsor-capital-commitment",
         "sec-08-management"
       ],
       "tags": [
@@ -3570,7 +3151,7 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: sponsor / management document",
       "title": "Sponsor / Management Document: Fund-specific CarryCo / SponsorCo Agreement, if used",
       "prompt": "Splits carry for a particular fund.",
       "details": "Useful for Class A voting control, Class B non-voting conditional carry, passive economics, vesting, forfeiture, clawback sharing.",
@@ -3578,7 +3159,7 @@ window.ORRICK_SEED_DATA = {
       "source": "Open-items memo - Section 1 additional documents needed",
       "termSectionIds": [
         "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment",
+        "sec-26-general-partner-clawback",
         "sec-08-management"
       ],
       "tags": [
@@ -3591,7 +3172,7 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: placement / sourcing document",
       "title": "Placement / Sourcing Document: Registered Broker-Dealer Placement Agreement",
       "prompt": "For registered placement agents.",
       "details": "Compensation, tail, permitted investors, offering materials, compliance review, FINRA/SEC obligations, indemnity.",
@@ -3599,11 +3180,7 @@ window.ORRICK_SEED_DATA = {
       "source": "Open-items memo - Section 1 additional documents needed",
       "termSectionIds": [
         "sec-06-investor-qualifications",
-        "sec-46-general-risks",
-        "sec-31-reports",
-        "sec-32-valuation",
-        "sec-38-exculpation-and-indemnification",
-        "sec-40-erisa"
+        "sec-27-fund-expenses"
       ],
       "tags": [
         "supporting-document",
@@ -3615,13 +3192,17 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: placement / sourcing document",
       "title": "Placement / Sourcing Document: Generic Capital Formation / Placement Agreement",
       "prompt": "Template for buy-side LP placement relationships.",
       "details": "Must be limited by securities-law compliance; specify no authority to bind the fund, no custody, no investment discretion.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 1 additional documents needed",
-      "termSectionIds": [],
+      "termSectionIds": [
+        "sec-06-investor-qualifications",
+        "sec-27-fund-expenses",
+        "sec-11-management-fee-offset"
+      ],
       "tags": [
         "supporting-document",
         "placement-sourcing-document"
@@ -3632,16 +3213,15 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: placement / sourcing document",
       "title": "Placement / Sourcing Document: Conditional Carry Participation Agreement",
       "prompt": "Carry or economics based on capital commitments placed.",
       "details": "May reference GP/CarryCo operating agreement. Include vesting thresholds, accepted commitments, tail, forfeiture, compliance conditions.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 1 additional documents needed",
       "termSectionIds": [
-        "sec-04-capital-commitments",
         "sec-24-distributions",
-        "sec-09-sponsor-capital-commitment"
+        "sec-26-general-partner-clawback"
       ],
       "tags": [
         "supporting-document",
@@ -3653,13 +3233,16 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: placement / sourcing document",
       "title": "Placement / Sourcing Document: Finder / Consultant Agreement",
       "prompt": "Only for non-BD relationships if counsel approves.",
       "details": "Use carefully. Avoid transaction-based compensation unless counsel confirms path. Include reps and limitations.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 1 additional documents needed",
-      "termSectionIds": [],
+      "termSectionIds": [
+        "sec-06-investor-qualifications",
+        "sec-46-general-risks"
+      ],
       "tags": [
         "supporting-document",
         "placement-sourcing-document"
@@ -3670,13 +3253,16 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: placement / sourcing document",
       "title": "Placement / Sourcing Document: Sell-Side Sourcing / Origination Agreement",
       "prompt": "For deal sources, brokers, consultants, or strategic relationships.",
       "details": "Define introduction-only vs negotiation role; compensation; exclusivity; confidentiality; no authority to bind fund.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 1 additional documents needed",
-      "termSectionIds": [],
+      "termSectionIds": [
+        "sec-27-fund-expenses",
+        "sec-29-other-competitive-activity-successor-fund"
+      ],
       "tags": [
         "supporting-document",
         "placement-sourcing-document"
@@ -3687,7 +3273,7 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: placement / sourcing document",
       "title": "Placement / Sourcing Document: Secondary Transaction / Broker Agreement",
       "prompt": "For parties helping acquire or dispose of private securities.",
       "details": "Broker-dealer analysis likely needed if compensation is transaction-based or party negotiates securities transactions.",
@@ -3695,8 +3281,6 @@ window.ORRICK_SEED_DATA = {
       "source": "Open-items memo - Section 1 additional documents needed",
       "termSectionIds": [
         "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
         "sec-33-transfers-of-interests-and-withdrawals"
       ],
       "tags": [
@@ -3709,7 +3293,7 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: operating policy / process",
       "title": "Operating Policy / Process: Investment Policy / Whitelist Schedule",
       "prompt": "Defines eligible companies and permitted instruments.",
       "details": "Include update process for whitelist and approval thresholds.",
@@ -3717,11 +3301,7 @@ window.ORRICK_SEED_DATA = {
       "source": "Open-items memo - Section 1 additional documents needed",
       "termSectionIds": [
         "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
-        "sec-12-limited-partner-advisory-committee",
-        "sec-41-amendments"
+        "sec-20-investment-limitations"
       ],
       "tags": [
         "supporting-document",
@@ -3733,19 +3313,15 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: operating policy / process",
       "title": "Operating Policy / Process: Allocation Policy",
       "prompt": "Allocates opportunities among fund, co-invests, SPVs, parallel funds, affiliates, and future funds.",
       "details": "Critical if multiple inbound deal sources and LP-facing channels exist.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 1 additional documents needed",
       "termSectionIds": [
-        "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-34-co-investment-opportunities"
+        "sec-34-co-investment-opportunities",
+        "sec-29-other-competitive-activity-successor-fund"
       ],
       "tags": [
         "supporting-document",
@@ -3757,17 +3333,14 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: operating policy / process",
       "title": "Operating Policy / Process: Capital Call Policy",
       "prompt": "Normal and expedited capital-call procedures.",
       "details": "Should handle 3-5 business day calls, emergency calls, reserves, default penalties.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 1 additional documents needed",
       "termSectionIds": [
-        "sec-21-capital-contributions",
-        "sec-30-borrowing",
-        "sec-27-fund-expenses",
-        "sec-09-sponsor-capital-commitment"
+        "sec-21-capital-contributions"
       ],
       "tags": [
         "supporting-document",
@@ -3779,19 +3352,15 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: operating policy / process",
       "title": "Operating Policy / Process: Warehousing Policy",
       "prompt": "Permits GP/affiliate to warehouse deals before fund takes them down.",
       "details": "Define cost basis, expenses, timing, conflict approvals, disclosure.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 1 additional documents needed",
       "termSectionIds": [
-        "sec-21-capital-contributions",
-        "sec-30-borrowing",
-        "sec-27-fund-expenses",
-        "sec-09-sponsor-capital-commitment",
-        "sec-12-limited-partner-advisory-committee",
-        "sec-41-amendments"
+        "sec-23-warehoused-securities",
+        "sec-12-limited-partner-advisory-committee"
       ],
       "tags": [
         "supporting-document",
@@ -3803,21 +3372,16 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: operating policy / process",
       "title": "Operating Policy / Process: Conflict Policy",
       "prompt": "Deals with affiliate transactions, sourced deals, side letters, co-invests, valuation, allocation.",
       "details": "Coordinate with LPAC provisions.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 1 additional documents needed",
       "termSectionIds": [
+        "sec-20-investment-limitations",
         "sec-12-limited-partner-advisory-committee",
-        "sec-41-amendments",
-        "sec-29-other-competitive-activity-successor-fund",
-        "sec-34-co-investment-opportunities",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-06-investor-qualifications",
-        "sec-31-reports",
-        "sec-32-valuation"
+        "sec-29-other-competitive-activity-successor-fund"
       ],
       "tags": [
         "supporting-document",
@@ -3829,21 +3393,15 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: operating policy / process",
       "title": "Operating Policy / Process: Valuation Policy",
       "prompt": "Valuation of private shares, SPVs, tender interests, forwards, and in-kind distributions.",
       "details": "Important due to illiquidity and limited observable prices.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 1 additional documents needed",
       "termSectionIds": [
-        "sec-03-investment-objectives-and-program",
-        "sec-20-investment-limitations",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall",
-        "sec-33-transfers-of-interests-and-withdrawals",
-        "sec-06-investor-qualifications",
-        "sec-31-reports",
         "sec-32-valuation",
-        "sec-38-exculpation-and-indemnification"
+        "sec-25-in-kind-distributions"
       ],
       "tags": [
         "supporting-document",
@@ -3855,7 +3413,7 @@ window.ORRICK_SEED_DATA = {
       "issueType": "supporting-document",
       "status": "open",
       "priority": "low",
-      "category": "",
+      "category": "Supporting documents: operating policy / process",
       "title": "Operating Policy / Process: Compliance Policies",
       "prompt": "Adviser, broker-dealer interface, AML/KYC, bad actor, privacy, records.",
       "details": "Depends on adviser registration/exemption and placement model.",
@@ -3863,10 +3421,7 @@ window.ORRICK_SEED_DATA = {
       "source": "Open-items memo - Section 1 additional documents needed",
       "termSectionIds": [
         "sec-06-investor-qualifications",
-        "sec-31-reports",
-        "sec-32-valuation",
-        "sec-38-exculpation-and-indemnification",
-        "sec-40-erisa"
+        "sec-31-reports"
       ],
       "tags": [
         "supporting-document",

@@ -55,6 +55,7 @@
     signOutBtn: document.getElementById("signOutBtn"),
     metrics: document.getElementById("metrics"),
     searchInput: document.getElementById("searchInput"),
+    topicFilter: document.getElementById("topicFilter"),
     typeFilter: document.getElementById("typeFilter"),
     statusFilter: document.getElementById("statusFilter"),
     followFilter: document.getElementById("followFilter"),
@@ -136,6 +137,7 @@
     selectedSectionId: "",
     docTab: "relevant",
     query: "",
+    topicFilter: "all",
     typeFilter: "all",
     statusFilter: "all",
     followFilter: "all",
@@ -411,6 +413,22 @@
     return parts.filter(Boolean).join(" ").toLowerCase();
   }
 
+  function issueTopic(issue) {
+    return issue.category || "Custom items";
+  }
+
+  function topicOrder() {
+    const order = [];
+    allIssues()
+      .slice()
+      .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
+      .forEach((issue) => {
+        const topic = issueTopic(issue);
+        if (!order.includes(topic)) order.push(topic);
+      });
+    return order;
+  }
+
   function isFollowUp(issue) {
     return issue.followUp || issue.status === "follow-up";
   }
@@ -418,10 +436,12 @@
   function filteredIssues() {
     const sourceIssues = allIssues();
     const orderMap = new Map(sourceIssues.map((issue, index) => [issue.id, index]));
+    const topics = topicOrder();
     const query = state.query.trim().toLowerCase();
     return sourceIssues
       .map(issueView)
       .filter((issue) => {
+        if (state.topicFilter !== "all" && issueTopic(issue) !== state.topicFilter) return false;
         if (state.typeFilter !== "all" && issue.issueType !== state.typeFilter) return false;
         if (state.statusFilter !== "all" && issue.status !== state.statusFilter) return false;
         if (state.followFilter === "flagged" && !isFollowUp(issue)) return false;
@@ -442,8 +462,8 @@
         return haystack.includes(query);
       })
       .sort((a, b) => {
-        const typeDelta = typeOrder.indexOf(a.issueType) - typeOrder.indexOf(b.issueType);
-        if (typeDelta !== 0) return typeDelta;
+        const topicDelta = topics.indexOf(issueTopic(a)) - topics.indexOf(issueTopic(b));
+        if (topicDelta !== 0) return topicDelta;
         const priorityDelta = (priorityOrder[a.priority] ?? 2) - (priorityOrder[b.priority] ?? 2);
         if (priorityDelta !== 0) return priorityDelta;
         return (a.sortOrder ?? orderMap.get(a.id) ?? 0) - (b.sortOrder ?? orderMap.get(b.id) ?? 0);
@@ -820,6 +840,16 @@
   }
 
   function renderFilters() {
+    const issueViews = allIssues().map(issueView);
+    const topics = topicOrder();
+    els.topicFilter.innerHTML = [
+      "<option value=\"all\">All topics</option>",
+      ...topics.map((topic) => {
+        const open = issueViews.filter((issue) => issueTopic(issue) === topic && issue.status !== "resolved").length;
+        return `<option value="${escapeHtml(topic)}">${escapeHtml(topic)}${open ? ` (${open})` : ""}</option>`;
+      })
+    ].join("");
+
     const types = typeOrder.filter((type) => allIssues().some((issue) => issue.issueType === type));
     els.typeFilter.innerHTML = [
       "<option value=\"all\">All types</option>",
@@ -841,6 +871,11 @@
     els.sectionFilter.innerHTML = ["<option value=\"all\">All clauses</option>", ...sectionOptions].join("");
     els.newIssueSection.innerHTML = sectionOptions.join("");
 
+    els.topicFilter.value = state.topicFilter;
+    if (els.topicFilter.value !== state.topicFilter) {
+      state.topicFilter = "all";
+      els.topicFilter.value = "all";
+    }
     els.typeFilter.value = state.typeFilter;
     els.statusFilter.value = state.statusFilter;
     els.followFilter.value = state.followFilter;
@@ -884,21 +919,31 @@
       return;
     }
 
+    let lastTopic = null;
     els.issueList.innerHTML = issues
       .map((issue) => {
+        const topic = issueTopic(issue);
+        const header =
+          topic !== lastTopic
+            ? `<div class="issue-group-label">${escapeHtml(topic)}</div>`
+            : "";
+        lastTopic = topic;
         const active = issue.id === state.selectedId ? " active" : "";
         const follow = isFollowUp(issue) ? "<span class=\"pill status-follow-up\">Flagged</span>" : "";
         const sectionCount = isClauseScopedIssue(issue) ? (issue.termSectionIds || []).length : 0;
         const updated = issue.updatedBy ? `<span class="pill">By ${escapeHtml(profileLabel(issue.updatedBy))}</span>` : "";
+        const priorityPill = issue.priority === "high" ? "<span class=\"pill priority-high\">High</span>" : "";
         const sectionPill = isClauseScopedIssue(issue)
           ? `<span class="pill">${sectionCount} clause${sectionCount === 1 ? "" : "s"}</span>`
           : "<span class=\"pill\">Broad item</span>";
         return `
+          ${header}
           <button class="issue-card${active}" data-issue-id="${escapeHtml(issue.id)}" type="button">
             <h3>${escapeHtml(issue.title)}</h3>
             <div class="issue-meta">
               <span class="pill type-${slugClass(issue.issueType)}">${escapeHtml(typeLabels[issue.issueType] || issue.issueType)}</span>
               <span class="pill status-${slugClass(issue.status)}">${escapeHtml(statusLabels[issue.status] || issue.status)}</span>
+              ${priorityPill}
               ${sectionPill}
               ${follow}
               ${updated}
@@ -916,6 +961,7 @@
 
     const chips = [];
     if (state.query.trim()) chips.push(`Search: ${state.query.trim()}`);
+    if (state.topicFilter !== "all") chips.push(`Topic: ${state.topicFilter}`);
     if (state.typeFilter !== "all") chips.push(`Type: ${typeLabels[state.typeFilter] || state.typeFilter}`);
     if (state.statusFilter !== "all") chips.push(`Status: ${statusLabels[state.statusFilter] || state.statusFilter}`);
     if (state.followFilter === "flagged") chips.push("Follow-up: flagged");
@@ -932,12 +978,14 @@
 
   function clearQueueFilters() {
     state.query = "";
+    state.topicFilter = "all";
     state.typeFilter = "all";
     state.statusFilter = "all";
     state.followFilter = "all";
     state.sectionFilter = "all";
     state.selectedSectionId = "";
     els.searchInput.value = "";
+    els.topicFilter.value = "all";
     els.typeFilter.value = "all";
     els.statusFilter.value = "all";
     els.followFilter.value = "all";
@@ -976,7 +1024,8 @@
       <div class="issue-meta">
         <span class="pill type-${slugClass(issue.issueType)}">${escapeHtml(typeLabels[issue.issueType] || issue.issueType)}</span>
         <span class="pill status-${slugClass(issue.status)}">${escapeHtml(statusLabels[issue.status] || issue.status)}</span>
-        ${issue.priority ? `<span class="pill">${escapeHtml(issue.priority)} priority</span>` : ""}
+        ${issue.priority ? `<span class="pill${issue.priority === "high" ? " priority-high" : ""}">${escapeHtml(issue.priority)} priority</span>` : ""}
+        ${issue.category ? `<span class="pill">${escapeHtml(issue.category)}</span>` : ""}
       </div>
       <div class="issue-brief">
         <div>
@@ -993,7 +1042,7 @@
             : ""
         }
         ${considerationsHtml(issue, sections)}
-        ${issue.details ? `<div><h3>Notes</h3><p>${nl2br(cleanIssueDetails(issue.details))}</p></div>` : ""}
+        ${issue.details && issue.issueType !== "question" ? `<div><h3>Notes</h3><p>${nl2br(cleanIssueDetails(issue.details))}</p></div>` : ""}
         ${updated}
       </div>
       ${sectionChips}
@@ -1038,6 +1087,15 @@
       .filter((section) => !section.isGroup)
       .slice(0, 4)
       .map((section) => section.title);
+
+    if (issue.issueType === "question" && issue.details) {
+      const points = [cleanIssueDetails(issue.details)];
+      if (linked.length) {
+        points.push(`Linked clauses: ${linked.join(", ")}.`);
+      }
+      return `<div class="issue-explainer"><strong>How to decide:</strong> ${escapeHtml(points.join(" "))}</div>`;
+    }
+
     const points = [];
 
     if (/carryco|carry|carried interest|clawback|waterfall/.test(signal)) {
@@ -1966,6 +2024,11 @@
 
     els.searchInput.addEventListener("input", () => {
       state.query = els.searchInput.value;
+      renderAll();
+    });
+
+    els.topicFilter.addEventListener("change", () => {
+      state.topicFilter = els.topicFilter.value;
       renderAll();
     });
 

@@ -6,9 +6,11 @@
     "dev": "vite --host 127.0.0.1",
     "build": "node scripts/build-static.mjs",
     "preview": "vite preview --host 127.0.0.1",
-    "summaries": "node scripts/apply_static_summaries.mjs"
+    "summaries": "node scripts/apply_static_summaries.mjs",
+    "test": "node scripts/smoke-test.mjs"
   },
   "devDependencies": {
+    "jsdom": "^29.1.1",
     "vite": "^7.0.0"
   }
 }
