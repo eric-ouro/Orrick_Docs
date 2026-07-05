@@ -149,7 +149,7 @@ QUESTION_CURATION: dict[str, dict] = {
     "How are clawback obligations allocated among ultimate carry recipients?": {
         "sections": ["General Partner Clawback", "Distributions", "Limited Partner Giveback"],
         "priority": "high",
-        "note": "The Fund-level clawback sits on the GP; the GP/CarryCo agreement must push it through to every carry recipient (escrow, holdback, or several guarantee), or the principals end up covering departed participants' share.",
+        "note": "The Fund-level clawback sits on the GP; the GP/CarryCo agreement must push it through to every carry recipient (escrow, holdback, or several guarantee), or the principals end up covering departed participants' share. Also settle the mechanics: the form tests the clawback only at wind-up, but if the waterfall is deal-by-deal LPs will push for interim clawback tests, an after-tax calculation, and escrow or personal guarantees from carry recipients.",
     },
     # B. Fund economics
     "What is the target fund size and hard cap?": {
@@ -175,7 +175,7 @@ QUESTION_CURATION: dict[str, dict] = {
     "Will placement fees, organization expenses, transaction fees, or monitoring fees offset management fees?": {
         "sections": ["Management Fee Offset", "Management Fee", "Fund Expenses"],
         "priority": "medium",
-        "note": "The offset section is optional in the form. Decide offsets now because they determine whether placement and sourcing costs are ultimately borne by LPs or by the Manager.",
+        "note": "The offset section is optional in the form. Decide offsets now because they determine whether placement and sourcing costs are ultimately borne by LPs or by the Manager. Pair this with a cap on organizational and offering expenses borne by the fund (commonly $250k-$1M depending on size, excess borne by the Manager) - the form currently charges formation costs to the fund without a stated cap.",
     },
     "What is the carry percentage?": {
         "sections": ["Distributions"],
@@ -280,9 +280,9 @@ QUESTION_CURATION: dict[str, dict] = {
         "note": "The form leaves remedies to the fund agreement. Standard menu: interest on late amounts, dilution/forfeiture up to 50%, forced transfer, and loss of voting rights.",
     },
     "Can the fund borrow under a bridge facility or subscription line?": {
-        "sections": ["Borrowing"],
+        "sections": ["Borrowing", HOLDING_VEHICLES],
         "priority": "medium",
-        "note": "The form permits borrowing subject to a bracketed cap. Pick the cap (commonly 20-30% of commitments) and confirm guarantees and SPV-level debt count against it.",
+        "note": "The form permits borrowing subject to a bracketed cap tied to commitments or uncalled commitments. Pick the cap (commonly 20-30% of commitments) and decide whether guarantees and leverage at SPV or holding-vehicle level count against it - with deals executed through SPVs, a fund-level-only cap is meaningless. Fund borrowing can also create UBTI for tax-exempt LPs.",
     },
     "Can the GP or affiliate advance funds to the fund?": {
         "sections": ["Borrowing", "General Partner Expenses"],
@@ -450,7 +450,7 @@ QUESTION_CURATION: dict[str, dict] = {
     "Will LPAC approval be needed for certain conflicts or allocation decisions?": {
         "sections": ["Limited Partner Advisory Committee", "Investment Limitations"],
         "priority": "medium",
-        "note": "Reserve LPAC approval for genuine conflicts (affiliate transactions, warehousing outside pre-agreed terms, allocation exceptions) and keep routine execution GP-discretionary.",
+        "note": "Reserve LPAC approval for genuine conflicts (affiliate transactions, warehousing outside pre-agreed terms, allocation exceptions) and keep routine execution GP-discretionary. Settle the LPAC's composition at the same time: the form brackets member count and appointment mechanics, and since the LPAC will carry real weight here (whitelist changes, warehousing, conflicts), keep it small (3-5 GP-appointed members from the largest LPs) and define its approval list precisely.",
     },
     # H. Regulatory, compliance, and operations
     "Will the manager rely on an investment adviser exemption or register?": {
@@ -496,7 +496,7 @@ QUESTION_CURATION: dict[str, dict] = {
     "What insurance and indemnity coverage should be maintained?": {
         "sections": ["Exculpation and Indemnification", "Fund Expenses"],
         "priority": "medium",
-        "note": "GP/Manager D&O and E&O coverage backstops the fund indemnity; the form lets the fund bear the premium as a Fund Expense.",
+        "note": "GP/Manager D&O and E&O coverage backstops the fund indemnity; the form lets the fund bear the premium as a Fund Expense. Confirm the indemnity's conduct standard too - the form exculpates absent material misconduct (vs a gross-negligence standard) - and whether covered persons extend to sourcing or placement parties, which LPs will resist.",
     },
     "What records must be kept for placement, sourcing, investment decisions, valuation, and conflicts?": {
         "sections": ["Reports", "Management"],
@@ -543,14 +543,6 @@ GAP_QUESTIONS: list[dict] = [
     },
     {
         "category": "I. Fund lifecycle and governance (gap review)",
-        "title": "LPAC size, appointment, and mandate",
-        "prompt": "How many LPAC members will there be, who appoints them, and which matters require LPAC approval?",
-        "sections": ["Limited Partner Advisory Committee", "Investment Limitations"],
-        "priority": "medium",
-        "note": "The form brackets member count and appointment mechanics. The LPAC will carry real weight here (whitelist changes, warehousing, conflicts, allocation exceptions), so keep it small (3-5) and define its approvals precisely.",
-    },
-    {
-        "category": "I. Fund lifecycle and governance (gap review)",
         "title": "Amendment consent thresholds",
         "prompt": "What LP consent threshold applies to amendments, and which amendments require special or affected-partner consent?",
         "sections": ["Amendments", "Limited Partner Advisory Committee"],
@@ -591,14 +583,6 @@ GAP_QUESTIONS: list[dict] = [
     },
     {
         "category": "J. Distributions, liability, and tax (gap review)",
-        "title": "GP clawback mechanics",
-        "prompt": "Is the GP clawback interim or end-of-fund only, is it calculated after-tax, and is it secured by escrow or personal guarantees?",
-        "sections": ["General Partner Clawback", "Distributions"],
-        "priority": "medium",
-        "note": "The form has an end-of-fund clawback. If the waterfall is deal-by-deal, LPs will push for interim clawback tests, an escrow/holdback, and guarantees from carry recipients - which feeds directly into the CarryCo design.",
-    },
-    {
-        "category": "J. Distributions, liability, and tax (gap review)",
         "title": "LP giveback cap and time limit",
         "prompt": "What cap and time limit apply to LP givebacks for indemnification and other fund liabilities?",
         "sections": ["Limited Partner Giveback", "Exculpation and Indemnification"],
@@ -607,35 +591,11 @@ GAP_QUESTIONS: list[dict] = [
     },
     {
         "category": "J. Distributions, liability, and tax (gap review)",
-        "title": "Organizational expense cap",
-        "prompt": "Is there a cap on organizational and offering expenses borne by the fund?",
-        "sections": ["Fund Expenses"],
-        "priority": "medium",
-        "note": "The form charges formation costs to the fund without a stated cap. LPs expect one (often $250k-$1M depending on size), with excess borne by the Manager - this also disciplines how much placement/structuring cost can be pushed to the fund.",
-    },
-    {
-        "category": "J. Distributions, liability, and tax (gap review)",
-        "title": "Borrowing cap scope",
-        "prompt": "What is the borrowing cap, and does it cover guarantees and debt at SPV or holding-vehicle level?",
-        "sections": ["Borrowing", HOLDING_VEHICLES],
-        "priority": "medium",
-        "note": "The form brackets a cap tied to commitments or uncalled commitments. With deals executed through SPVs, decide whether vehicle-level leverage and fund guarantees count toward the cap, or the cap is meaningless.",
-    },
-    {
-        "category": "J. Distributions, liability, and tax (gap review)",
         "title": "Tax-exempt and non-U.S. investor accommodations",
         "prompt": "Will the fund accept tax-exempt or non-U.S. LPs, and are blockers or feeders needed for UBTI/ECI concerns?",
         "sections": ["Taxation", "ERISA", HOLDING_VEHICLES],
         "priority": "medium",
         "note": "Fund-level borrowing (subscription line, bridge) can create UBTI for tax-exempt LPs; non-U.S. LPs care about ECI. Decide whether to offer a blocker/feeder or restrict the investor base, and stay under the 25% ERISA plan-asset threshold.",
-    },
-    {
-        "category": "J. Distributions, liability, and tax (gap review)",
-        "title": "Exculpation and indemnification standard",
-        "prompt": "What conduct standard applies to exculpation and indemnification (gross negligence vs ordinary negligence), and which persons are covered?",
-        "sections": ["Exculpation and Indemnification"],
-        "priority": "medium",
-        "note": "The form exculpates absent material misconduct. Confirm the precise standard and whether covered persons extend to sourcing or placement parties - LPs will resist indemnifying compensated third parties.",
     },
 ]
 

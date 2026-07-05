@@ -4,13 +4,15 @@ Interactive tracker for reviewing fund term sheets against open-items memos. The
 
 ## Work Queue Structure
 
-The seed data produces 131 issues from the two source documents, organized by topic:
+The seed data produces 126 issues from the two source documents, organized by topic:
 
 - 8 immediate decisions (memo section 5)
 - 6 requested drafting changes (memo section 4)
 - 78 detailed questions (memo section 3, topics A-H)
-- 16 gap-review questions (topics I-J) covering term-sheet sections the memo skips: investment period, term/extensions, key person, GP removal, LPAC mandate, amendments, side letters/MFN, closing true-ups, recycling, in-kind distributions, clawback mechanics, LP giveback, expense caps, borrowing scope, tax/ERISA accommodations, and indemnification standards
+- 11 gap-review questions (topics I-J) covering term-sheet sections the memo skips: investment period, term/extensions, key person, GP removal, amendments, side letters/MFN, closing true-ups, recycling, in-kind distributions, LP giveback, and tax/ERISA accommodations
 - 23 supporting documents (memo section 1)
+
+Gap topics that overlap memo questions (LPAC mandate, clawback mechanics, expense caps, borrowing scope, indemnification standards) are folded into the notes of the corresponding A-H questions instead of appearing as separate items.
 
 Every question carries a curated set of linked term-sheet clauses (question-level, not category-level), a priority, and a short "how to decide" note shown in the detail panel. The memo's section 7 checklist is intentionally not extracted: every line duplicates a decision, question, or supporting document already in the queue.
 

@@ -33,7 +33,7 @@ check("workspace visible after local mode", !doc.getElementById("workspaceShell"
 
 const issueCards = doc.querySelectorAll(".issue-card");
 const groupLabels = [...doc.querySelectorAll(".issue-group-label")].map((el) => el.textContent);
-check(`131 issue cards rendered (got ${issueCards.length})`, issueCards.length === 131);
+check(`126 issue cards rendered (got ${issueCards.length})`, issueCards.length === 126);
 check(`topic group headers rendered (got ${groupLabels.length})`, groupLabels.length === 16);
 check("first group is Immediate decisions", groupLabels[0] === "Immediate decisions");
 
@@ -45,7 +45,7 @@ topicFilter.value = "B. Fund economics";
 topicFilter.dispatchEvent(new window.Event("change", { bubbles: true }));
 const filteredCards = doc.querySelectorAll(".issue-card");
 check(`topic filter narrows queue (got ${filteredCards.length})`, filteredCards.length === 10);
-check("queue count text", doc.getElementById("queueCount").textContent === "Showing 10 of 131");
+check("queue count text", doc.getElementById("queueCount").textContent === "Showing 10 of 126");
 
 // Select the carry-percentage question and verify curated content shows.
 const carryCard = [...filteredCards].find((el) => el.textContent.includes("carry percentage"));
@@ -59,11 +59,11 @@ check("stale Capital Commitments link removed", !detail.includes("Capital Commit
 // Gap questions exist and are linked to previously-orphaned sections.
 topicFilter.value = "J. Distributions, liability, and tax (gap review)";
 topicFilter.dispatchEvent(new window.Event("change", { bubbles: true }));
-check(`gap topic renders (got ${doc.querySelectorAll(".issue-card").length})`, doc.querySelectorAll(".issue-card").length === 8);
+check(`gap topic renders (got ${doc.querySelectorAll(".issue-card").length})`, doc.querySelectorAll(".issue-card").length === 4);
 
 // Clear filters restores the full queue.
 doc.getElementById("clearFiltersBtn").click();
-check("clear filters restores queue", doc.querySelectorAll(".issue-card").length === 131);
+check("clear filters restores queue", doc.querySelectorAll(".issue-card").length === 126);
 
 if (failures.length) {
   console.error(`\n${failures.length} check(s) failed`);

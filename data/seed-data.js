@@ -1,7 +1,7 @@
 window.ORRICK_SEED_DATA = {
   "meta": {
     "project": "Blind Pool Fund Term Sheet Workspace",
-    "generatedAt": "2026-07-05T10:20:31",
+    "generatedAt": "2026-07-05T10:33:43",
     "sourceFiles": [
       {
         "label": "Orrick venture capital / private equity fund form term sheet",
@@ -1355,7 +1355,7 @@ window.ORRICK_SEED_DATA = {
       "category": "A. Entity structure and ownership",
       "title": "How are clawback obligations allocated among ultimate carry recipients",
       "prompt": "How are clawback obligations allocated among ultimate carry recipients?",
-      "details": "The Fund-level clawback sits on the GP; the GP/CarryCo agreement must push it through to every carry recipient (escrow, holdback, or several guarantee), or the principals end up covering departed participants' share.",
+      "details": "The Fund-level clawback sits on the GP; the GP/CarryCo agreement must push it through to every carry recipient (escrow, holdback, or several guarantee), or the principals end up covering departed participants' share. Also settle the mechanics: the form tests the clawback only at wind-up, but if the waterfall is deal-by-deal LPs will push for interim clawback tests, an after-tax calculation, and escrow or personal guarantees from carry recipients.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
@@ -1449,7 +1449,7 @@ window.ORRICK_SEED_DATA = {
       "category": "B. Fund economics",
       "title": "Will placement fees, organization expenses, transaction fees, or monitoring fees offset management fees",
       "prompt": "Will placement fees, organization expenses, transaction fees, or monitoring fees offset management fees?",
-      "details": "The offset section is optional in the form. Decide offsets now because they determine whether placement and sourcing costs are ultimately borne by LPs or by the Manager.",
+      "details": "The offset section is optional in the form. Decide offsets now because they determine whether placement and sourcing costs are ultimately borne by LPs or by the Manager. Pair this with a cap on organizational and offering expenses borne by the fund (commonly $250k-$1M depending on size, excess borne by the Manager) - the form currently charges formation costs to the fund without a stated cap.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
@@ -1846,11 +1846,12 @@ window.ORRICK_SEED_DATA = {
       "category": "D. Capital calls, speed, and warehousing",
       "title": "Can the fund borrow under a bridge facility or subscription line",
       "prompt": "Can the fund borrow under a bridge facility or subscription line?",
-      "details": "The form permits borrowing subject to a bracketed cap. Pick the cap (commonly 20-30% of commitments) and confirm guarantees and SPV-level debt count against it.",
+      "details": "The form permits borrowing subject to a bracketed cap tied to commitments or uncalled commitments. Pick the cap (commonly 20-30% of commitments) and decide whether guarantees and leverage at SPV or holding-vehicle level count against it - with deals executed through SPVs, a fund-level-only cap is meaningless. Fund borrowing can also create UBTI for tax-exempt LPs.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
-        "sec-30-borrowing"
+        "sec-30-borrowing",
+        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall"
       ],
       "tags": [
         "capital-calls-speed-and-warehousing"
@@ -2469,7 +2470,7 @@ window.ORRICK_SEED_DATA = {
       "category": "G. Future funds, SPVs, and allocations",
       "title": "Will LPAC approval be needed for certain conflicts or allocation decisions",
       "prompt": "Will LPAC approval be needed for certain conflicts or allocation decisions?",
-      "details": "Reserve LPAC approval for genuine conflicts (affiliate transactions, warehousing outside pre-agreed terms, allocation exceptions) and keep routine execution GP-discretionary.",
+      "details": "Reserve LPAC approval for genuine conflicts (affiliate transactions, warehousing outside pre-agreed terms, allocation exceptions) and keep routine execution GP-discretionary. Settle the LPAC's composition at the same time: the form brackets member count and appointment mechanics, and since the LPAC will carry real weight here (whitelist changes, warehousing, conflicts), keep it small (3-5 GP-appointed members from the largest LPs) and define its approval list precisely.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
@@ -2635,7 +2636,7 @@ window.ORRICK_SEED_DATA = {
       "category": "H. Regulatory, compliance, and operations",
       "title": "What insurance and indemnity coverage should be maintained",
       "prompt": "What insurance and indemnity coverage should be maintained?",
-      "details": "GP/Manager D&O and E&O coverage backstops the fund indemnity; the form lets the fund bear the premium as a Fund Expense.",
+      "details": "GP/Manager D&O and E&O coverage backstops the fund indemnity; the form lets the fund bear the premium as a Fund Expense. Confirm the indemnity's conduct standard too - the form exculpates absent material misconduct (vs a gross-negligence standard) - and whether covered persons extend to sourcing or placement parties, which LPs will resist.",
       "provisionalAnswer": "",
       "source": "Open-items memo - Section 3 detailed questions",
       "termSectionIds": [
@@ -2742,26 +2743,7 @@ window.ORRICK_SEED_DATA = {
       ]
     },
     {
-      "id": "gap-005-lpac-size-appointment-and-mandate",
-      "issueType": "question",
-      "status": "open",
-      "priority": "medium",
-      "category": "I. Fund lifecycle and governance (gap review)",
-      "title": "LPAC size, appointment, and mandate",
-      "prompt": "How many LPAC members will there be, who appoints them, and which matters require LPAC approval?",
-      "details": "The form brackets member count and appointment mechanics. The LPAC will carry real weight here (whitelist changes, warehousing, conflicts, allocation exceptions), so keep it small (3-5) and define its approvals precisely.",
-      "provisionalAnswer": "",
-      "source": "Term sheet gap review - not covered in the open-items memo",
-      "termSectionIds": [
-        "sec-12-limited-partner-advisory-committee",
-        "sec-20-investment-limitations"
-      ],
-      "tags": [
-        "term-sheet-gap"
-      ]
-    },
-    {
-      "id": "gap-006-amendment-consent-thresholds",
+      "id": "gap-005-amendment-consent-thresholds",
       "issueType": "question",
       "status": "open",
       "priority": "medium",
@@ -2780,7 +2762,7 @@ window.ORRICK_SEED_DATA = {
       ]
     },
     {
-      "id": "gap-007-side-letter-and-mfn-policy",
+      "id": "gap-006-side-letter-and-mfn-policy",
       "issueType": "question",
       "status": "open",
       "priority": "medium",
@@ -2799,7 +2781,7 @@ window.ORRICK_SEED_DATA = {
       ]
     },
     {
-      "id": "gap-008-subsequent-closing-true-up-and-interest",
+      "id": "gap-007-subsequent-closing-true-up-and-interest",
       "issueType": "question",
       "status": "open",
       "priority": "medium",
@@ -2818,7 +2800,7 @@ window.ORRICK_SEED_DATA = {
       ]
     },
     {
-      "id": "gap-009-recycling-and-reinvestment-of-proceeds",
+      "id": "gap-008-recycling-and-reinvestment-of-proceeds",
       "issueType": "question",
       "status": "open",
       "priority": "high",
@@ -2837,7 +2819,7 @@ window.ORRICK_SEED_DATA = {
       ]
     },
     {
-      "id": "gap-010-in-kind-distributions-of-non-marketable-private-shares",
+      "id": "gap-009-in-kind-distributions-of-non-marketable-private-shares",
       "issueType": "question",
       "status": "open",
       "priority": "high",
@@ -2857,26 +2839,7 @@ window.ORRICK_SEED_DATA = {
       ]
     },
     {
-      "id": "gap-011-gp-clawback-mechanics",
-      "issueType": "question",
-      "status": "open",
-      "priority": "medium",
-      "category": "J. Distributions, liability, and tax (gap review)",
-      "title": "GP clawback mechanics",
-      "prompt": "Is the GP clawback interim or end-of-fund only, is it calculated after-tax, and is it secured by escrow or personal guarantees?",
-      "details": "The form has an end-of-fund clawback. If the waterfall is deal-by-deal, LPs will push for interim clawback tests, an escrow/holdback, and guarantees from carry recipients - which feeds directly into the CarryCo design.",
-      "provisionalAnswer": "",
-      "source": "Term sheet gap review - not covered in the open-items memo",
-      "termSectionIds": [
-        "sec-26-general-partner-clawback",
-        "sec-24-distributions"
-      ],
-      "tags": [
-        "term-sheet-gap"
-      ]
-    },
-    {
-      "id": "gap-012-lp-giveback-cap-and-time-limit",
+      "id": "gap-010-lp-giveback-cap-and-time-limit",
       "issueType": "question",
       "status": "open",
       "priority": "medium",
@@ -2895,44 +2858,7 @@ window.ORRICK_SEED_DATA = {
       ]
     },
     {
-      "id": "gap-013-organizational-expense-cap",
-      "issueType": "question",
-      "status": "open",
-      "priority": "medium",
-      "category": "J. Distributions, liability, and tax (gap review)",
-      "title": "Organizational expense cap",
-      "prompt": "Is there a cap on organizational and offering expenses borne by the fund?",
-      "details": "The form charges formation costs to the fund without a stated cap. LPs expect one (often $250k-$1M depending on size), with excess borne by the Manager - this also disciplines how much placement/structuring cost can be pushed to the fund.",
-      "provisionalAnswer": "",
-      "source": "Term sheet gap review - not covered in the open-items memo",
-      "termSectionIds": [
-        "sec-27-fund-expenses"
-      ],
-      "tags": [
-        "term-sheet-gap"
-      ]
-    },
-    {
-      "id": "gap-014-borrowing-cap-scope",
-      "issueType": "question",
-      "status": "open",
-      "priority": "medium",
-      "category": "J. Distributions, liability, and tax (gap review)",
-      "title": "Borrowing cap scope",
-      "prompt": "What is the borrowing cap, and does it cover guarantees and debt at SPV or holding-vehicle level?",
-      "details": "The form brackets a cap tied to commitments or uncalled commitments. With deals executed through SPVs, decide whether vehicle-level leverage and fund guarantees count toward the cap, or the cap is meaningless.",
-      "provisionalAnswer": "",
-      "source": "Term sheet gap review - not covered in the open-items memo",
-      "termSectionIds": [
-        "sec-30-borrowing",
-        "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall"
-      ],
-      "tags": [
-        "term-sheet-gap"
-      ]
-    },
-    {
-      "id": "gap-015-tax-exempt-and-non-u-s-investor-accommodations",
+      "id": "gap-011-tax-exempt-and-non-u-s-investor-accommodations",
       "issueType": "question",
       "status": "open",
       "priority": "medium",
@@ -2946,24 +2872,6 @@ window.ORRICK_SEED_DATA = {
         "sec-45-taxation",
         "sec-40-erisa",
         "sec-36-holding-vehicles-feeder-vehicle-alternative-investment-vehicles-parall"
-      ],
-      "tags": [
-        "term-sheet-gap"
-      ]
-    },
-    {
-      "id": "gap-016-exculpation-and-indemnification-standard",
-      "issueType": "question",
-      "status": "open",
-      "priority": "medium",
-      "category": "J. Distributions, liability, and tax (gap review)",
-      "title": "Exculpation and indemnification standard",
-      "prompt": "What conduct standard applies to exculpation and indemnification (gross negligence vs ordinary negligence), and which persons are covered?",
-      "details": "The form exculpates absent material misconduct. Confirm the precise standard and whether covered persons extend to sourcing or placement parties - LPs will resist indemnifying compensated third parties.",
-      "provisionalAnswer": "",
-      "source": "Term sheet gap review - not covered in the open-items memo",
-      "termSectionIds": [
-        "sec-38-exculpation-and-indemnification"
       ],
       "tags": [
         "term-sheet-gap"
