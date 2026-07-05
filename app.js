@@ -443,7 +443,11 @@
       .filter((issue) => {
         if (state.topicFilter !== "all" && issueTopic(issue) !== state.topicFilter) return false;
         if (state.typeFilter !== "all" && issue.issueType !== state.typeFilter) return false;
-        if (state.statusFilter !== "all" && issue.status !== state.statusFilter) return false;
+        if (state.statusFilter === "not-resolved") {
+          if (issue.status === "resolved") return false;
+        } else if (state.statusFilter !== "all" && issue.status !== state.statusFilter) {
+          return false;
+        }
         if (state.followFilter === "flagged" && !isFollowUp(issue)) return false;
         if (state.followFilter === "not-flagged" && isFollowUp(issue)) return false;
         if (state.sectionFilter !== "all" && !issueMentionsSection(issue, state.sectionFilter)) return false;
@@ -858,6 +862,7 @@
 
     els.statusFilter.innerHTML = [
       "<option value=\"all\">All statuses</option>",
+      "<option value=\"not-resolved\">Not resolved</option>",
       ...Object.entries(statusLabels).map(([value, label]) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`)
     ].join("");
 
@@ -963,7 +968,8 @@
     if (state.query.trim()) chips.push(`Search: ${state.query.trim()}`);
     if (state.topicFilter !== "all") chips.push(`Topic: ${state.topicFilter}`);
     if (state.typeFilter !== "all") chips.push(`Type: ${typeLabels[state.typeFilter] || state.typeFilter}`);
-    if (state.statusFilter !== "all") chips.push(`Status: ${statusLabels[state.statusFilter] || state.statusFilter}`);
+    if (state.statusFilter === "not-resolved") chips.push("Status: Not resolved");
+    else if (state.statusFilter !== "all") chips.push(`Status: ${statusLabels[state.statusFilter] || state.statusFilter}`);
     if (state.followFilter === "flagged") chips.push("Follow-up: flagged");
     if (state.followFilter === "not-flagged") chips.push("Follow-up: not flagged");
     if (state.sectionFilter !== "all") chips.push(`Clause: ${sectionTitle(state.sectionFilter)}`);

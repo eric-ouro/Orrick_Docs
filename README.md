@@ -157,4 +157,11 @@ Run the headless render smoke test with:
 npm test
 ```
 
-Existing Supabase projects keep the issue set they were seeded with. To pick up a regenerated queue, create a new project with `Seed Current Docs` (no schema change is required).
+After regenerating the seed, sync already-seeded Supabase projects (updates seeded issues in place, inserts new ones, removes retired ones, rebuilds clause links, and preserves user answers) by generating and pushing a data migration:
+
+```bash
+node scripts/generate_seed_sync_migration.mjs
+supabase db push
+```
+
+Custom (user-created) issues are never touched by the sync.

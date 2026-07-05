@@ -61,6 +61,19 @@ topicFilter.value = "J. Distributions, liability, and tax (gap review)";
 topicFilter.dispatchEvent(new window.Event("change", { bubbles: true }));
 check(`gap topic renders (got ${doc.querySelectorAll(".issue-card").length})`, doc.querySelectorAll(".issue-card").length === 4);
 
+// "Not resolved" status filter shows every non-resolved item.
+topicFilter.value = "all";
+topicFilter.dispatchEvent(new window.Event("change", { bubbles: true }));
+const statusFilter = doc.getElementById("statusFilter");
+check(
+  "status filter has Not resolved option",
+  [...statusFilter.options].some((o) => o.value === "not-resolved")
+);
+statusFilter.value = "not-resolved";
+statusFilter.dispatchEvent(new window.Event("change", { bubbles: true }));
+// Local seed has no resolved issues, so all 126 should remain.
+check(`not-resolved shows all non-resolved (got ${doc.querySelectorAll(".issue-card").length})`, doc.querySelectorAll(".issue-card").length === 126);
+
 // Clear filters restores the full queue.
 doc.getElementById("clearFiltersBtn").click();
 check("clear filters restores queue", doc.querySelectorAll(".issue-card").length === 126);
