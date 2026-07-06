@@ -1601,8 +1601,8 @@
     if (el.mode === "omit") return true;
     if (el.mode === "custom") return String(el.value || "").trim() !== "";
     if (seg.type === "blank") return false;
-    if (el.mode === "include") return true;
-    if (el.mode === "option") return seg.options[el.optionIndex] != null;
+    if (el.mode === "include") return seg.type === "optional";
+    if (el.mode === "option") return seg.type === "choice" && seg.options[el.optionIndex] != null;
     return false;
   }
 
@@ -1893,7 +1893,9 @@
         if (el.mode === "omit") choice = "(omitted)";
         else if (el.mode === "custom") choice = String(el.value || "").trim() || "UNRESOLVED";
         else if (el.mode === "include") choice = "(kept)";
-        else if (el.mode === "option" && seg.options[el.optionIndex]) choice = seg.options[el.optionIndex].label;
+        else if (el.mode === "option" && seg.type === "choice" && seg.options[el.optionIndex]) {
+          choice = seg.options[el.optionIndex].label;
+        }
         lines.push(`${pad}Choice ${n} [${options}] => ${choice}`);
         if (seg.type === "optional" && el.mode === "include") visit(seg.nodes, depth + 1);
         else if (seg.type === "choice" && el.mode === "option" && seg.options[el.optionIndex]) {

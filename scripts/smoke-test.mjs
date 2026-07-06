@@ -218,6 +218,58 @@ doc.querySelector(".issue-card").click();
 await new Promise((resolve) => setTimeout(resolve, 20));
 check("issue editor restored after selecting issue", doc.getElementById("clausePanel").hidden && !doc.getElementById("answerForm").hidden);
 
+// Regression: clause_states saved by an older parser can carry election shapes
+// that no longer match the current tree (e.g. a path that used to be a pick-one
+// choice is now a keep/omit optional). Rendering must not throw on that data.
+{
+  const staleDom = new JSDOM(html.replace(/<script[^>]*src=[^>]*><\/script>/g, ""), {
+    url: "http://localhost/",
+    runScripts: "outside-only",
+    pretendToBeVisual: true
+  });
+  const w2 = staleDom.window;
+  w2.HTMLDialogElement.prototype.showModal ||= function () {};
+  w2.HTMLDialogElement.prototype.close ||= function () {};
+  w2.localStorage.setItem(
+    "orrick.blindPoolFund.workspace.v2",
+    JSON.stringify({
+      version: 2,
+      clauseStates: {
+        // option-mode data landing on an optional/blank; out-of-range and missing indexes
+        "sec-05-closings": {
+          status: "accepted",
+          elections: { "0": { mode: "option", optionIndex: 1, blank: "25" }, "1": { mode: "option" }, "2": { mode: "include" } },
+          rewriteText: "",
+          notes: ""
+        },
+        "sec-10-management-fee": {
+          status: "accepted",
+          elections: { "0": { mode: "option", optionIndex: 0 }, "1": { mode: "option", optionIndex: 9 }, "2": { mode: "include" } },
+          rewriteText: "",
+          notes: ""
+        }
+      }
+    })
+  );
+  w2.eval(fs.readFileSync("data/seed-data.js", "utf8"));
+  w2.eval("window.ORRICK_SUPABASE_CONFIG = {};");
+  let staleThrew = null;
+  try {
+    w2.eval(fs.readFileSync("app.js", "utf8"));
+    w2.document.getElementById("localModeBtn").click();
+    ["sec-05-closings", "sec-10-management-fee"].forEach((id) => {
+      const el = w2.document.querySelector(`[data-section-id="${id}"]`);
+      if (el) el.click();
+    });
+  } catch (error) {
+    staleThrew = error;
+  }
+  check(
+    `stale/mismatched clause elections render without throwing${staleThrew ? ` (threw: ${staleThrew.message})` : ""}`,
+    !staleThrew && !w2.document.getElementById("workspaceShell").hidden
+  );
+}
+
 if (failures.length) {
   console.error(`\n${failures.length} check(s) failed`);
   process.exit(1);
