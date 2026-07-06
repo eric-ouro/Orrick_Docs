@@ -642,12 +642,21 @@ textarea {
 
 .election-context {
   background: #faf7f1;
+  border: 1px solid var(--line);
   border-radius: 6px;
   color: var(--muted);
   font-size: 12.5px;
-  line-height: 1.5;
+  line-height: 1.6;
   margin: 0;
-  padding: 7px 9px;
+  padding: 8px 10px;
+}
+
+.election-context-target {
+  background: var(--gold-soft);
+  border-radius: 3px;
+  color: #704a13;
+  font-weight: 700;
+  padding: 0 3px;
 }
 
 .election-here {

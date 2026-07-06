@@ -1366,14 +1366,18 @@
   const clauseTokensCache = new Map();
 
   function splitTopLevelBrackets(body) {
+    const s = String(body || "");
     const items = [];
     let depth = 0;
     let buffer = "";
-    for (const char of String(body || "")) {
+    let bracketStart = 0;
+    for (let idx = 0; idx < s.length; idx += 1) {
+      const char = s[idx];
       if (char === "[") {
         if (depth === 0) {
           if (buffer) items.push({ kind: "text", text: buffer });
           buffer = "";
+          bracketStart = idx;
         } else {
           buffer += char;
         }
@@ -1381,7 +1385,9 @@
       } else if (char === "]" && depth > 0) {
         depth -= 1;
         if (depth === 0) {
-          items.push({ kind: "bracket", inner: buffer });
+          // `start`/`innerStart`/`end` are offsets within this string, used to map
+          // each election back to its exact span in the original clause body.
+          items.push({ kind: "bracket", inner: buffer, start: bracketStart, innerStart: bracketStart + 1, end: idx + 1 });
           buffer = "";
         } else {
           buffer += char;
@@ -1433,11 +1439,12 @@
       .trim();
   }
 
-  function parseClauseLevel(body, basePath) {
+  function parseClauseLevel(body, basePath, baseOffset) {
     const raw = splitTopLevelBrackets(String(body || ""));
     const segs = [];
     let ord = 0;
     const nextPath = () => (basePath ? `${basePath}.${ord++}` : String(ord++));
+    const abs = (n) => (Number.isFinite(n) ? baseOffset + n : undefined);
     let i = 0;
     while (i < raw.length) {
       const item = raw[i];
@@ -1452,12 +1459,12 @@
         continue;
       }
       if (isBlankInner(item.inner)) {
-        segs.push({ kind: "election", type: "blank", path: nextPath() });
+        segs.push({ kind: "election", type: "blank", path: nextPath(), range: [abs(item.start), abs(item.end)] });
         i += 1;
         continue;
       }
       // Look ahead for a run of directly-adjacent option brackets (OR allowed).
-      const runInners = [item.inner];
+      const runItems = [item];
       let hasOr = false;
       let j = i + 1;
       while (j < raw.length) {
@@ -1469,20 +1476,21 @@
           j += 1;
           continue;
         }
-        runInners.push(next.inner);
+        runItems.push(next);
         j += 1;
       }
-      const allLeaf = runInners.every((inner) => !hasNestedBracket(inner));
+      const allLeaf = runItems.every((it) => !hasNestedBracket(it.inner));
       // A pick-one choice is a run of 2+ brackets that are either OR-separated or
       // all leaves (plain values). A run that mixes in a nested-bracket option is
       // NOT a choice - each of its brackets is an independent optional instead.
-      if (runInners.length > 1 && (hasOr || allLeaf)) {
+      if (runItems.length > 1 && (hasOr || allLeaf)) {
         const path = nextPath();
-        const options = runInners.map((inner, k) => ({
-          label: plainLabel(inner),
-          nodes: parseClauseLevel(inner, `${path}:${k}`)
+        const options = runItems.map((it, k) => ({
+          label: plainLabel(it.inner),
+          nodes: parseClauseLevel(it.inner, `${path}:${k}`, abs(it.innerStart))
         }));
-        segs.push({ kind: "election", type: "choice", path, options });
+        const last = runItems[runItems.length - 1];
+        segs.push({ kind: "election", type: "choice", path, options, range: [abs(item.start), abs(last.end)] });
         i = j;
         continue;
       }
@@ -1494,7 +1502,8 @@
         type: "optional",
         path,
         label: plainLabel(item.inner),
-        nodes: parseClauseLevel(item.inner, `${path}>`)
+        nodes: parseClauseLevel(item.inner, `${path}>`, abs(item.innerStart)),
+        range: [abs(item.start), abs(item.end)]
       });
       i += 1;
     }
@@ -1504,7 +1513,7 @@
   function parseClauseTokens(body) {
     const cacheKey = String(body || "");
     if (clauseTokensCache.has(cacheKey)) return clauseTokensCache.get(cacheKey);
-    const segs = parseClauseLevel(cacheKey, "");
+    const segs = parseClauseLevel(cacheKey, "", 0);
     clauseTokensCache.set(cacheKey, segs);
     return segs;
   }
@@ -1723,6 +1732,52 @@
     return s.length > max ? `${s.slice(0, max - 1)}…` : s;
   }
 
+  // The verbatim sentence from the clause body around an election, with the exact
+  // bracketed text highlighted, so the drafter can read what they are deciding.
+  function electionSentenceHtml(section, seg) {
+    const body = String(section.body || "");
+    const range = seg.range || [];
+    let start = range[0];
+    let end = range[1];
+    if (!Number.isFinite(start) || !Number.isFinite(end)) return "";
+    start = Math.max(0, Math.min(start, body.length));
+    end = Math.max(start, Math.min(end, body.length));
+
+    const WINDOW = 260;
+    let before = body.slice(Math.max(0, start - WINDOW), start);
+    let after = body.slice(end, Math.min(body.length, end + WINDOW));
+
+    // Trim leading context back to the start of the current sentence. A boundary is
+    // sentence-ending punctuation (. or ;) plus an optional closing quote/paren and
+    // whitespace - NOT a bare closing quote (e.g. after a defined term).
+    let sliceFrom = 0;
+    const boundaryRe = /[.;][”’")\]]?\s+/g;
+    let match;
+    while ((match = boundaryRe.exec(before)) !== null) {
+      sliceFrom = match.index + match[0].length;
+    }
+    if (sliceFrom > 0) {
+      before = before.slice(sliceFrom);
+    } else if (start - WINDOW > 0) {
+      before = `…${before.replace(/^\S*\s/, "")}`;
+    }
+
+    // Trim trailing context forward to the end of the current sentence.
+    const forward = after.search(/[.;][”’")\]]?(\s|$)/);
+    if (forward >= 0) {
+      after = after.slice(0, forward + 1);
+    } else if (end + WINDOW < body.length) {
+      after = `${after.replace(/\s\S*$/, "")}…`;
+    }
+
+    const target = body.slice(start, end);
+    return `
+      <p class="election-context">
+        ${escapeHtml(before)}<mark class="election-context-target">${escapeHtml(target)}</mark>${escapeHtml(after)}
+      </p>
+    `;
+  }
+
   // Recursively render the interactive controls for a list of segments. Nested
   // elections appear indented under the option/optional that activates them.
   function renderElectionControls(section, nodes, elections, ctx) {
@@ -1802,6 +1857,7 @@
           <span class="election-kind">${escapeHtml(kindLabel)}</span>
           <span class="election-flag">${resolved ? "Resolved" : "Needs a choice"}</span>
         </div>
+        ${electionSentenceHtml(section, seg)}
         ${body}
       </div>
     `;

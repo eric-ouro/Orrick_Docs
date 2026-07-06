@@ -197,6 +197,21 @@ check("nested choice appears inside the kept provision", nestedChoiceOptions.len
 doc.querySelector('[data-section-id="sec-10-management-fee"]').click();
 const mgmtRows = doc.querySelectorAll("#clauseElections .election-row");
 check(`management fee clause exposes several elections (got ${mgmtRows.length})`, mgmtRows.length >= 5);
+
+// Each election shows the verbatim sentence it lives in, with its bracket marked.
+const firstCtx = mgmtRows[0].querySelector(".election-context");
+check("election shows in-context sentence", Boolean(firstCtx) && firstCtx.textContent.includes("Management Fee"));
+const firstTarget = mgmtRows[0].querySelector(".election-context-target");
+check(
+  "context highlights this election's exact bracket text",
+  Boolean(firstTarget) && firstTarget.textContent.includes("[2.5]") && firstTarget.textContent.includes("[2.0]")
+);
+const earlierRow = [...mgmtRows].find((r) => (r.querySelector(".election-context-target")?.textContent || "").includes("the earlier of"));
+check("keep/omit election marks its own phrase in context", Boolean(earlierRow));
+check(
+  "context around the earlier-of phrase reads naturally",
+  Boolean(earlierRow) && earlierRow.querySelector(".election-context").textContent.includes("Following")
+);
 const stepdownOption = [...doc.querySelectorAll("#clauseElections .election-option")].find((label) =>
   label.textContent.includes("percentage points")
 );
