@@ -122,19 +122,21 @@ check("clause panel visible after clicking a clause", !clausePanel.hidden);
 check("answer form hidden in clause mode", doc.getElementById("answerForm").hidden);
 check("clause guidance shows retired-question note", doc.getElementById("clauseGuidance").textContent.includes("giveback cap"));
 
-const electionSelects = doc.querySelectorAll("#clauseElections [data-election-select]");
-check(`giveback clause has 2 elections (got ${electionSelects.length})`, electionSelects.length === 2);
+const electionRows = doc.querySelectorAll("#clauseElections .election-row");
+check(`giveback clause has 2 elections (got ${electionRows.length})`, electionRows.length === 2);
+check("options render as readable radio cards", doc.querySelectorAll("#clauseElections .election-option").length >= 5);
 
 const acceptBtn = doc.getElementById("clauseAcceptBtn");
 check("accept disabled until elections resolved", acceptBtn.disabled);
 
 // Resolve both elections by picking the first option of each group.
 for (let i = 0; i < 2; i += 1) {
-  const select = doc.querySelectorAll("#clauseElections [data-election-select]")[i];
-  select.value = "option:0";
-  select.dispatchEvent(changeEvent());
+  const rows = doc.querySelectorAll("#clauseElections .election-row");
+  const radio = rows[i].querySelector('input[type="radio"][value="option:0"]');
+  radio.checked = true;
+  radio.dispatchEvent(changeEvent());
 }
-check("clause header shows 2/2 resolved", doc.getElementById("clauseHeader").textContent.includes("2/2 elections resolved"));
+check("clause header shows 2/2 choices made", doc.getElementById("clauseHeader").textContent.includes("2/2 choices made"));
 check("preview shows filled election", Boolean(doc.querySelector("#clausePreview .election-filled")));
 check("accept enabled once resolved", !doc.getElementById("clauseAcceptBtn").disabled);
 
@@ -149,6 +151,21 @@ check(`clauses metric advanced (got ${metricAfter})`, /^1\/\d+$/.test(metricAfte
 const stored = JSON.parse(window.localStorage.getItem("orrick.blindPoolFund.workspace.v2"));
 const storedClause = stored.clauseStates["sec-39-limited-partner-giveback"];
 check("clause state persisted locally", storedClause?.status === "accepted" && Object.keys(storedClause.elections).length === 2);
+
+// Nested blank inside an option (Closings clause): picking it reveals a fill-in.
+doc.querySelector('[data-section-id="sec-05-closings"]').click();
+const nestedOption = [...doc.querySelectorAll("#clauseElections .election-option")].find((label) =>
+  label.textContent.includes("______ million")
+);
+const nestedOptionRadio = nestedOption ? nestedOption.querySelector("input") : null;
+check("nested-blank option is displayed readably", Boolean(nestedOptionRadio));
+nestedOptionRadio.checked = true;
+nestedOptionRadio.dispatchEvent(changeEvent());
+const nestedInput = doc.querySelector("#clauseElections [data-election-blank]");
+check("nested blank input appears when its option is chosen", Boolean(nestedInput));
+nestedInput.value = "25";
+nestedInput.dispatchEvent(new window.Event("input", { bubbles: true }));
+check("nested blank fill resolves that election", doc.querySelector("#clausePreview").textContent.includes("$25 million"));
 
 // Selecting an issue switches the right pane back to the issue editor.
 doc.querySelector(".issue-card").click();

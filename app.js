@@ -1478,13 +1478,37 @@
     };
   }
 
+  const NESTED_BLANK_RE = /\[\s*_+\s*\]/;
+
+  function optionHasBlank(option) {
+    return NESTED_BLANK_RE.test(String(option || ""));
+  }
+
+  // The final text an election contributes to the clause, or "" when omitted.
+  // Returns null when the election is not yet resolved.
+  function resolvedElectionText(token, election) {
+    if (!election || !election.mode) return null;
+    if (election.mode === "omit") return "";
+    if (election.mode === "custom") {
+      const value = String(election.value || "").trim();
+      return value === "" ? null : value;
+    }
+    if (election.mode === "include") return token.options[0] || "";
+    if (election.mode === "option") {
+      const option = token.options[election.optionIndex];
+      if (option == null) return election.value != null ? String(election.value) : null;
+      if (optionHasBlank(option)) {
+        const fill = String(election.blank || "").trim();
+        if (fill === "") return null;
+        return option.replace(NESTED_BLANK_RE, fill);
+      }
+      return option;
+    }
+    return null;
+  }
+
   function electionResolved(token, election) {
-    if (!election || !election.mode) return false;
-    if (election.mode === "omit") return true;
-    if (election.mode === "option") return election.value != null && election.value !== "";
-    if (election.mode === "custom") return String(election.value || "").trim() !== "";
-    if (election.mode === "include") return true;
-    return false;
+    return resolvedElectionText(token, election) !== null;
   }
 
   function clauseProgress(section) {
@@ -1586,77 +1610,99 @@
     return "";
   }
 
-  function truncateOption(text, max = 110) {
-    const clean = String(text || "").trim();
-    return clean.length > max ? `${clean.slice(0, max)}…` : clean;
+  function optionDisplayText(option) {
+    // Show a readable placeholder where a nested blank lives.
+    return String(option || "").replace(NESTED_BLANK_RE, "______").trim();
   }
 
-  function electionControlHtml(section, token, clauseState) {
+  function electionControlHtml(section, token, clauseState, uiNumber) {
     const election = clauseState.elections[token.index] || {};
     const resolved = electionResolved(token, election);
     const context = electionContext(section, token);
     const contextHtml = context
-      ? `<div class="election-context">…${escapeHtml(context)}</div>`
+      ? `<p class="election-context">In context: “…${escapeHtml(context)} <span class="election-here">[ ? ]</span> …”</p>`
       : "";
+    const radioName = `el-${section.id}-${token.index}`;
 
-    let control = "";
+    let body = "";
     if (token.type === "blank") {
-      control = `<input type="text" data-election-input="${token.index}" value="${escapeHtml(election.value || "")}" placeholder="Fill in the blank" />`;
+      body = `
+        <input type="text" class="election-text" data-election-input="${token.index}" value="${escapeHtml(election.value || "")}" placeholder="Type the value to fill this blank" />
+      `;
     } else {
-      const optionsHtml = token.options
-        .map(
-          (option, optionIndex) =>
-            `<option value="option:${optionIndex}"${election.mode === "option" && String(election.value) === option ? " selected" : ""}>${escapeHtml(truncateOption(option))}</option>`
-        )
+      const optionRows = token.options
+        .map((option, optionIndex) => {
+          const selected = election.mode === "option" && Number(election.optionIndex) === optionIndex;
+          const nested = optionHasBlank(option);
+          const nestedInput =
+            selected && nested
+              ? `<input type="text" class="election-text election-nested" data-election-blank="${token.index}" value="${escapeHtml(election.blank || "")}" placeholder="Fill the blank in this option" />`
+              : "";
+          return `
+            <label class="election-option${selected ? " selected" : ""}">
+              <input type="radio" name="${radioName}" data-election-index="${token.index}" value="option:${optionIndex}"${selected ? " checked" : ""} />
+              <span class="election-option-text">${escapeHtml(optionDisplayText(option))}</span>
+            </label>
+            ${nestedInput}
+          `;
+        })
         .join("");
-      const placeholderLabel = token.type === "choice" ? "Choose an option…" : "Keep or omit…";
-      const includeOption =
-        token.type === "optional"
-          ? `<option value="include"${election.mode === "include" ? " selected" : ""}>Keep: ${escapeHtml(truncateOption(token.options[0], 80))}</option>`
-          : optionsHtml;
-      control = `
-        <select data-election-select="${token.index}">
-          <option value=""${!election.mode ? " selected" : ""}>${escapeHtml(placeholderLabel)}</option>
-          ${includeOption}
-          <option value="omit"${election.mode === "omit" ? " selected" : ""}>Omit</option>
-          <option value="custom"${election.mode === "custom" ? " selected" : ""}>Write in…</option>
-        </select>
+
+      const omitSelected = election.mode === "omit";
+      const customSelected = election.mode === "custom";
+      const omitLabel = token.type === "optional" ? "Leave this text out" : "Omit — none of these";
+      const omitRow = `
+        <label class="election-option election-option-alt${omitSelected ? " selected" : ""}">
+          <input type="radio" name="${radioName}" data-election-index="${token.index}" value="omit"${omitSelected ? " checked" : ""} />
+          <span class="election-option-text">${escapeHtml(omitLabel)}</span>
+        </label>
+      `;
+      const customRow = `
+        <label class="election-option election-option-alt${customSelected ? " selected" : ""}">
+          <input type="radio" name="${radioName}" data-election-index="${token.index}" value="custom"${customSelected ? " checked" : ""} />
+          <span class="election-option-text">Write in custom language…</span>
+        </label>
         ${
-          election.mode === "custom"
-            ? `<input type="text" data-election-custom="${token.index}" value="${escapeHtml(election.value || "")}" placeholder="Custom language" />`
+          customSelected
+            ? `<input type="text" class="election-text" data-election-custom="${token.index}" value="${escapeHtml(election.value || "")}" placeholder="Custom language" />`
             : ""
         }
       `;
+      body = `<div class="election-options">${optionRows}${omitRow}${customRow}</div>`;
     }
 
-    const label =
-      token.type === "blank" ? "Blank" : token.type === "choice" ? `Pick one of ${token.options.length}` : "Optional text";
+    const kindLabel =
+      token.type === "blank"
+        ? "Fill in the blank"
+        : token.type === "choice"
+          ? `Choose one of ${token.options.length}`
+          : "Keep, omit, or rewrite";
     return `
       <div class="election-row${resolved ? " resolved" : ""}">
-        <div class="election-label">
-          <span class="pill${resolved ? " election-done" : ""}">${escapeHtml(label)}</span>
+        <div class="election-head">
+          <span class="election-num">${uiNumber}</span>
+          <span class="election-kind">${escapeHtml(kindLabel)}</span>
+          <span class="election-flag">${resolved ? "Resolved" : "Needs a choice"}</span>
         </div>
         ${contextHtml}
-        ${control}
+        ${body}
       </div>
     `;
   }
 
   function clausePreviewHtml(section, clauseState) {
     const tokens = parseClauseTokens(section.body);
+    let electionNumber = 0;
     const parts = tokens.map((token) => {
       if (token.kind === "text") return escapeHtml(token.text);
       if (token.kind === "note") return `<span class="clause-note">[${escapeHtml(token.text)}]</span>`;
+      electionNumber += 1;
       const election = clauseState.elections[token.index] || {};
-      if (electionResolved(token, election)) {
-        if (election.mode === "omit") return "";
-        if (election.mode === "include" || election.mode === "option") {
-          return `<span class="election-filled">${escapeHtml(election.mode === "include" ? token.options[0] : election.value)}</span>`;
-        }
-        return `<span class="election-filled">${escapeHtml(election.value)}</span>`;
+      const resolvedText = resolvedElectionText(token, election);
+      if (resolvedText !== null) {
+        return resolvedText === "" ? "" : `<span class="election-filled">${escapeHtml(resolvedText)}</span>`;
       }
-      if (token.type === "blank") return "<mark class=\"election-open\">[_____]</mark>";
-      return `<mark class="election-open">[${escapeHtml(truncateOption(token.options.join("]["), 160))}]</mark>`;
+      return `<mark class="election-open">choice ${electionNumber}</mark>`;
     });
     return parts.join("");
   }
@@ -1678,10 +1724,10 @@
     els.clauseHeader.innerHTML = `
       <div class="issue-meta">
         <span class="pill clause-status-${slugClass(clauseState.status)}">${escapeHtml(clauseStatusLabels[clauseState.status] || clauseState.status)}</span>
-        <span class="pill">${progress.total ? `${progress.resolved}/${progress.total} elections resolved` : "No bracketed options"}</span>
+        <span class="pill election-progress">${progress.total ? `${progress.resolved}/${progress.total} choices made` : "No bracketed options"}</span>
         <span class="pill">Row ${escapeHtml(section.row)}</span>
       </div>
-      <p class="clause-hint">Resolve every bracketed option below, then accept the clause - or reject it / send it to rewrite.</p>
+      <p class="clause-hint">Make a choice for each numbered item below, then accept the clause - or reject it / send it to rewrite.</p>
     `;
 
     const guidance = section.guidance || [];
@@ -1693,7 +1739,7 @@
 
     const elections = electionTokens(section);
     els.clauseElections.innerHTML = elections.length
-      ? elections.map((token) => electionControlHtml(section, token, clauseState)).join("")
+      ? elections.map((token, i) => electionControlHtml(section, token, clauseState, i + 1)).join("")
       : "<p class=\"source-note\">This clause has no bracketed options. Accept it as written, reject it, or request a rewrite.</p>";
 
     els.clauseRewriteInput.value = clauseState.rewriteText || "";
@@ -1746,6 +1792,29 @@
       <div class="detail-label">Clause preview with elections applied</div>
       <p>${clausePreviewHtml(section, clauseState)}</p>
     `;
+  }
+
+  // Update resolved highlighting/flags live while typing, without re-rendering
+  // (which would blur the active input) and refresh the accept button + header.
+  function refreshElectionRowState() {
+    const section = selectedClauseSection();
+    if (!section) return;
+    const clauseState = clauseStateFor(section);
+    const tokens = electionTokens(section);
+    els.clauseElections.querySelectorAll(".election-row").forEach((row, i) => {
+      const token = tokens[i];
+      if (!token) return;
+      const resolved = electionResolved(token, clauseState.elections[token.index]);
+      row.classList.toggle("resolved", resolved);
+      const flag = row.querySelector(".election-flag");
+      if (flag) flag.textContent = resolved ? "Resolved" : "Needs a choice";
+    });
+    const progress = clauseProgress(section);
+    const headerPill = els.clauseHeader.querySelector(".election-progress");
+    if (headerPill) {
+      headerPill.textContent = `${progress.resolved}/${progress.total} choices made`;
+    }
+    els.clauseAcceptBtn.disabled = progress.total > 0 && progress.resolved < progress.total;
   }
 
   function clearAiResponse() {
@@ -2659,27 +2728,28 @@
     els.clauseElections.addEventListener("change", (event) => {
       const section = selectedClauseSection();
       if (!section) return;
-      const select = event.target.closest("[data-election-select]");
-      if (select) {
-        const index = Number(select.dataset.electionSelect);
-        const token = electionTokens(section).find((item) => item.index === index);
-        const value = select.value;
-        let election = null;
-        if (value.startsWith("option:")) {
-          election = { mode: "option", value: token.options[Number(value.slice(7))] };
-        } else if (value === "include") {
-          election = { mode: "include" };
-        } else if (value === "omit") {
-          election = { mode: "omit" };
-        } else if (value === "custom") {
-          const existing = clauseStateFor(section).elections[index];
-          election = { mode: "custom", value: existing?.mode === "custom" ? existing.value || "" : "" };
-        }
-        setClauseElection(section, index, election);
-        renderClausePanel();
-        renderMetrics();
-        renderDocument();
+      const radio = event.target.closest("input[data-election-index]");
+      if (!radio) return;
+      const index = Number(radio.dataset.electionIndex);
+      const value = radio.value;
+      const existing = clauseStateFor(section).elections[index] || {};
+      let election = null;
+      if (value.startsWith("option:")) {
+        const optionIndex = Number(value.slice(7));
+        election = {
+          mode: "option",
+          optionIndex,
+          blank: Number(existing.optionIndex) === optionIndex ? existing.blank || "" : ""
+        };
+      } else if (value === "omit") {
+        election = { mode: "omit" };
+      } else if (value === "custom") {
+        election = { mode: "custom", value: existing.mode === "custom" ? existing.value || "" : "" };
       }
+      setClauseElection(section, index, election);
+      renderClausePanel();
+      renderMetrics();
+      renderDocument();
     });
 
     els.clauseElections.addEventListener("input", (event) => {
@@ -2687,18 +2757,26 @@
       if (!section) return;
       const blank = event.target.closest("[data-election-input]");
       const custom = event.target.closest("[data-election-custom]");
-      const target = blank || custom;
-      if (!target) return;
-      const index = Number(blank ? blank.dataset.electionInput : custom.dataset.electionCustom);
-      setClauseElection(section, index, { mode: "custom", value: target.value });
+      const nested = event.target.closest("[data-election-blank]");
+      if (blank) {
+        setClauseElection(section, Number(blank.dataset.electionInput), { mode: "custom", value: blank.value });
+      } else if (custom) {
+        setClauseElection(section, Number(custom.dataset.electionCustom), { mode: "custom", value: custom.value });
+      } else if (nested) {
+        const index = Number(nested.dataset.electionBlank);
+        const existing = clauseStateFor(section).elections[index] || { mode: "option", optionIndex: 0 };
+        setClauseElection(section, index, { ...existing, mode: "option", blank: nested.value });
+      } else {
+        return;
+      }
       refreshClausePreview();
+      refreshElectionRowState();
     });
 
     els.clauseElections.addEventListener(
       "blur",
       (event) => {
-        if (event.target.closest("[data-election-input],[data-election-custom]")) {
-          renderClausePanel();
+        if (event.target.closest("[data-election-input],[data-election-custom],[data-election-blank]")) {
           renderMetrics();
           renderDocument();
         }
