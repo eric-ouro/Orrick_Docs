@@ -87,6 +87,7 @@
     selectedTitle: document.getElementById("selectedTitle"),
     saveState: document.getElementById("saveState"),
     syncNowBtn: document.getElementById("syncNowBtn"),
+    connectivityBadge: document.getElementById("connectivityBadge"),
     issueDetail: document.getElementById("issueDetail"),
     answerForm: document.getElementById("answerForm"),
     aiPanel: document.getElementById("aiPanel"),
@@ -407,6 +408,28 @@
     return { label: "Synced", cls: "saved" };
   }
 
+  // The global top-right pill: Connected / Pushing N / Offline - N unsaved.
+  function connectivityState() {
+    const pending = outboxCount();
+    if (!app.online) {
+      return {
+        label: pending ? `Offline - ${pending} unsaved` : "Offline",
+        cls: "offline",
+        title: pending
+          ? "Changes are saved on this device and will sync automatically when you reconnect. Click to retry now."
+          : "No internet connection. Your work stays on this device until you reconnect."
+      };
+    }
+    if (flushing || pending) {
+      return {
+        label: pending ? `Pushing ${pending}…` : "Pushing…",
+        cls: "pushing",
+        title: "Sending your queued changes to the server."
+      };
+    }
+    return { label: "Connected", cls: "online", title: "All changes are saved to the server." };
+  }
+
   function renderSyncStatus() {
     window.clearTimeout(saveTimer);
     const { label, cls } = defaultSaveState();
@@ -416,6 +439,17 @@
     }
     if (els.syncNowBtn) {
       els.syncNowBtn.hidden = !(app.mode === "remote" && outboxCount() > 0);
+    }
+    if (els.connectivityBadge) {
+      if (app.mode !== "remote") {
+        els.connectivityBadge.hidden = true;
+      } else {
+        const c = connectivityState();
+        els.connectivityBadge.hidden = false;
+        els.connectivityBadge.textContent = c.label;
+        els.connectivityBadge.title = c.title;
+        els.connectivityBadge.className = `connectivity ${c.cls}`;
+      }
     }
   }
 
@@ -3055,13 +3089,13 @@
       if (app.mode === "remote" && isOnline() && outboxCount()) scheduleFlush(0);
     });
 
-    if (els.syncNowBtn) {
-      els.syncNowBtn.addEventListener("click", () => {
-        app.online = isOnline();
-        renderSyncStatus();
-        flushOutbox();
-      });
-    }
+    const retryNow = () => {
+      app.online = isOnline();
+      renderSyncStatus();
+      flushOutbox();
+    };
+    if (els.syncNowBtn) els.syncNowBtn.addEventListener("click", retryNow);
+    if (els.connectivityBadge) els.connectivityBadge.addEventListener("click", retryNow);
 
     els.localModeBtn.addEventListener("click", () => {
       setMode("local");

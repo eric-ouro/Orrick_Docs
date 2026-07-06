@@ -983,6 +983,61 @@ textarea {
   gap: 8px;
 }
 
+.connectivity {
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 700;
+  gap: 7px;
+  padding: 5px 12px;
+  white-space: nowrap;
+}
+
+.connectivity::before {
+  border-radius: 50%;
+  content: "";
+  height: 8px;
+  width: 8px;
+  background: currentColor;
+}
+
+.connectivity.online {
+  background: var(--green-soft);
+  border-color: #9cc8a6;
+  color: #315f39;
+}
+
+.connectivity.pushing {
+  background: var(--gold-soft);
+  border-color: #d9bf8a;
+  color: #704a13;
+}
+
+.connectivity.pushing::before {
+  animation: connectivity-pulse 1s ease-in-out infinite;
+}
+
+.connectivity.offline {
+  background: #f4e0e0;
+  border-color: #d9a6a6;
+  color: #8a2b2b;
+}
+
+@keyframes connectivity-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
 .sync-now {
   background: var(--accent, #315f39);
   border: none;

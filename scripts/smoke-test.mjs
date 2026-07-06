@@ -475,6 +475,11 @@ check("issue editor restored after selecting issue", doc.getElementById("clauseP
   const booted = await waitFor(() => rdoc.querySelector("#issueList .issue-card"));
   check("remote workspace boots against mock Supabase", booted && !rdoc.getElementById("workspaceShell").hidden);
   check("badge reads Synced when online with empty queue", rdoc.getElementById("saveState").textContent.includes("Synced"));
+  const connBadge = rdoc.getElementById("connectivityBadge");
+  check(
+    "top-right connectivity badge shows Connected when online",
+    !connBadge.hidden && connBadge.className.includes("online") && connBadge.textContent.includes("Connected")
+  );
 
   // Go offline (writes now fail as network errors) and make edits.
   mock.online = false;
@@ -526,6 +531,10 @@ check("issue editor restored after selecting issue", doc.getElementById("clauseP
       rdoc.getElementById("saveState").textContent.toLowerCase().includes("offline")
   );
   check("Sync now button is offered while queued", !rdoc.getElementById("syncNowBtn").hidden);
+  check(
+    "top-right badge shows Offline with the change count",
+    connBadge.className.includes("offline") && /offline - 2 unsaved/i.test(connBadge.textContent)
+  );
 
   // Reconnect: dispatch the browser online event and let the queue flush.
   mock.online = true;
@@ -541,6 +550,10 @@ check("issue editor restored after selecting issue", doc.getElementById("clauseP
     mock.writes.filter((wr) => wr.table === "issue_states").pop().payload.status === "resolved"
   );
   check("badge returns to Synced after reconnect", rdoc.getElementById("saveState").textContent.includes("Synced"));
+  check(
+    "top-right badge returns to Connected after the queue drains",
+    connBadge.className.includes("online") && connBadge.textContent.includes("Connected")
+  );
 }
 
 if (failures.length) {
