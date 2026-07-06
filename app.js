@@ -99,6 +99,11 @@
     clauseRewriteBtn: document.getElementById("clauseRewriteBtn"),
     clauseReopenBtn: document.getElementById("clauseReopenBtn"),
     clausePreview: document.getElementById("clausePreview"),
+    clauseAiQuestionInput: document.getElementById("clauseAiQuestionInput"),
+    clauseAskAiBtn: document.getElementById("clauseAskAiBtn"),
+    clauseAskClaudeBtn: document.getElementById("clauseAskClaudeBtn"),
+    clauseSaveAiBtn: document.getElementById("clauseSaveAiBtn"),
+    clauseAiResponse: document.getElementById("clauseAiResponse"),
     statusInput: document.getElementById("statusInput"),
     ownerInput: document.getElementById("ownerInput"),
     answerInput: document.getElementById("answerInput"),
@@ -176,7 +181,8 @@
     sectionFilter: "all",
     rightPane: "issue",
     selectedClauseId: "",
-    aiIssueId: ""
+    aiIssueId: "",
+    aiClauseId: ""
   };
 
   function loadLocalWorkspace() {
@@ -1396,66 +1402,134 @@
     return /^\s*NTD\b/i.test(inner) || /^\s*(the above limitations|LPAC not needed)/i.test(inner);
   }
 
-  // Tokens: text | note | election. Election kinds:
+  // Parse a clause body into a tree of segments: text, note, or election.
+  // Elections NEST - a choice option or a kept optional can contain its own
+  // elections, e.g. "[ ...reduced by [0.25][0.1]... ][OR][ ...reduced to [2.5][2.0]... ]".
   //   blank    - [_____] fill-in
-  //   choice   - adjacent [A][B](...) pick-one groups (incl. [A][OR][B])
-  //   optional - a lone bracketed provision to keep or omit
-  function parseClauseTokens(body) {
-    const cacheKey = String(body || "");
-    if (clauseTokensCache.has(cacheKey)) return clauseTokensCache.get(cacheKey);
+  //   choice   - a run of adjacent [A][B] brackets (or [A][OR][B]) - pick one
+  //   optional - a lone bracketed provision to keep, omit, or rewrite
+  // Each election carries a stable path (built from `.`, `:` and `>`) so user
+  // selections persist across renders and reloads.
+  function isOrSeparator(inner) {
+    return /^\s*or\s*$/i.test(inner);
+  }
 
-    const raw = splitTopLevelBrackets(cacheKey);
-    const tokens = [];
-    let electionIndex = 0;
-    let cursor = 0;
+  function hasNestedBracket(inner) {
+    return String(inner || "").includes("[");
+  }
 
-    while (cursor < raw.length) {
-      const item = raw[cursor];
+  // A readable one-line label for an option/optional, with nested brackets shown
+  // as a small placeholder so the radio card stays legible.
+  function plainLabel(inner) {
+    return splitTopLevelBrackets(String(inner || ""))
+      .map((part) => {
+        if (part.kind === "text") return part.text;
+        if (isNoteInner(part.inner)) return "";
+        if (isOrSeparator(part.inner)) return " / ";
+        return "\u25a2"; // placeholder for a nested blank/choice
+      })
+      .join("")
+      .replace(/\s{2,}/g, " ")
+      .trim();
+  }
+
+  function parseClauseLevel(body, basePath) {
+    const raw = splitTopLevelBrackets(String(body || ""));
+    const segs = [];
+    let ord = 0;
+    const nextPath = () => (basePath ? `${basePath}.${ord++}` : String(ord++));
+    let i = 0;
+    while (i < raw.length) {
+      const item = raw[i];
       if (item.kind === "text") {
-        tokens.push({ kind: "text", text: item.text });
-        cursor += 1;
+        segs.push({ kind: "text", text: item.text });
+        i += 1;
         continue;
       }
       if (isNoteInner(item.inner)) {
-        tokens.push({ kind: "note", text: item.inner });
-        cursor += 1;
+        segs.push({ kind: "note", text: item.inner });
+        i += 1;
         continue;
       }
       if (isBlankInner(item.inner)) {
-        tokens.push({ kind: "election", type: "blank", index: electionIndex, options: [] });
-        electionIndex += 1;
-        cursor += 1;
+        segs.push({ kind: "election", type: "blank", path: nextPath() });
+        i += 1;
         continue;
       }
-      // Collect a run of adjacent option brackets (no text in between), skipping
-      // [OR] separators and stopping at blanks/notes.
-      const options = [item.inner];
-      let lookahead = cursor + 1;
-      while (lookahead < raw.length) {
-        const next = raw[lookahead];
-        if (next.kind !== "bracket" || isBlankInner(next.inner) || isNoteInner(next.inner)) break;
-        if (/^\s*OR\s*$/.test(next.inner)) {
-          lookahead += 1;
+      // Look ahead for a run of directly-adjacent option brackets (OR allowed).
+      const runInners = [item.inner];
+      let hasOr = false;
+      let j = i + 1;
+      while (j < raw.length) {
+        const next = raw[j];
+        if (next.kind !== "bracket") break;
+        if (isBlankInner(next.inner) || isNoteInner(next.inner)) break;
+        if (isOrSeparator(next.inner)) {
+          hasOr = true;
+          j += 1;
           continue;
         }
-        options.push(next.inner);
-        lookahead += 1;
+        runInners.push(next.inner);
+        j += 1;
       }
-      if (options.length > 1) {
-        tokens.push({ kind: "election", type: "choice", index: electionIndex, options });
-      } else {
-        tokens.push({ kind: "election", type: "optional", index: electionIndex, options });
+      const allLeaf = runInners.every((inner) => !hasNestedBracket(inner));
+      // A pick-one choice is a run of 2+ brackets that are either OR-separated or
+      // all leaves (plain values). A run that mixes in a nested-bracket option is
+      // NOT a choice - each of its brackets is an independent optional instead.
+      if (runInners.length > 1 && (hasOr || allLeaf)) {
+        const path = nextPath();
+        const options = runInners.map((inner, k) => ({
+          label: plainLabel(inner),
+          nodes: parseClauseLevel(inner, `${path}:${k}`)
+        }));
+        segs.push({ kind: "election", type: "choice", path, options });
+        i = j;
+        continue;
       }
-      electionIndex += 1;
-      cursor = options.length > 1 ? lookahead : cursor + 1;
+      // Otherwise, this single bracket is a keep/omit optional whose kept text may
+      // itself contain nested elections.
+      const path = nextPath();
+      segs.push({
+        kind: "election",
+        type: "optional",
+        path,
+        label: plainLabel(item.inner),
+        nodes: parseClauseLevel(item.inner, `${path}>`)
+      });
+      i += 1;
     }
-
-    clauseTokensCache.set(cacheKey, tokens);
-    return tokens;
+    return segs;
   }
 
+  function parseClauseTokens(body) {
+    const cacheKey = String(body || "");
+    if (clauseTokensCache.has(cacheKey)) return clauseTokensCache.get(cacheKey);
+    const segs = parseClauseLevel(cacheKey, "");
+    clauseTokensCache.set(cacheKey, segs);
+    return segs;
+  }
+
+  // Depth-first visit of every election in the tree (active or not).
+  function walkElections(nodes, cb) {
+    for (const seg of nodes || []) {
+      if (seg.kind !== "election") continue;
+      cb(seg);
+      if (seg.type === "optional") walkElections(seg.nodes, cb);
+      else if (seg.type === "choice") seg.options.forEach((opt) => walkElections(opt.nodes, cb));
+    }
+  }
+
+  // Top-level election segments (used only to test "does this clause have any").
   function electionTokens(section) {
     return parseClauseTokens(section.body).filter((token) => token.kind === "election");
+  }
+
+  function electionByPath(section, path) {
+    let found = null;
+    walkElections(parseClauseTokens(section.body), (seg) => {
+      if (seg.path === path) found = seg;
+    });
+    return found;
   }
 
   function clauseKeyFor(section) {
@@ -1478,44 +1552,91 @@
     };
   }
 
-  const NESTED_BLANK_RE = /\[\s*_+\s*\]/;
-
-  function optionHasBlank(option) {
-    return NESTED_BLANK_RE.test(String(option || ""));
-  }
-
-  // The final text an election contributes to the clause, or "" when omitted.
-  // Returns null when the election is not yet resolved.
-  function resolvedElectionText(token, election) {
-    if (!election || !election.mode) return null;
-    if (election.mode === "omit") return "";
-    if (election.mode === "custom") {
-      const value = String(election.value || "").trim();
-      return value === "" ? null : value;
-    }
-    if (election.mode === "include") return token.options[0] || "";
-    if (election.mode === "option") {
-      const option = token.options[election.optionIndex];
-      if (option == null) return election.value != null ? String(election.value) : null;
-      if (optionHasBlank(option)) {
-        const fill = String(election.blank || "").trim();
-        if (fill === "") return null;
-        return option.replace(NESTED_BLANK_RE, fill);
+  // Resolve a list of segments into { text, resolved } given the elections map.
+  // `text` is the drafting output (omitted elections contribute ""), `resolved`
+  // is true only when every active election down the tree has a decision.
+  function resolveNodes(nodes, elections) {
+    let text = "";
+    let resolved = true;
+    for (const seg of nodes || []) {
+      if (seg.kind === "text") {
+        text += seg.text;
+        continue;
       }
-      return option;
+      if (seg.kind === "note") continue;
+      if (seg.kind !== "election") continue;
+      const r = resolveElection(seg, elections);
+      text += r.text;
+      if (!r.resolved) resolved = false;
     }
-    return null;
+    return { text, resolved };
   }
 
-  function electionResolved(token, election) {
-    return resolvedElectionText(token, election) !== null;
+  function resolveElection(seg, elections) {
+    const el = (elections && elections[seg.path]) || {};
+    if (el.mode === "omit") return { text: "", resolved: true };
+    if (el.mode === "custom") {
+      const value = String(el.value || "").trim();
+      return value === "" ? { text: "", resolved: false } : { text: value, resolved: true };
+    }
+    if (seg.type === "blank") return { text: "", resolved: false };
+    if (seg.type === "optional") {
+      if (el.mode === "include") return resolveNodes(seg.nodes, elections);
+      return { text: "", resolved: false };
+    }
+    if (seg.type === "choice") {
+      if (el.mode === "option") {
+        const option = seg.options[el.optionIndex];
+        if (!option) return { text: "", resolved: false };
+        return resolveNodes(option.nodes, elections);
+      }
+      return { text: "", resolved: false };
+    }
+    return { text: "", resolved: false };
+  }
+
+  // Whether an election's own decision is made (ignores descendants).
+  function selfResolved(seg, el) {
+    if (!el || !el.mode) return false;
+    if (el.mode === "omit") return true;
+    if (el.mode === "custom") return String(el.value || "").trim() !== "";
+    if (seg.type === "blank") return false;
+    if (el.mode === "include") return true;
+    if (el.mode === "option") return seg.options[el.optionIndex] != null;
+    return false;
+  }
+
+  // Count active elections (top level always active; nested ones active only once
+  // their parent option/optional is chosen) and how many are individually decided.
+  function countElections(nodes, elections) {
+    let total = 0;
+    let resolved = 0;
+    for (const seg of nodes || []) {
+      if (seg.kind !== "election") continue;
+      const el = (elections && elections[seg.path]) || {};
+      total += 1;
+      if (selfResolved(seg, el)) resolved += 1;
+      if (seg.type === "optional" && el.mode === "include") {
+        const c = countElections(seg.nodes, elections);
+        total += c.total;
+        resolved += c.resolved;
+      } else if (seg.type === "choice" && el.mode === "option") {
+        const option = seg.options[el.optionIndex];
+        if (option) {
+          const c = countElections(option.nodes, elections);
+          total += c.total;
+          resolved += c.resolved;
+        }
+      }
+    }
+    return { total, resolved };
   }
 
   function clauseProgress(section) {
-    const elections = electionTokens(section);
+    const nodes = parseClauseTokens(section.body);
     const clauseState = clauseStateFor(section);
-    const resolved = elections.filter((token) => electionResolved(token, clauseState.elections[token.index])).length;
-    return { total: elections.length, resolved, status: clauseState.status };
+    const { total, resolved } = countElections(nodes, clauseState.elections);
+    return { total, resolved, status: clauseState.status };
   }
 
   function clauseIsSettled(section) {
@@ -1590,121 +1711,305 @@
     );
   }
 
-  function setClauseElection(section, index, election) {
+  function setClauseElection(section, path, election) {
     const current = clauseStateFor(section);
-    const elections = { ...current.elections, [index]: election };
-    if (!election || !election.mode) delete elections[index];
+    const elections = { ...current.elections, [path]: election };
+    if (!election || !election.mode) delete elections[path];
     updateClauseState(section, { elections });
   }
 
-  function electionContext(section, token) {
-    // Short snippet of the text just before the election, for orientation.
-    const tokens = parseClauseTokens(section.body);
-    const position = tokens.indexOf(token);
-    for (let i = position - 1; i >= 0; i -= 1) {
-      if (tokens[i].kind === "text" && tokens[i].text.trim()) {
-        const text = tokens[i].text.trim();
-        return text.length > 90 ? `…${text.slice(-90)}` : text;
-      }
-    }
-    return "";
+  function shortenLabel(text, max = 42) {
+    const s = String(text || "").trim();
+    return s.length > max ? `${s.slice(0, max - 1)}…` : s;
   }
 
-  function optionDisplayText(option) {
-    // Show a readable placeholder where a nested blank lives.
-    return String(option || "").replace(NESTED_BLANK_RE, "______").trim();
+  // Recursively render the interactive controls for a list of segments. Nested
+  // elections appear indented under the option/optional that activates them.
+  function renderElectionControls(section, nodes, elections, ctx) {
+    return (nodes || [])
+      .filter((seg) => seg.kind === "election")
+      .map((seg) => electionControlHtml(section, seg, elections, ctx))
+      .join("");
   }
 
-  function electionControlHtml(section, token, clauseState, uiNumber) {
-    const election = clauseState.elections[token.index] || {};
-    const resolved = electionResolved(token, election);
-    const context = electionContext(section, token);
-    const contextHtml = context
-      ? `<p class="election-context">In context: “…${escapeHtml(context)} <span class="election-here">[ ? ]</span> …”</p>`
-      : "";
-    const radioName = `el-${section.id}-${token.index}`;
+  function electionControlHtml(section, seg, elections, ctx) {
+    const el = elections[seg.path] || {};
+    const resolved = selfResolved(seg, el);
+    ctx.n += 1;
+    const num = ctx.n;
+    const safePath = escapeHtml(seg.path);
+    const radioName = `el-${section.id}-${seg.path}`.replace(/[^a-z0-9_-]/gi, "_");
 
     let body = "";
-    if (token.type === "blank") {
-      body = `
-        <input type="text" class="election-text" data-election-input="${token.index}" value="${escapeHtml(election.value || "")}" placeholder="Type the value to fill this blank" />
-      `;
-    } else {
-      const optionRows = token.options
+    let kindLabel = "";
+    let nestedHtml = "";
+
+    if (seg.type === "blank") {
+      kindLabel = "Fill in the blank";
+      body = `<input type="text" class="election-text" data-election-input="${safePath}" value="${escapeHtml(el.value || "")}" placeholder="Type the value to fill this blank" />`;
+    } else if (seg.type === "choice") {
+      kindLabel = `Choose one of ${seg.options.length}`;
+      const optionRows = seg.options
         .map((option, optionIndex) => {
-          const selected = election.mode === "option" && Number(election.optionIndex) === optionIndex;
-          const nested = optionHasBlank(option);
-          const nestedInput =
-            selected && nested
-              ? `<input type="text" class="election-text election-nested" data-election-blank="${token.index}" value="${escapeHtml(election.blank || "")}" placeholder="Fill the blank in this option" />`
-              : "";
+          const selected = el.mode === "option" && Number(el.optionIndex) === optionIndex;
+          const label = option.label || "(blank)";
+          let inner = "";
+          if (selected && option.nodes.some((n) => n.kind === "election")) {
+            inner = `<div class="election-nested-group">${renderElectionControls(section, option.nodes, elections, ctx)}</div>`;
+          }
           return `
             <label class="election-option${selected ? " selected" : ""}">
-              <input type="radio" name="${radioName}" data-election-index="${token.index}" value="option:${optionIndex}"${selected ? " checked" : ""} />
-              <span class="election-option-text">${escapeHtml(optionDisplayText(option))}</span>
+              <input type="radio" name="${radioName}" data-election-path="${safePath}" value="option:${optionIndex}"${selected ? " checked" : ""} />
+              <span class="election-option-text">${escapeHtml(label)}</span>
             </label>
-            ${nestedInput}
+            ${inner}
           `;
         })
         .join("");
-
-      const omitSelected = election.mode === "omit";
-      const customSelected = election.mode === "custom";
-      const omitLabel = token.type === "optional" ? "Leave this text out" : "Omit — none of these";
-      const omitRow = `
-        <label class="election-option election-option-alt${omitSelected ? " selected" : ""}">
-          <input type="radio" name="${radioName}" data-election-index="${token.index}" value="omit"${omitSelected ? " checked" : ""} />
-          <span class="election-option-text">${escapeHtml(omitLabel)}</span>
+      const omitSelected = el.mode === "omit";
+      const customSelected = el.mode === "custom";
+      body = `<div class="election-options">
+        ${optionRows}
+        ${altRow(radioName, safePath, "omit", "None of these (omit)", omitSelected)}
+        ${altRow(radioName, safePath, "custom", "Write in custom language…", customSelected)}
+        ${customSelected ? `<input type="text" class="election-text" data-election-custom="${safePath}" value="${escapeHtml(el.value || "")}" placeholder="Custom language" />` : ""}
+      </div>`;
+    } else {
+      // optional
+      kindLabel = "Keep, omit, or rewrite";
+      const includeSelected = el.mode === "include";
+      const omitSelected = el.mode === "omit";
+      const customSelected = el.mode === "custom";
+      if (includeSelected && seg.nodes.some((n) => n.kind === "election")) {
+        nestedHtml = `<div class="election-nested-group">${renderElectionControls(section, seg.nodes, elections, ctx)}</div>`;
+      }
+      body = `<div class="election-options">
+        <label class="election-option${includeSelected ? " selected" : ""}">
+          <input type="radio" name="${radioName}" data-election-path="${safePath}" value="include"${includeSelected ? " checked" : ""} />
+          <span class="election-option-text">Keep: ${escapeHtml(seg.label || "this language")}</span>
         </label>
-      `;
-      const customRow = `
-        <label class="election-option election-option-alt${customSelected ? " selected" : ""}">
-          <input type="radio" name="${radioName}" data-election-index="${token.index}" value="custom"${customSelected ? " checked" : ""} />
-          <span class="election-option-text">Write in custom language…</span>
-        </label>
-        ${
-          customSelected
-            ? `<input type="text" class="election-text" data-election-custom="${token.index}" value="${escapeHtml(election.value || "")}" placeholder="Custom language" />`
-            : ""
-        }
-      `;
-      body = `<div class="election-options">${optionRows}${omitRow}${customRow}</div>`;
+        ${nestedHtml}
+        ${altRow(radioName, safePath, "omit", "Leave this text out", omitSelected)}
+        ${altRow(radioName, safePath, "custom", "Write in custom language…", customSelected)}
+        ${customSelected ? `<input type="text" class="election-text" data-election-custom="${safePath}" value="${escapeHtml(el.value || "")}" placeholder="Custom language" />` : ""}
+      </div>`;
     }
 
-    const kindLabel =
-      token.type === "blank"
-        ? "Fill in the blank"
-        : token.type === "choice"
-          ? `Choose one of ${token.options.length}`
-          : "Keep, omit, or rewrite";
     return `
-      <div class="election-row${resolved ? " resolved" : ""}">
+      <div class="election-row${resolved ? " resolved" : ""}" data-election-row="${safePath}">
         <div class="election-head">
-          <span class="election-num">${uiNumber}</span>
+          <span class="election-num">${num}</span>
           <span class="election-kind">${escapeHtml(kindLabel)}</span>
           <span class="election-flag">${resolved ? "Resolved" : "Needs a choice"}</span>
         </div>
-        ${contextHtml}
         ${body}
       </div>
     `;
   }
 
-  function clausePreviewHtml(section, clauseState) {
-    const tokens = parseClauseTokens(section.body);
-    let electionNumber = 0;
-    const parts = tokens.map((token) => {
-      if (token.kind === "text") return escapeHtml(token.text);
-      if (token.kind === "note") return `<span class="clause-note">[${escapeHtml(token.text)}]</span>`;
-      electionNumber += 1;
-      const election = clauseState.elections[token.index] || {};
-      const resolvedText = resolvedElectionText(token, election);
-      if (resolvedText !== null) {
-        return resolvedText === "" ? "" : `<span class="election-filled">${escapeHtml(resolvedText)}</span>`;
+  function altRow(radioName, path, value, label, selected) {
+    return `
+      <label class="election-option election-option-alt${selected ? " selected" : ""}">
+        <input type="radio" name="${radioName}" data-election-path="${path}" value="${value}"${selected ? " checked" : ""} />
+        <span class="election-option-text">${escapeHtml(label)}</span>
+      </label>
+    `;
+  }
+
+  // Live preview of the clause with current elections applied; unresolved spots
+  // become inline markers and partially-filled options show what's still open.
+  function previewNodes(nodes, elections) {
+    return (nodes || [])
+      .map((seg) => {
+        if (seg.kind === "text") return escapeHtml(seg.text);
+        if (seg.kind === "note") return `<span class="clause-note">[${escapeHtml(seg.text)}]</span>`;
+        if (seg.kind !== "election") return "";
+        return previewElection(seg, elections);
+      })
+      .join("");
+  }
+
+  function previewElection(seg, elections) {
+    const el = elections[seg.path] || {};
+    if (el.mode === "omit") return "";
+    if (el.mode === "custom") {
+      const v = String(el.value || "").trim();
+      return v ? `<span class="election-filled">${escapeHtml(v)}</span>` : `<mark class="election-open">write-in…</mark>`;
+    }
+    if (seg.type === "blank") {
+      return `<mark class="election-open">▢</mark>`;
+    }
+    if (seg.type === "optional") {
+      if (el.mode === "include") return `<span class="election-filled">${previewNodes(seg.nodes, elections)}</span>`;
+      return `<mark class="election-open">${escapeHtml(shortenLabel(seg.label || "optional", 24))}?</mark>`;
+    }
+    if (seg.type === "choice") {
+      if (el.mode === "option") {
+        const option = seg.options[el.optionIndex];
+        if (option) return `<span class="election-filled">${previewNodes(option.nodes, elections)}</span>`;
       }
-      return `<mark class="election-open">choice ${electionNumber}</mark>`;
-    });
-    return parts.join("");
+      return `<mark class="election-open">choose: ${escapeHtml(seg.options.map((o) => shortenLabel(o.label, 18)).join(" / "))}</mark>`;
+    }
+    return "";
+  }
+
+  function clausePreviewHtml(section, clauseState) {
+    return previewNodes(parseClauseTokens(section.body), clauseState.elections);
+  }
+
+  // Plain resolved text for a settled clause: elections applied, drafting notes
+  // dropped, whitespace tidied. Used to fill the document pane once complete.
+  function clauseFinalText(section, clauseState) {
+    const { text } = resolveNodes(parseClauseTokens(section.body), clauseState.elections);
+    return text
+      .replace(/\s+([,.;:)])/g, "$1")
+      .replace(/\(\s+/g, "(")
+      .replace(/\s{2,}/g, " ")
+      .trim();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Clause AI: reuses the /api/ask-section endpoint by mapping the clause into
+  // the issue+sections shape the endpoint already understands.
+  // ---------------------------------------------------------------------------
+
+  function electionSummaryForAi(section, clauseState) {
+    const elections = clauseState.elections || {};
+    const lines = [];
+    let n = 0;
+    const visit = (nodes, depth) => {
+      for (const seg of nodes || []) {
+        if (seg.kind !== "election") continue;
+        n += 1;
+        const pad = "  ".repeat(depth);
+        const el = elections[seg.path] || {};
+        const options =
+          seg.type === "blank"
+            ? "fill-in blank"
+            : seg.type === "choice"
+              ? seg.options.map((o) => o.label.trim()).join(" | ")
+              : `keep/omit: ${seg.label}`;
+        let choice = "UNRESOLVED";
+        if (el.mode === "omit") choice = "(omitted)";
+        else if (el.mode === "custom") choice = String(el.value || "").trim() || "UNRESOLVED";
+        else if (el.mode === "include") choice = "(kept)";
+        else if (el.mode === "option" && seg.options[el.optionIndex]) choice = seg.options[el.optionIndex].label;
+        lines.push(`${pad}Choice ${n} [${options}] => ${choice}`);
+        if (seg.type === "optional" && el.mode === "include") visit(seg.nodes, depth + 1);
+        else if (seg.type === "choice" && el.mode === "option" && seg.options[el.optionIndex]) {
+          visit(seg.options[el.optionIndex].nodes, depth + 1);
+        }
+      }
+    };
+    visit(parseClauseTokens(section.body), 0);
+    return lines.join("\n");
+  }
+
+  function clauseAiContext(section, clauseState) {
+    const guidance = (section.guidance || []).join(" ");
+    const applied = clauseFinalText(section, clauseState);
+    return {
+      project: app.currentProject?.name || seed.meta.project || "Orrick Docs",
+      question: els.clauseAiQuestionInput.value.trim(),
+      issue: {
+        title: `Clause: ${section.title}`,
+        issueType: "clause-election",
+        status: clauseState.status,
+        priority: "",
+        prompt:
+          "Help resolve the bracketed drafting elections in this term-sheet clause (choose options, fill blanks, or draft replacement language).",
+        details: [guidance, `Current elections:\n${electionSummaryForAi(section, clauseState)}`]
+          .filter(Boolean)
+          .join("\n\n"),
+        provisionalAnswer: applied ? `Clause with current elections applied:\n${applied}` : "",
+        answer: clauseState.rewriteText || "",
+        proposedChange: "",
+        followUpNotes: clauseState.notes || ""
+      },
+      sections: [
+        {
+          id: section.id,
+          title: section.title,
+          row: section.row,
+          group: section.group,
+          body: section.body
+        }
+      ]
+    };
+  }
+
+  function setClauseAiResponse(message, tone, raw) {
+    state.aiClauseId = selectedClauseSection()?.id || state.selectedClauseId || "";
+    els.clauseAiResponse.dataset.raw = raw || "";
+    els.clauseAiResponse.className = `ai-response${tone ? ` ${tone}` : ""}`;
+    els.clauseAiResponse.innerHTML = message ? nl2br(message) : "";
+    els.clauseSaveAiBtn.disabled = !raw;
+  }
+
+  function clearClauseAiResponse() {
+    if (!els.clauseAiResponse) return;
+    state.aiClauseId = "";
+    els.clauseAiResponse.dataset.raw = "";
+    els.clauseAiResponse.innerHTML = "";
+    els.clauseSaveAiBtn.disabled = true;
+  }
+
+  async function askAiAboutClause(provider) {
+    const section = selectedClauseSection();
+    const question = els.clauseAiQuestionInput.value.trim();
+    const providerLabel = provider === "anthropic" ? "Claude" : "OpenAI";
+    if (!section) {
+      setClauseAiResponse("Select a clause first.", "error", "");
+      return;
+    }
+    if (!question) {
+      setClauseAiResponse("Add a question before asking AI.", "error", "");
+      return;
+    }
+    els.clauseAskAiBtn.disabled = true;
+    els.clauseAskClaudeBtn.disabled = true;
+    setClauseAiResponse(`Asking ${providerLabel}...`, "loading", "");
+    try {
+      const response = await fetch("/api/ask-section", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...clauseAiContext(section, clauseStateFor(section)), provider })
+      });
+      const text = await response.text();
+      let data = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (_error) {
+        data = {};
+      }
+      if (!response.ok) {
+        const endpointHint =
+          response.status === 404
+            ? "The AI endpoint is available through Vercel dev or the deployed Vercel site, not the plain Vite dev server."
+            : "";
+        throw new Error(data.error || endpointHint || `${providerLabel} request failed with ${response.status}.`);
+      }
+      const answer = data.answer || "No answer was returned.";
+      setClauseAiResponse(answer, "", answer);
+    } catch (error) {
+      console.error(error);
+      setClauseAiResponse(error.message || "Could not ask AI.", "error", "");
+    } finally {
+      els.clauseAskAiBtn.disabled = false;
+      els.clauseAskClaudeBtn.disabled = false;
+    }
+  }
+
+  function saveClauseAiToNotes() {
+    const section = selectedClauseSection();
+    const answer = els.clauseAiResponse.dataset.raw || "";
+    if (!section || !answer) return;
+    const stamp = new Date().toLocaleString();
+    const existing = els.clauseNotesInput.value.trim();
+    const addition = `AI note (${stamp})\n${answer}`;
+    els.clauseNotesInput.value = [existing, addition].filter(Boolean).join("\n\n");
+    updateClauseState(section, { notes: els.clauseNotesInput.value });
+    clearClauseAiResponse();
   }
 
   function renderClausePanel() {
@@ -1737,9 +2042,9 @@
           .join("")}</ul></div>`
       : "";
 
-    const elections = electionTokens(section);
-    els.clauseElections.innerHTML = elections.length
-      ? elections.map((token, i) => electionControlHtml(section, token, clauseState, i + 1)).join("")
+    const nodes = parseClauseTokens(section.body);
+    els.clauseElections.innerHTML = progress.total
+      ? renderElectionControls(section, nodes, clauseState.elections, { n: 0 })
       : "<p class=\"source-note\">This clause has no bracketed options. Accept it as written, reject it, or request a rewrite.</p>";
 
     els.clauseRewriteInput.value = clauseState.rewriteText || "";
@@ -1760,6 +2065,8 @@
       <div class="detail-label">Clause preview with elections applied</div>
       <p>${clausePreviewHtml(section, clauseState)}</p>
     `;
+
+    if (state.aiClauseId && state.aiClauseId !== section.id) clearClauseAiResponse();
   }
 
   function renderAnswerPanel() {
@@ -1800,11 +2107,11 @@
     const section = selectedClauseSection();
     if (!section) return;
     const clauseState = clauseStateFor(section);
-    const tokens = electionTokens(section);
-    els.clauseElections.querySelectorAll(".election-row").forEach((row, i) => {
-      const token = tokens[i];
-      if (!token) return;
-      const resolved = electionResolved(token, clauseState.elections[token.index]);
+    els.clauseElections.querySelectorAll(".election-row").forEach((row) => {
+      const path = row.getAttribute("data-election-row");
+      const seg = electionByPath(section, path);
+      if (!seg) return;
+      const resolved = selfResolved(seg, clauseState.elections[path]);
       row.classList.toggle("resolved", resolved);
       const flag = row.querySelector(".election-flag");
       if (flag) flag.textContent = resolved ? "Resolved" : "Needs a choice";
@@ -2064,6 +2371,34 @@
         : "";
       electionBadge = statusPill || progressPill ? `<div class="issue-meta section-badges">${statusPill}${progressPill}</div>` : "";
     }
+
+    // Once a clause is settled, the document shows the edited (finalized) text
+    // instead of the raw bracketed form language.
+    let bodyHtml = section.body ? `<p>${escapeHtml(section.body)}</p>` : "";
+    if (!section.isGroup && clauseIsSettled(section)) {
+      const cs = clauseStateFor(section);
+      let label = "Finalized";
+      let finalBlock = "";
+      if (cs.status === "rejected") {
+        label = "Rejected";
+        finalBlock = "<p class=\"clause-final-rejected\">This clause has been rejected — to be removed from or replaced in the draft.</p>";
+      } else if (cs.status === "rewrite") {
+        label = "Rewrite requested";
+        const text = (cs.rewriteText || "").trim() || clauseFinalText(section, cs);
+        finalBlock = `<p class="clause-final-text">${escapeHtml(text)}</p>`;
+      } else {
+        const text = clauseFinalText(section, cs);
+        finalBlock = `<p class="clause-final-text">${escapeHtml(text)}</p>`;
+      }
+      bodyHtml = `
+        <div class="clause-final clause-final-${slugClass(cs.status)}">
+          <div class="detail-label">Edited clause · ${escapeHtml(label)}</div>
+          ${finalBlock}
+        </div>
+        ${section.body ? `<details class="clause-original"><summary>Show original form language</summary><p>${escapeHtml(section.body)}</p></details>` : ""}
+      `;
+    }
+
     return `
       <article class="term-section${selected}${group}" data-section-id="${escapeHtml(section.id)}"${section.isGroup ? "" : " tabindex=\"0\" role=\"button\""} aria-label="${escapeHtml(`Review ${section.title}`)}">
         <div class="section-header">
@@ -2079,7 +2414,7 @@
         </div>
         ${electionBadge}
         ${summary ? `<div class="section-summary"><div class="detail-label">Summary</div><p>${escapeHtml(summary)}</p></div>` : ""}
-        ${section.body ? `<p>${escapeHtml(section.body)}</p>` : ""}
+        ${bodyHtml}
       </article>
     `;
   }
@@ -2641,6 +2976,8 @@
     });
 
     els.documentContent.addEventListener("click", (event) => {
+      // Let the "Show original form language" disclosure toggle natively.
+      if (event.target.closest(".clause-original")) return;
       const section = event.target.closest("[data-section-id]");
       if (section && !section.classList.contains("group-row")) {
         setFocusedSection(section.dataset.sectionId);
@@ -2728,25 +3065,22 @@
     els.clauseElections.addEventListener("change", (event) => {
       const section = selectedClauseSection();
       if (!section) return;
-      const radio = event.target.closest("input[data-election-index]");
+      const radio = event.target.closest("input[data-election-path]");
       if (!radio) return;
-      const index = Number(radio.dataset.electionIndex);
+      const path = radio.dataset.electionPath;
       const value = radio.value;
-      const existing = clauseStateFor(section).elections[index] || {};
+      const existing = clauseStateFor(section).elections[path] || {};
       let election = null;
       if (value.startsWith("option:")) {
-        const optionIndex = Number(value.slice(7));
-        election = {
-          mode: "option",
-          optionIndex,
-          blank: Number(existing.optionIndex) === optionIndex ? existing.blank || "" : ""
-        };
+        election = { mode: "option", optionIndex: Number(value.slice(7)) };
+      } else if (value === "include") {
+        election = { mode: "include" };
       } else if (value === "omit") {
         election = { mode: "omit" };
       } else if (value === "custom") {
         election = { mode: "custom", value: existing.mode === "custom" ? existing.value || "" : "" };
       }
-      setClauseElection(section, index, election);
+      setClauseElection(section, path, election);
       renderClausePanel();
       renderMetrics();
       renderDocument();
@@ -2757,15 +3091,10 @@
       if (!section) return;
       const blank = event.target.closest("[data-election-input]");
       const custom = event.target.closest("[data-election-custom]");
-      const nested = event.target.closest("[data-election-blank]");
       if (blank) {
-        setClauseElection(section, Number(blank.dataset.electionInput), { mode: "custom", value: blank.value });
+        setClauseElection(section, blank.dataset.electionInput, { mode: "custom", value: blank.value });
       } else if (custom) {
-        setClauseElection(section, Number(custom.dataset.electionCustom), { mode: "custom", value: custom.value });
-      } else if (nested) {
-        const index = Number(nested.dataset.electionBlank);
-        const existing = clauseStateFor(section).elections[index] || { mode: "option", optionIndex: 0 };
-        setClauseElection(section, index, { ...existing, mode: "option", blank: nested.value });
+        setClauseElection(section, custom.dataset.electionCustom, { mode: "custom", value: custom.value });
       } else {
         return;
       }
@@ -2776,7 +3105,7 @@
     els.clauseElections.addEventListener(
       "blur",
       (event) => {
-        if (event.target.closest("[data-election-input],[data-election-custom],[data-election-blank]")) {
+        if (event.target.closest("[data-election-input],[data-election-custom]")) {
           renderMetrics();
           renderDocument();
         }
@@ -2809,6 +3138,10 @@
       els.clauseRewriteInput.focus();
     });
     els.clauseReopenBtn.addEventListener("click", () => setClauseStatus("pending"));
+
+    els.clauseAskAiBtn.addEventListener("click", () => askAiAboutClause("openai"));
+    els.clauseAskClaudeBtn.addEventListener("click", () => askAiAboutClause("anthropic"));
+    els.clauseSaveAiBtn.addEventListener("click", saveClauseAiToNotes);
 
     els.newIssueForm.addEventListener("submit", async (event) => {
       if (event.submitter && event.submitter.id === "createIssueBtn") {

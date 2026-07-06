@@ -4,12 +4,12 @@ Interactive tracker for reviewing fund term sheets against open-items memos. The
 
 ## Work Queue Structure
 
-The seed data produces 109 issues from the two source documents, organized by topic:
+The seed data produces 105 issues from the two source documents, organized by topic:
 
 - 8 immediate decisions (memo section 5)
 - 6 requested drafting changes (memo section 4)
-- 66 detailed questions (memo section 3, topics A-H)
-- 6 gap-review questions (topics I-J): amendments, side letters/MFN, closing true-ups, recycling, in-kind distributions, and tax/ERISA accommodations
+- 63 detailed questions (memo section 3, topics A-H)
+- 5 gap-review questions (topics I-J): side letters/MFN, closing true-ups, recycling, in-kind distributions, and tax/ERISA accommodations
 - 23 supporting documents (memo section 1)
 
 Every decision, change, and question also carries a resolution tier tag:
@@ -19,7 +19,7 @@ Every decision, change, and question also carries a resolution tier tag:
 - `fill-in`: per-clause questions resolved primarily by electing bracketed options, but that still need judgment
 - `addition-removal`: adding, rewriting, or deleting language
 
-Questions that were purely "fill in this blank" (fund size, minimum commitment, fee rate, carry percentage, hurdle, catch-up, concentration limits, call notice periods, fund term, key persons, GP removal thresholds, giveback caps, audited financials, and similar) are not issues at all: the clause-election editor replaces them, and their "how to decide" notes appear as guidance on the clause itself.
+Questions that were purely "fill in this blank" (fund size, minimum commitment, fee rate, carry percentage, hurdle, catch-up, concentration limits, call notice periods, fund term, key persons, GP removal thresholds, giveback caps, audited financials, GP commitment funding forms, warehousing permission, successor-fund threshold, amendment consent threshold, and similar) are not issues at all: the clause-election editor replaces them, and their "how to decide" notes appear as guidance on the clause itself. The queue was audited to confirm no remaining question is merely a copy of a clause dropdown.
 
 Gap topics that overlap memo questions (LPAC mandate, clawback mechanics, expense caps, borrowing scope, indemnification standards) are folded into the notes of the corresponding A-H questions instead of appearing as separate items.
 
@@ -31,9 +31,12 @@ The queue is grouped by topic, with Topic and Tier filters showing open-item cou
 
 The Orrick form expresses most drafting choices as brackets: blanks (`$[_____]`), pick-one option groups (`[fourth][fifth][sixth]`), and optional provisions to keep or omit. Clicking any clause in the document pane opens the clause-election editor in the right pane:
 
-- each blank gets a text input, each option group a dropdown (with write-in and omit choices), and each optional provision a keep/omit/write-in selector
+- each blank gets a text input, each option group radio cards (with write-in and omit choices), and each optional provision a keep/omit/write-in selector
+- **nested brackets are handled recursively**: options and kept provisions that themselves contain further brackets (e.g. `[ …reduced by [0.25][0.1]… ][OR][ …reduced to [2.5][2.0]… ]`, or `[ …extend for [two] periods]`) reveal their sub-elections indented beneath the parent choice, and the progress count grows as those become active
 - a live preview shows the clause with elections applied; unresolved brackets stay highlighted
 - the clause can be accepted (only once every election is resolved), rejected, or sent to rewrite with requested language
+- an **Ask About This Clause** AI panel (OpenAI or Claude) answers questions using the clause text, its elections, and guidance, and can save the response into the clause notes
+- once a clause is settled, the **document pane fills in with the edited clause** (elections applied, drafting notes removed; rewrite text for rewrites; a rejected marker for rejections), with the original form language available under a disclosure toggle
 - the Clauses metric tracks how many of the 30 bracketed clauses are settled
 
 Elections persist to the `clause_states` table in Supabase (or browser storage in local mode). Guidance notes from the retired fill-in questions appear at the top of the editor for the relevant clause.

@@ -157,6 +157,23 @@
             <button id="clauseReopenBtn" class="secondary-action" type="button" hidden>Reopen</button>
           </div>
           <div id="clausePreview" class="clause-preview"></div>
+
+          <section class="ai-panel" aria-label="AI help for this clause">
+            <div>
+              <p class="eyebrow">AI follow-up</p>
+              <h3>Ask About This Clause</h3>
+            </div>
+            <label>
+              <span>Question</span>
+              <textarea id="clauseAiQuestionInput" rows="3" placeholder="Ask how to resolve these elections, what is market, or to draft replacement language."></textarea>
+            </label>
+            <div class="form-actions">
+              <button id="clauseSaveAiBtn" class="secondary-action" type="button" disabled>Save to Clause Notes</button>
+              <button id="clauseAskAiBtn" type="button">Ask OpenAI</button>
+              <button id="clauseAskClaudeBtn" type="button">Ask Claude</button>
+            </div>
+            <div id="clauseAiResponse" class="ai-response" aria-live="polite"></div>
+          </section>
         </section>
 
         <form id="answerForm" class="answer-form">

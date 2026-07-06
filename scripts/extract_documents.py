@@ -619,6 +619,10 @@ REPLACED_BY_ELECTIONS: dict[str, str] = {
     "What is the standard capital call notice period?": "Capital Contributions",
     "Will annual financials be audited?": "Reports",
     "What reporting cadence is promised to LPs?": "Reports",
+    # Overlap cleanup: these fill-in questions duplicated a single clause election.
+    "What is the GP commitment, and can it be cashless, notes, warehoused securities, or fee waiver?": "Sponsor Capital Commitment",
+    "Can the GP or affiliate warehouse securities and later sell them to the fund?": "Warehoused Securities",
+    "When can a successor fund be launched?": SUCCESSOR_FUND,
 }
 
 
@@ -645,25 +649,19 @@ CLAUSE_GUIDANCE_EXTRA: list[tuple[str, str]] = [
         "Limited Partner Giveback",
         "Elect the giveback cap ([25][50][100]% of commitment) and the sunset ([second][third] anniversary). Market practice caps givebacks at 25-50% and sunsets them 2-3 years after distribution.",
     ),
+    (
+        "Amendments",
+        "Elect the amendment consent threshold ([a majority in interest][a two-thirds in interest]). Majority in interest is typical; also carve out administrative amendments the GP can make alone - important given the expected vehicle flexibility changes.",
+    ),
 ]
 
 
 # Questions the memo does not ask but the term sheet requires answers to.
 # Sourced from a section-by-section gap review of the form term sheet.
 # "num" keeps the stable issue key fixed even as entries are added or retired
-# (gaps 1-4 and 10 were retired in favor of clause elections; see
+# (gaps 1-5 and 10 were retired in favor of clause elections; see
 # CLAUSE_GUIDANCE_EXTRA).
 GAP_QUESTIONS: list[dict] = [
-    {
-        "num": 5,
-        "category": "I. Fund lifecycle and governance (gap review)",
-        "title": "Amendment consent thresholds",
-        "prompt": "What LP consent threshold applies to amendments, and which amendments require special or affected-partner consent?",
-        "sections": ["Amendments", "Limited Partner Advisory Committee"],
-        "priority": "medium",
-        "tier": TIER_FILL,
-        "note": "The form protects LPs from adverse amendments without consent. Confirm the general threshold (majority in interest is typical) and carve out administrative amendments the GP can make alone - important given the expected vehicle flexibility changes.",
-    },
     {
         "num": 6,
         "category": "I. Fund lifecycle and governance (gap review)",

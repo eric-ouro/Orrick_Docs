@@ -1,7 +1,7 @@
 window.ORRICK_SEED_DATA = {
   "meta": {
     "project": "Blind Pool Fund Term Sheet Workspace",
-    "generatedAt": "2026-07-05T16:19:27",
+    "generatedAt": "2026-07-05T17:44:06",
     "sourceFiles": [
       {
         "label": "Orrick venture capital / private equity fund form term sheet",
@@ -113,6 +113,9 @@ window.ORRICK_SEED_DATA = {
         "body": "The General Partner, its affiliates and their related persons are expected to commit at least [_____]% of aggregate Capital Commitments to the Fund (the “Sponsor Capital Commitment”). In its sole discretion, the General Partner’s Capital Commitment[ may be in the form of cash, cashless contributions, warehoused securities[, promissory notes] or any combination of the above]. The Sponsor Capital Commitment will not be subject to any part of the Management Fee (as defined below) or carried interest.[NTD: Promissory notes are unusual.]",
         "group": "Management",
         "isGroup": false,
+        "guidance": [
+          "The form's Sponsor Capital Commitment already brackets cash, cashless, warehoused securities, and notes. Confirm the percentage (1-2% is common) and which funding forms LPs will accept."
+        ],
         "summary": "Sets the expected GP/affiliate commitment percentage and leaves open whether that commitment may be cash, cashless contributions, warehoused securities, promissory notes, or a combination."
       },
       {
@@ -262,6 +265,9 @@ window.ORRICK_SEED_DATA = {
         "body": "On or prior to the first anniversary of the date of the [Initial Closing][Final Closing], the Fund may purchase from the General Partner, its affiliates or their related persons, certain securities that any of such persons have purchased prior to the Initial Closing, at a purchase price equal to the sum of (a) such persons’ original cost, and (b) legal and out-of-pocket expenses incurred related to such investments.][NTD: Optional provision if want to allow the General Partner to warehouse investments.]",
         "group": "Operations and Economics",
         "isGroup": false,
+        "guidance": [
+          "The form's optional Warehoused Securities clause permits transfers at cost plus expenses. Keep it - warehousing is core to executing before the fund closes - and decide whether warehoused positions can satisfy the GP commitment."
+        ],
         "summary": "Permits the fund to acquire pre-closing warehoused investments from the GP or affiliates at cost plus related expenses, if this optional provision is retained."
       },
       {
@@ -321,6 +327,9 @@ window.ORRICK_SEED_DATA = {
         "body": "At any time, the General Partner, its affiliates and their related persons may sponsor, act as the primary source of investments or otherwise provide support for, other funds or collective investment vehicles with investment objectives similar to, or different from those of the Fund; provided that, except as may be provided in the Fund Agreement, the General Partner, the Management Company and the Principals, acting together, shall not act in such capacity in respect of any blind-pool investment vehicle that has a substantially similar investment objective as the Fund with an investment program that is within the size and scope of the Fund’s investment program (such a fund, a “Successor Fund”), without the consent of the [LPAC or a majority in interest of the Limited Partners], prior to the time the Fund first becomes Fully Invested. The Fund will be considered “Fully Invested” upon the earlier to occur of: (a) the termination or expiration of the Investment Period; or (b) the date upon which at least [70]% of Capital Commitments having been invested in [Portfolio Companies][Portfolio Investments], committed to be so invested, used to pay Fund Expenses, or set aside as reasonable reserves for future Fund Expenses and/or follow-on investments[ in then existing [Portfolio Companies][Portfolio Investments]].",
         "group": "Operations and Economics",
         "isGroup": false,
+        "guidance": [
+          "The form restricts successor blind pools during the investment period until a deployment threshold (often 70-75% invested/reserved). Pick the threshold and confirm SPVs don't count as successor funds."
+        ],
         "summary": "Allows the GP and affiliates to sponsor or support other vehicles while restricting successor blind-pool fundraising during the investment period unless specified conditions are met."
       },
       {
@@ -436,6 +445,9 @@ window.ORRICK_SEED_DATA = {
         "body": "In general, the Fund Agreement will be amended only with the consent of the General Partner and[ a majority in interest][ a two-thirds in interest] of the Limited Partners. There will be no amendment that is adverse to a Limited Partner unless such amendment is consented to by such Limited Partner or by its terms applies to all Limited Partners.",
         "group": "Legal & Miscellaneous",
         "isGroup": false,
+        "guidance": [
+          "Elect the amendment consent threshold ([a majority in interest][a two-thirds in interest]). Majority in interest is typical; also carve out administrative amendments the GP can make alone - important given the expected vehicle flexibility changes."
+        ],
         "summary": "Sets amendment consent mechanics and protects limited partners from adverse amendments without required consent or equal application."
       },
       {
@@ -1446,26 +1458,6 @@ window.ORRICK_SEED_DATA = {
       ]
     },
     {
-      "id": "q-019-what-is-the-gp-commitment-and-can-it-be-cashless-notes-warehoused-secu",
-      "issueType": "question",
-      "status": "open",
-      "priority": "high",
-      "category": "B. Fund economics",
-      "title": "What is the GP commitment, and can it be cashless, notes, warehoused securities, or fee waiver",
-      "prompt": "What is the GP commitment, and can it be cashless, notes, warehoused securities, or fee waiver?",
-      "details": "The form's Sponsor Capital Commitment already brackets cash, cashless, warehoused securities, and notes. Confirm the percentage (1-2% is common) and which funding forms LPs will accept.",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 3 detailed questions",
-      "termSectionIds": [
-        "sec-09-sponsor-capital-commitment",
-        "sec-23-warehoused-securities",
-        "sec-21-capital-contributions"
-      ],
-      "tags": [
-        "fill-in"
-      ]
-    },
-    {
       "id": "q-020-what-counts-as-a-late-stage-private-technology-company",
       "issueType": "question",
       "status": "open",
@@ -1730,25 +1722,6 @@ window.ORRICK_SEED_DATA = {
       ],
       "tags": [
         "addition-removal"
-      ]
-    },
-    {
-      "id": "q-037-can-the-gp-or-affiliate-warehouse-securities-and-later-sell-them-to-th",
-      "issueType": "question",
-      "status": "open",
-      "priority": "high",
-      "category": "D. Capital calls, speed, and warehousing",
-      "title": "Can the GP or affiliate warehouse securities and later sell them to the fund",
-      "prompt": "Can the GP or affiliate warehouse securities and later sell them to the fund?",
-      "details": "The form's optional Warehoused Securities clause permits transfers at cost plus expenses. Keep it - warehousing is core to executing before the fund closes - and decide whether warehoused positions can satisfy the GP commitment.",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 3 detailed questions",
-      "termSectionIds": [
-        "sec-23-warehoused-securities",
-        "sec-09-sponsor-capital-commitment"
-      ],
-      "tags": [
-        "fill-in"
       ]
     },
     {
@@ -2168,24 +2141,6 @@ window.ORRICK_SEED_DATA = {
       ]
     },
     {
-      "id": "q-060-when-can-a-successor-fund-be-launched",
-      "issueType": "question",
-      "status": "open",
-      "priority": "high",
-      "category": "G. Future funds, SPVs, and allocations",
-      "title": "When can a successor fund be launched",
-      "prompt": "When can a successor fund be launched?",
-      "details": "The form restricts successor blind pools during the investment period until a deployment threshold (often 70-75% invested/reserved). Pick the threshold and confirm SPVs don't count as successor funds.",
-      "provisionalAnswer": "",
-      "source": "Open-items memo - Section 3 detailed questions",
-      "termSectionIds": [
-        "sec-29-other-competitive-activity-successor-fund"
-      ],
-      "tags": [
-        "fill-in"
-      ]
-    },
-    {
       "id": "q-061-what-counts-as-a-prohibited-substantially-similar-blind-pool-fund",
       "issueType": "question",
       "status": "open",
@@ -2484,25 +2439,6 @@ window.ORRICK_SEED_DATA = {
       ],
       "tags": [
         "high-level"
-      ]
-    },
-    {
-      "id": "gap-005-amendment-consent-thresholds",
-      "issueType": "question",
-      "status": "open",
-      "priority": "medium",
-      "category": "I. Fund lifecycle and governance (gap review)",
-      "title": "Amendment consent thresholds",
-      "prompt": "What LP consent threshold applies to amendments, and which amendments require special or affected-partner consent?",
-      "details": "The form protects LPs from adverse amendments without consent. Confirm the general threshold (majority in interest is typical) and carve out administrative amendments the GP can make alone - important given the expected vehicle flexibility changes.",
-      "provisionalAnswer": "",
-      "source": "Term sheet gap review - not covered in the open-items memo",
-      "termSectionIds": [
-        "sec-41-amendments",
-        "sec-12-limited-partner-advisory-committee"
-      ],
-      "tags": [
-        "fill-in"
       ]
     },
     {

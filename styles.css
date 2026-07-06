@@ -710,6 +710,20 @@ textarea {
   margin-top: -2px;
 }
 
+/* Sub-elections that appear once a parent option/optional is chosen. */
+.election-nested-group {
+  border-left: 2px solid var(--accent);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 2px 0 4px 18px;
+  padding-left: 12px;
+}
+
+.election-nested-group .election-row {
+  background: var(--surface);
+}
+
 .clause-preview {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -756,6 +770,54 @@ textarea {
 
 .section-badges {
   margin: 6px 0;
+}
+
+/* Finalized clause text shown in the document pane after completion */
+.clause-final {
+  border-left: 4px solid #5c8a63;
+  border-radius: 8px;
+  background: #f1f6f1;
+  margin: 8px 0 6px;
+  padding: 10px 12px;
+}
+
+.clause-final-rewrite {
+  border-left-color: #c9a05a;
+  background: var(--gold-soft);
+}
+
+.clause-final-rejected {
+  border-left-color: #c0736c;
+  background: var(--red-soft);
+}
+
+.clause-final .detail-label {
+  margin-bottom: 4px;
+}
+
+.clause-final-text {
+  line-height: 1.55;
+}
+
+.clause-final-rejected .clause-final-rejected,
+.clause-final-rejected p {
+  color: #76302e;
+  font-weight: 600;
+}
+
+.clause-original {
+  color: var(--muted);
+  font-size: 12.5px;
+  margin-top: 4px;
+}
+
+.clause-original summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.clause-original p {
+  margin-top: 6px;
 }
 
 .empty-state {
