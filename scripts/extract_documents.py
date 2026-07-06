@@ -25,6 +25,41 @@ def clean(text: str) -> str:
     return re.sub(r"\s+", " ", text or "").strip()
 
 
+# The source term sheet has a few clauses with unbalanced square brackets (a
+# missing or stray "[" / "]"). Because the app parses brackets into interactive
+# elections, an unbalanced bracket swallows the rest of the clause into one giant
+# option, so the individual elections lose the sentence they refer to. These
+# targeted, minimal corrections restore bracket balance without changing wording.
+BODY_CORRECTIONS: dict[str, list[tuple[str, str]]] = {
+    # The "provided further" (scout fund) proviso never closes, absorbing every
+    # later limitation. Close it after the scout-fund sentence, matching the
+    # sibling "provided, however" proviso.
+    "sec-20-investment-limitations": [
+        ("are paid \u201ccarried interest\u201d. Make an initial", "are paid \u201ccarried interest\u201d]. Make an initial"),
+    ],
+    # The "Notwithstanding the foregoing" optional never closes. Close it after
+    # the "management of [_____]." sentence, before the trailing NTD note.
+    "sec-17-time-commitment-key-person-event": [
+        ("management of [_____].[NTD: only to be used", "management of [_____].][NTD: only to be used"),
+    ],
+    # The whole warehoused-securities provision is optional (per its NTD) and ends
+    # with a stray "]" but is missing the opening "[".
+    "sec-23-warehoused-securities": [
+        ("On or prior to the first anniversary", "[On or prior to the first anniversary"),
+    ],
+}
+
+
+def apply_body_corrections(section_id: str, body: str) -> str:
+    for old, new in BODY_CORRECTIONS.get(section_id, []):
+        if old not in body:
+            raise ValueError(
+                f"Body correction for {section_id} did not match; source text may have changed:\n  {old!r}"
+            )
+        body = body.replace(old, new)
+    return body
+
+
 def slugify(text: str, fallback: str = "item") -> str:
     slug = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
     return slug[:70] or fallback
@@ -65,6 +100,7 @@ def extract_term_sections(path: Path) -> list[dict]:
         body = clean(row.cells[1].text)
         is_group = not body or body == title
         section_id = f"sec-{row_index:02d}-{slugify(title, 'section')}"
+        body = apply_body_corrections(section_id, body)
         if is_group:
             current_group = title
         sections.append(

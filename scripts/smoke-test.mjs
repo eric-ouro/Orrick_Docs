@@ -233,6 +233,62 @@ doc.querySelector(".issue-card").click();
 await new Promise((resolve) => setTimeout(resolve, 20));
 check("issue editor restored after selecting issue", doc.getElementById("clausePanel").hidden && !doc.getElementById("answerForm").hidden);
 
+// Every clause body must have balanced square brackets. An unbalanced bracket
+// makes the parser swallow the rest of the clause into one giant option, so its
+// elections lose the sentence they refer to.
+{
+  const unbalanced = window.ORRICK_SEED_DATA.termSheet.sections
+    .filter((section) => !section.isGroup && section.body)
+    .filter((section) => {
+      let depth = 0;
+      let ok = true;
+      for (const ch of section.body) {
+        if (ch === "[") depth += 1;
+        else if (ch === "]") {
+          depth -= 1;
+          if (depth < 0) ok = false;
+        }
+      }
+      return depth !== 0 || !ok;
+    })
+    .map((section) => section.id);
+  check(`all clause bodies have balanced brackets${unbalanced.length ? ` (bad: ${unbalanced.join(", ")})` : ""}`, unbalanced.length === 0);
+}
+
+// Investment Limitations has nested (sub) elections; each election - including
+// nested ones - must show the in-context sentence it refers to.
+{
+  doc.querySelector('[data-doc-tab="full"]').click();
+  const limitsSection = doc.querySelector('[data-section-id="sec-20-investment-limitations"]');
+  check("investment limitations clause is present in full view", Boolean(limitsSection));
+  if (limitsSection) {
+    limitsSection.click();
+    // Keep every optional so nested elections become visible.
+    let guard = 0;
+    while (guard++ < 60) {
+      const keep = doc.querySelector('#clauseElections input[value="include"]:not(:checked)');
+      if (!keep) break;
+      keep.checked = true;
+      keep.dispatchEvent(changeEvent());
+    }
+    const rows = [...doc.querySelectorAll("#clauseElections .election-row")];
+    const nestedRows = rows.filter((row) => (row.getAttribute("data-election-row") || "").match(/[>:]/));
+    const rowsWithoutContext = rows.filter((row) => !row.querySelector(".election-context"));
+    check(`investment limitations exposes nested elections (got ${nestedRows.length})`, nestedRows.length >= 4);
+    check(
+      `every investment-limitations election shows its clause sentence${rowsWithoutContext.length ? ` (missing: ${rowsWithoutContext.length})` : ""}`,
+      rows.length > 0 && rowsWithoutContext.length === 0
+    );
+    const scoutRow = rows.find((row) => (row.getAttribute("data-election-row") || "").startsWith("5>"));
+    check(
+      "nested scout-fund election is anchored in its sentence",
+      Boolean(scoutRow) && /scout fund/.test(scoutRow.querySelector(".election-context")?.textContent || "")
+    );
+  }
+  // Restore the relevant view for later checks.
+  doc.querySelector('[data-doc-tab="relevant"]').click();
+}
+
 // Regression: clause_states saved by an older parser can carry election shapes
 // that no longer match the current tree (e.g. a path that used to be a pick-one
 // choice is now a keep/omit optional). Rendering must not throw on that data.
@@ -285,8 +341,211 @@ check("issue editor restored after selecting issue", doc.getElementById("clauseP
   );
 }
 
+// Offline outbox: boot the app in remote mode against a mock Supabase whose
+// writes can be toggled offline. Verify edits queue durably, coalesce (LWW), and
+// flush on reconnect.
+{
+  const waitFor = async (fn, timeout = 4000) => {
+    const start = Date.now();
+    while (Date.now() - start < timeout) {
+      if (fn()) return true;
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    }
+    return false;
+  };
+
+  const mock = {
+    online: true,
+    writes: [],
+    reads: {
+      projects: [{ id: "proj-1", name: "Test Project", updated_at: "2026-01-01T00:00:00Z" }],
+      documents: [{ id: "doc-1", project_id: "proj-1", title: "TS", document_type: "term_sheet", source_label: "x" }],
+      document_sections: [
+        {
+          id: "sec-x",
+          stable_key: "sec-x",
+          document_id: "doc-1",
+          project_id: "proj-1",
+          section_order: 1,
+          title: "Closings",
+          body: "The GP will hold the closing at $[_____] million in commitments.",
+          group_title: "Fund",
+          is_group: false,
+          section_kind: "clause",
+          source_ref: {}
+        }
+      ],
+      issues: [
+        {
+          id: "iss-1",
+          stable_key: "iss-1",
+          project_id: "proj-1",
+          issue_type: "question",
+          initial_status: "open",
+          priority: "medium",
+          category: "Custom",
+          title: "Test question",
+          prompt: "Test?",
+          details: "",
+          tags: [],
+          sort_order: 0
+        }
+      ],
+      issue_sections: [{ project_id: "proj-1", issue_id: "iss-1", section_id: "sec-x", position: 0 }],
+      issue_states: [],
+      clause_states: [],
+      profiles: [{ id: "u1", email: "t@e.com", display_name: "t" }],
+      project_members: [{ project_id: "proj-1", user_id: "u1", role: "owner", added_by: "u1", created_at: "2026-01-01T00:00:00Z" }],
+      issue_events: []
+    }
+  };
+
+  const makeMockDb = () => {
+    const buildQuery = (table) => {
+      const b = { _op: null, _payload: null, _single: false };
+      const chain = () => b;
+      b.select = chain;
+      b.eq = chain;
+      b.neq = chain;
+      b.in = chain;
+      b.match = chain;
+      b.order = chain;
+      b.limit = chain;
+      b.single = () => {
+        b._single = true;
+        return b;
+      };
+      b.upsert = (payload) => {
+        b._op = "upsert";
+        b._payload = payload;
+        return b;
+      };
+      b.insert = (payload) => {
+        b._op = "insert";
+        b._payload = payload;
+        return b;
+      };
+      b.update = (payload) => {
+        b._op = "update";
+        b._payload = payload;
+        return b;
+      };
+      b.delete = () => {
+        b._op = "delete";
+        return b;
+      };
+      b.then = (resolve, reject) =>
+        Promise.resolve()
+          .then(() => {
+            if (b._op) {
+              if (!mock.online) throw new TypeError("Failed to fetch");
+              mock.writes.push({ table, op: b._op, payload: b._payload });
+              return { data: b._payload, error: null };
+            }
+            return { data: (mock.reads[table] || []).slice(), error: null };
+          })
+          .then(resolve, reject);
+      return b;
+    };
+    return {
+      auth: {
+        getSession: async () => ({ data: { session: { user: { id: "u1", email: "t@e.com" } } }, error: null }),
+        onAuthStateChange: () => ({ data: { subscription: { unsubscribe() {} } } })
+      },
+      from: (table) => buildQuery(table)
+    };
+  };
+
+  const remoteDom = new JSDOM(html.replace(/<script[^>]*src=[^>]*><\/script>/g, ""), {
+    url: "http://localhost/",
+    runScripts: "outside-only",
+    pretendToBeVisual: true
+  });
+  const w = remoteDom.window;
+  w.HTMLDialogElement.prototype.showModal ||= function () {};
+  w.HTMLDialogElement.prototype.close ||= function () {};
+  w.supabase = { createClient: makeMockDb };
+  w.eval(fs.readFileSync("data/seed-data.js", "utf8"));
+  w.eval("window.ORRICK_SUPABASE_CONFIG = { url: 'https://x.supabase.co', anonKey: 'test-anon-key' };");
+  w.eval(fs.readFileSync("app.js", "utf8"));
+
+  const rdoc = w.document;
+  const outboxOf = () => JSON.parse(w.localStorage.getItem("orrick.blindPoolFund.outbox.v1") || "{}").ops || {};
+
+  const booted = await waitFor(() => rdoc.querySelector("#issueList .issue-card"));
+  check("remote workspace boots against mock Supabase", booted && !rdoc.getElementById("workspaceShell").hidden);
+  check("badge reads Synced when online with empty queue", rdoc.getElementById("saveState").textContent.includes("Synced"));
+
+  // Go offline (writes now fail as network errors) and make edits.
+  mock.online = false;
+  rdoc.querySelector("#issueList .issue-card").click();
+  await new Promise((resolve) => setTimeout(resolve, 30));
+
+  const statusInput = rdoc.getElementById("statusInput");
+  statusInput.value = "in-progress";
+  statusInput.dispatchEvent(new w.Event("change", { bubbles: true }));
+  // Second edit to the same issue should coalesce (last-write-wins), not stack.
+  statusInput.value = "resolved";
+  statusInput.dispatchEvent(new w.Event("change", { bubbles: true }));
+
+  // Edit a clause election too.
+  const sectionEl = rdoc.querySelector('[data-section-id="sec-x"]');
+  check("linked clause is available in remote document pane", Boolean(sectionEl));
+  if (sectionEl) sectionEl.click();
+  await new Promise((resolve) => setTimeout(resolve, 30));
+  const blank = rdoc.querySelector("#clauseElections [data-election-input]");
+  check("clause blank input rendered in remote mode", Boolean(blank));
+  if (blank) {
+    blank.value = "25";
+    blank.dispatchEvent(new w.Event("input", { bubbles: true }));
+  }
+
+  // Wait for the debounced flush to fire and fail while offline.
+  await new Promise((resolve) => setTimeout(resolve, 900));
+
+  const queuedOffline = outboxOf();
+  const queuedKeys = Object.keys(queuedOffline);
+  check(
+    `offline edits persist to the outbox (got ${queuedKeys.length})`,
+    queuedKeys.length === 2 &&
+      queuedKeys.includes("proj-1|issue_state|iss-1") &&
+      queuedKeys.includes("proj-1|clause_state|sec-x")
+  );
+  check(
+    "repeated edits to one row coalesce to a single op (LWW)",
+    queuedKeys.filter((key) => key.includes("|issue_state|")).length === 1 &&
+      queuedOffline["proj-1|issue_state|iss-1"].payload.status === "resolved"
+  );
+  check(
+    "no issue/clause writes reached the server while offline",
+    mock.writes.filter((wr) => wr.table === "issue_states" || wr.table === "clause_states").length === 0
+  );
+  check(
+    "badge shows offline with queued count",
+    rdoc.getElementById("saveState").className.includes("offline") &&
+      rdoc.getElementById("saveState").textContent.toLowerCase().includes("offline")
+  );
+  check("Sync now button is offered while queued", !rdoc.getElementById("syncNowBtn").hidden);
+
+  // Reconnect: dispatch the browser online event and let the queue flush.
+  mock.online = true;
+  w.dispatchEvent(new w.Event("online"));
+  const drained = await waitFor(() => Object.keys(outboxOf()).length === 0);
+  check("outbox drains on reconnect", drained);
+  check(
+    "queued edits reached the server after reconnect",
+    mock.writes.some((wr) => wr.table === "issue_states") && mock.writes.some((wr) => wr.table === "clause_states")
+  );
+  check(
+    "the synced issue payload reflects the last write (resolved)",
+    mock.writes.filter((wr) => wr.table === "issue_states").pop().payload.status === "resolved"
+  );
+  check("badge returns to Synced after reconnect", rdoc.getElementById("saveState").textContent.includes("Synced"));
+}
+
 if (failures.length) {
   console.error(`\n${failures.length} check(s) failed`);
   process.exit(1);
 }
 console.log("\nAll smoke checks passed.");
+process.exit(0);

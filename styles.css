@@ -971,6 +971,34 @@ textarea {
   color: #315f39;
 }
 
+.save-state.offline {
+  background: #f4e0e0;
+  border-color: #d9a6a6;
+  color: #8a2b2b;
+}
+
+.save-status {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.sync-now {
+  background: var(--accent, #315f39);
+  border: none;
+  border-radius: 999px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 12px;
+  white-space: nowrap;
+}
+
+.sync-now:hover {
+  filter: brightness(1.05);
+}
+
 .issue-detail {
   border-bottom: 1px solid var(--line);
   flex: 0 0 auto;

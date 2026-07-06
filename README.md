@@ -49,6 +49,10 @@ Open:
 
 With `config.js` populated, the page signs users in with Supabase and stores edits in Postgres. If Supabase config is missing, the page offers a local fallback that uses browser storage.
 
+## Offline Resilience
+
+In remote mode the app keeps working when the network drops mid-session. Every issue and clause edit is applied optimistically in memory and queued in a durable `localStorage` outbox (`orrick.blindPoolFund.outbox.v1`). The queue coalesces by project/kind/row so repeated edits collapse to the latest value (last-write-wins). When connectivity returns—via the browser `online` event, window focus, a periodic retry, or the **Sync now** button—the queue flushes to Supabase and clears. The save badge reflects state: `Synced`, `Saving…`, or `Offline - N queued`. Actions that cannot be safely queued offline (creating items/projects, seeding, managing members, switching projects) are blocked with a clear message until reconnect. Opening the app with no network at all is out of scope.
+
 ## Local Development
 
 Install dependencies once:

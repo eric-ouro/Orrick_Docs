@@ -3,6 +3,7 @@
 
   const seed = window.ORRICK_SEED_DATA;
   const storageKey = "orrick.blindPoolFund.workspace.v2";
+  const outboxKey = "orrick.blindPoolFund.outbox.v1";
   const config = window.ORRICK_SUPABASE_CONFIG || {};
   const supabaseUrl = config.url || (config.projectRef ? `https://${config.projectRef}.supabase.co` : "");
   const supabaseAnonKey = config.anonKey || "";
@@ -85,6 +86,7 @@
     documentContent: document.getElementById("documentContent"),
     selectedTitle: document.getElementById("selectedTitle"),
     saveState: document.getElementById("saveState"),
+    syncNowBtn: document.getElementById("syncNowBtn"),
     issueDetail: document.getElementById("issueDetail"),
     answerForm: document.getElementById("answerForm"),
     aiPanel: document.getElementById("aiPanel"),
@@ -147,6 +149,7 @@
 
   const app = {
     mode: db ? "remote" : "setup",
+    online: typeof navigator !== "undefined" ? navigator.onLine !== false : true,
     session: null,
     user: null,
     profile: null,
@@ -165,8 +168,6 @@
   };
 
   let saveTimer = null;
-  const remoteSaveTimers = new Map();
-  const pendingIssueState = new Map();
 
   const state = {
     selectedId: app.localWorkspace.lastSelectedId || "",
@@ -209,6 +210,213 @@
       savedAt: new Date().toISOString()
     };
     localStorage.setItem(storageKey, JSON.stringify(payload));
+  }
+
+  // ---------------------------------------------------------------------------
+  // Offline outbox: a durable queue of unsynced remote writes. In remote mode
+  // every edit is applied optimistically to the in-memory Maps, coalesced per
+  // (project|kind|key) for last-write-wins, persisted to localStorage, and
+  // flushed to Supabase on reconnect. This keeps work safe when the network
+  // drops mid-session. (Cold-start offline is out of scope by design.)
+  // ---------------------------------------------------------------------------
+  let flushTimer = null;
+  let retryTimer = null;
+  let flushing = false;
+
+  function loadOutbox() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(outboxKey) || "{}");
+      return { version: 1, ops: parsed.ops && typeof parsed.ops === "object" ? parsed.ops : {} };
+    } catch (error) {
+      console.warn("Could not load outbox", error);
+      return { version: 1, ops: {} };
+    }
+  }
+
+  const outbox = loadOutbox();
+
+  function persistOutbox() {
+    try {
+      localStorage.setItem(outboxKey, JSON.stringify(outbox));
+    } catch (error) {
+      console.warn("Could not persist outbox", error);
+    }
+  }
+
+  function outboxCount() {
+    return Object.keys(outbox.ops).length;
+  }
+
+  function opKey(projectId, kind, key) {
+    return `${projectId}|${kind}|${key}`;
+  }
+
+  // Coalesce by (project|kind|key): the newest payload for a given row wins,
+  // which is exactly the last-write-wins semantics we want and keeps the queue
+  // bounded no matter how many keystrokes happened while offline.
+  function enqueueMutation(kind, key, projectId, payload) {
+    if (!projectId || !key) return;
+    outbox.ops[opKey(projectId, kind, key)] = {
+      kind,
+      key,
+      projectId,
+      payload,
+      updatedAt: new Date().toISOString()
+    };
+    persistOutbox();
+  }
+
+  // Distinguish "we lost the network" (keep the change queued and retry) from a
+  // genuine server/DB rejection (surface it; don't loop forever).
+  function isNetworkError(error) {
+    if (typeof navigator !== "undefined" && navigator.onLine === false) return true;
+    if (!error) return false;
+    if (error instanceof TypeError) return true; // fetch() network failure
+    if (error.name === "TypeError" || error.name === "AbortError") return true;
+    const status = error.status ?? error.code ?? error.statusCode;
+    if (status === undefined || status === null || status === "") {
+      const message = String(error.message || "").toLowerCase();
+      return (
+        message.includes("failed to fetch") ||
+        message.includes("networkerror") ||
+        message.includes("network request failed") ||
+        message.includes("load failed") ||
+        message.includes("fetch failed")
+      );
+    }
+    return false;
+  }
+
+  function isOnline() {
+    return typeof navigator === "undefined" ? true : navigator.onLine !== false;
+  }
+
+  // Guard for actions that cannot be safely queued offline (creating rows with
+  // server-generated IDs, project/member administration, switching projects).
+  function requireOnline(message) {
+    if (isOnline()) return true;
+    setConnectivity(false);
+    throw new Error(message || "You're offline. Reconnect to do that.");
+  }
+
+  function setConnectivity(online) {
+    if (app.online === online) {
+      renderSyncStatus();
+      return;
+    }
+    app.online = online;
+    renderSyncStatus();
+    if (online) scheduleFlush(0);
+  }
+
+  function scheduleFlush(delay = 650) {
+    window.clearTimeout(flushTimer);
+    flushTimer = window.setTimeout(() => {
+      flushOutbox();
+    }, delay);
+  }
+
+  function scheduleRetry() {
+    window.clearTimeout(retryTimer);
+    retryTimer = window.setTimeout(() => {
+      flushOutbox();
+    }, 15000);
+  }
+
+  async function flushOne(op) {
+    if (op.kind === "issue_state") {
+      const { data, error } = await db
+        .from("issue_states")
+        .upsert(op.payload, { onConflict: "issue_id" })
+        .select()
+        .single();
+      if (error) throw error;
+      app.issueStates.set(op.key, normalizeState(data));
+      return;
+    }
+    if (op.kind === "clause_state") {
+      const { data, error } = await db
+        .from("clause_states")
+        .upsert(op.payload, { onConflict: "section_id" })
+        .select()
+        .single();
+      if (error) throw error;
+      app.clauseStates.set(op.key, normalizeClauseState(data));
+      return;
+    }
+    // Unknown op kind: drop it rather than blocking the queue forever.
+  }
+
+  async function flushOutbox() {
+    if (!db || !app.user || flushing) return;
+    if (!outboxCount()) {
+      renderSyncStatus();
+      return;
+    }
+    if (!isOnline()) {
+      setConnectivity(false);
+      return;
+    }
+    flushing = true;
+    renderSyncStatus();
+    let hitNetworkError = false;
+    let syncedSelected = false;
+    for (const [key, op] of Object.entries(outbox.ops)) {
+      try {
+        await flushOne(op);
+        delete outbox.ops[key];
+        persistOutbox();
+        if (op.kind === "issue_state" && op.key === state.selectedId) syncedSelected = true;
+      } catch (error) {
+        if (isNetworkError(error)) {
+          hitNetworkError = true;
+          break;
+        }
+        console.error("Dropping outbox op after a server error", op, error);
+        delete outbox.ops[key];
+        persistOutbox();
+      }
+    }
+    flushing = false;
+    if (hitNetworkError) {
+      app.online = false;
+      scheduleRetry();
+    } else {
+      app.online = isOnline();
+    }
+    renderSyncStatus();
+    if (syncedSelected && app.online && app.mode === "remote" && state.rightPane === "issue") {
+      try {
+        await loadIssueEvents(state.selectedId);
+        renderSelectedIssue();
+        renderIssueList();
+      } catch (_error) {
+        /* non-fatal */
+      }
+    }
+  }
+
+  // Single source of truth for the save/sync badge. In remote mode it reflects
+  // connectivity and how many edits are still waiting to reach Supabase.
+  function defaultSaveState() {
+    if (app.mode !== "remote") return { label: "Saved", cls: "saved" };
+    const pending = outboxCount();
+    if (!app.online) return { label: pending ? `Offline - ${pending} queued` : "Offline", cls: "offline" };
+    if (flushing) return { label: "Syncing…", cls: "dirty" };
+    if (pending) return { label: pending === 1 ? "Saving…" : `Saving ${pending}…`, cls: "dirty" };
+    return { label: "Synced", cls: "saved" };
+  }
+
+  function renderSyncStatus() {
+    window.clearTimeout(saveTimer);
+    const { label, cls } = defaultSaveState();
+    if (els.saveState) {
+      els.saveState.textContent = label;
+      els.saveState.className = `save-state ${cls}`;
+    }
+    if (els.syncNowBtn) {
+      els.syncNowBtn.hidden = !(app.mode === "remote" && outboxCount() > 0);
+    }
   }
 
   function escapeHtml(value) {
@@ -269,8 +477,7 @@
     els.saveState.textContent = label;
     els.saveState.className = `save-state ${className || ""}`;
     saveTimer = window.setTimeout(() => {
-      els.saveState.textContent = app.mode === "remote" ? "Synced" : "Saved";
-      els.saveState.className = "save-state saved";
+      renderSyncStatus();
     }, 900);
   }
 
@@ -848,6 +1055,7 @@
 
   async function inviteProjectMember() {
     assertRemote();
+    requireOnline("You're offline - reconnect to invite members.");
     if (!app.currentProject) return;
     const email = els.shareEmailInput.value.trim().toLowerCase();
     const role = els.shareRoleInput.value || "editor";
@@ -881,6 +1089,7 @@
 
   async function updateProjectMemberRole(userId, role) {
     assertRemote();
+    requireOnline("You're offline - reconnect to change member roles.");
     if (!app.currentProject || userId === app.user.id) return;
     const { error } = await db
       .from("project_members")
@@ -896,6 +1105,7 @@
 
   async function removeProjectMember(userId) {
     assertRemote();
+    requireOnline("You're offline - reconnect to remove members.");
     if (!app.currentProject || userId === app.user.id) return;
     const { error } = await db
       .from("project_members")
@@ -1396,7 +1606,22 @@
         buffer += char;
       }
     }
-    if (buffer) items.push({ kind: depth > 0 ? "bracket" : "text", inner: buffer, text: buffer });
+    if (buffer) {
+      if (depth > 0) {
+        // An unbalanced (never-closed) bracket: still record its span so the
+        // election can map back to the clause text instead of losing its range.
+        items.push({
+          kind: "bracket",
+          inner: buffer,
+          text: buffer,
+          start: bracketStart,
+          innerStart: bracketStart + 1,
+          end: s.length
+        });
+      } else {
+        items.push({ kind: "text", text: buffer });
+      }
+    }
     return items;
   }
 
@@ -1662,8 +1887,6 @@
     return sectionMap().get(state.selectedClauseId) || null;
   }
 
-  const clauseSaveTimers = new Map();
-
   function updateClauseState(section, patch) {
     if (!section) return;
     const current = clauseStateFor(section);
@@ -1676,48 +1899,22 @@
     if (app.mode === "remote") {
       next.updatedBy = app.user?.id || "";
       app.clauseStates.set(section.id, { ...next, sectionId: section.id, projectId: app.currentProject.id });
-      scheduleRemoteClauseSave(section);
-      showSaveState("Saving", "dirty");
+      enqueueMutation("clause_state", section.id, app.currentProject.id, {
+        section_id: section.id,
+        project_id: app.currentProject.id,
+        status: next.status || "pending",
+        elections: next.elections || {},
+        rewrite_text: next.rewriteText || null,
+        notes: next.notes || null,
+        updated_by: app.user.id
+      });
+      scheduleFlush();
+      renderSyncStatus();
     } else {
       app.localWorkspace.clauseStates[clauseKeyFor(section)] = next;
       persistLocalWorkspace();
       showSaveState("Saved", "saved");
     }
-  }
-
-  function scheduleRemoteClauseSave(section) {
-    window.clearTimeout(clauseSaveTimers.get(section.id));
-    clauseSaveTimers.set(
-      section.id,
-      window.setTimeout(async () => {
-        try {
-          const next = app.clauseStates.get(section.id);
-          if (!next) return;
-          const { data, error } = await db
-            .from("clause_states")
-            .upsert(
-              {
-                section_id: section.id,
-                project_id: app.currentProject.id,
-                status: next.status || "pending",
-                elections: next.elections || {},
-                rewrite_text: next.rewriteText || null,
-                notes: next.notes || null,
-                updated_by: app.user.id
-              },
-              { onConflict: "section_id" }
-            )
-            .select()
-            .single();
-          if (error) throw error;
-          app.clauseStates.set(section.id, normalizeClauseState(data));
-          showSaveState("Synced", "saved");
-        } catch (error) {
-          console.error(error);
-          showSaveState("Save failed", "dirty");
-        }
-      }, 650)
-    );
   }
 
   function setClauseElection(section, path, election) {
@@ -2503,9 +2700,21 @@
         next.resolvedAt = "";
       }
       app.issueStates.set(issue.id, next);
-      pendingIssueState.set(issue.id, next);
-      scheduleRemoteIssueStateSave(issue.id);
-      showSaveState("Saving", "dirty");
+      enqueueMutation("issue_state", issue.id, app.currentProject.id, {
+        issue_id: issue.id,
+        project_id: next.projectId || app.currentProject.id,
+        status: next.status || "open",
+        owner_user_id: next.ownerUserId || null,
+        owner_note: next.owner || null,
+        answer: next.answer || null,
+        proposed_change: next.proposedChange || null,
+        follow_up: Boolean(next.followUp),
+        follow_up_notes: next.followUpNotes || null,
+        resolved_at: next.resolvedAt || null,
+        updated_by: app.user.id
+      });
+      scheduleFlush();
+      renderSyncStatus();
     } else {
       app.localWorkspace.answers[issue.id] = {
         ...(app.localWorkspace.answers[issue.id] || {}),
@@ -2522,52 +2731,6 @@
       renderSelectedIssue();
       renderDocument();
     }
-  }
-
-  function scheduleRemoteIssueStateSave(issueId) {
-    window.clearTimeout(remoteSaveTimers.get(issueId));
-    remoteSaveTimers.set(
-      issueId,
-      window.setTimeout(async () => {
-        try {
-          await saveRemoteIssueState(issueId);
-          await loadIssueEvents(issueId);
-          renderSelectedIssue();
-          renderIssueList();
-          showSaveState("Synced", "saved");
-        } catch (error) {
-          console.error(error);
-          showSaveState("Save failed", "dirty");
-        }
-      }, 650)
-    );
-  }
-
-  async function saveRemoteIssueState(issueId) {
-    assertRemote();
-    const next = pendingIssueState.get(issueId);
-    if (!next) return;
-    const payload = {
-      issue_id: issueId,
-      project_id: next.projectId || app.currentProject.id,
-      status: next.status || "open",
-      owner_user_id: next.ownerUserId || null,
-      owner_note: next.owner || null,
-      answer: next.answer || null,
-      proposed_change: next.proposedChange || null,
-      follow_up: Boolean(next.followUp),
-      follow_up_notes: next.followUpNotes || null,
-      resolved_at: next.resolvedAt || null,
-      updated_by: app.user.id
-    };
-    const { data, error } = await db
-      .from("issue_states")
-      .upsert(payload, { onConflict: "issue_id" })
-      .select()
-      .single();
-    if (error) throw error;
-    app.issueStates.set(issueId, normalizeState(data));
-    pendingIssueState.delete(issueId);
   }
 
   async function setSelectedIssue(issueId) {
@@ -2600,6 +2763,7 @@
 
     if (app.mode === "remote") {
       assertRemote();
+      requireOnline("You're offline - reconnect to add a new item.");
       if (!app.currentProject) return;
       const stableKey = `custom-${Date.now()}-${slugify(title)}`;
       const { data, error } = await db
@@ -2665,6 +2829,7 @@
 
   async function createBlankProject(name, description) {
     assertRemote();
+    requireOnline("You're offline - reconnect to create a project.");
     const { data, error } = await db
       .from("projects")
       .insert({
@@ -2684,6 +2849,7 @@
 
   async function seedCurrentProject(nameOverride, descriptionOverride) {
     assertRemote();
+    requireOnline("You're offline - reconnect to seed a project.");
     showSaveState("Seeding", "dirty");
     const projectName = nameOverride || seed.meta.project;
     const projectDescription =
@@ -2883,6 +3049,20 @@
   }
 
   function bindEvents() {
+    window.addEventListener("online", () => setConnectivity(true));
+    window.addEventListener("offline", () => setConnectivity(false));
+    window.addEventListener("focus", () => {
+      if (app.mode === "remote" && isOnline() && outboxCount()) scheduleFlush(0);
+    });
+
+    if (els.syncNowBtn) {
+      els.syncNowBtn.addEventListener("click", () => {
+        app.online = isOnline();
+        renderSyncStatus();
+        flushOutbox();
+      });
+    }
+
     els.localModeBtn.addEventListener("click", () => {
       setMode("local");
       loadLocalSeed();
@@ -2903,8 +3083,22 @@
     els.signOutBtn.addEventListener("click", signOut);
 
     els.projectSelect.addEventListener("change", async () => {
-      if (els.projectSelect.value) {
+      if (!els.projectSelect.value) return;
+      if (!isOnline()) {
+        setConnectivity(false);
+        window.alert("You're offline - reconnect to switch projects.");
+        els.projectSelect.value = app.currentProject?.id || "";
+        return;
+      }
+      try {
         await loadProject(els.projectSelect.value);
+      } catch (error) {
+        console.error(error);
+        if (isNetworkError(error)) {
+          setConnectivity(false);
+          window.alert("Lost the connection while loading that project.");
+          els.projectSelect.value = app.currentProject?.id || "";
+        }
       }
     });
 
@@ -3234,6 +3428,8 @@
 
     try {
       await loadRemoteSession();
+      renderSyncStatus();
+      if (outboxCount()) scheduleFlush(0);
     } catch (error) {
       console.error(error);
       els.setupMessage.textContent = error.message || "Could not connect to Supabase.";
