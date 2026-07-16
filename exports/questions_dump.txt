@@ -1,0 +1,205 @@
+[follow-up] decision-1-use-separate-carryco | Immediate decisions
+   Q: Use separate CarryCo?
+   A: Believe we should have the separate company but 
+   FU: ask about this. is it standard to have a separate carry company or can we just through it?
+[resolved] decision-2-who-owns-manager-llc | Immediate decisions
+   Q: Who owns Manager LLC?
+   A: No separate management company. we will pay management fees to the GPs
+   FU: this is just a test
+[resolved] decision-3-fund-exemption-path | Immediate decisions
+   Q: Fund exemption path?
+   A: figure out if everyone is QP - leaning towards 3c7 and 506a
+[resolved] decision-4-offering-path | Immediate decisions
+   Q: Offering path?
+   A: 506b
+   FU: ensure this makes sense with lawyer
+[resolved/FU] decision-5-capital-call-design | Immediate decisions
+   Q: Capital-call design?
+   A: ideally 3-5 business days.
+   FU: follow up on standard practices here/thanasi
+[resolved] decision-6-vehicle-flexibility | Immediate decisions
+   Q: Vehicle flexibility?
+[resolved] decision-7-placement-compensation-disclosure | Immediate decisions
+   Q: Placement compensation disclosure?
+   A: Probably A, follow up
+   FU: figure out standard practices
+[open] decision-8-successor-fund-restriction | Immediate decisions
+   Q: Successor fund restriction?
+[resolved] change-01-ability-to-give-conditional-carry-or-incentive-payments | Requested drafting changes
+   Q: Ability to give conditional carry or incentive payments
+   A: we need the ability to compensate either lp placement or deal placement. 
+   FU: ask about whether we can pay for lp placement out of management fees/what the particular structure looks like.  |  | e) transfer, capital and other taxes, charges, duties and fees, and any other costs (including broken-deal, unconsummated deal and similar costs), incurred in or related to sourcing, investigating, identifying, developing, negotiating, structuring, trading, selling, monitoring, acquiring, holding, selling or otherwise managing or disposing, or hedging against changes in the value, of Fund assets, assets or obligations, including reasonable expenses related to travel and accommodation, regardless of whether such investments are subsequently consummated (to the extent not reimbursed by [Portfolio Companies][Portfolio Investments], by sellers or other third parties, and not otherwise capitalized as part of such investments); |  | 
+[resolved] change-02-sourcing-origination-and-strategic-relationship-arrangements | Requested drafting changes
+   Q: Sourcing, origination, and strategic relationship arrangements
+   A: The Manager, GP, or affiliates may enter into sourcing, origination, consulting, brokerage, referral, or strategic relationship agreements with third parties in connection with identifying, sourcing, diligencing, acquiring, selling, or disposing of investments.
+   FU: do we need this?
+[follow-up/FU] change-03-investment-objectives-and-permitted-investments | Requested drafting changes
+   Q: Investment objectives and permitted investments
+   FU: need to decide whether we are doing asset specific funds or want to have a generic whitelist.
+[resolved] change-04-restriction-on-blind-pool-fund-investments-carveouts-for-weird-vehicle | Requested drafting changes
+   Q: Restriction on blind-pool fund investments - carveouts for weird vehicles
+   A: we want maximal qbility to invest in weird stuff. maybe have generic language that is like includluding but not limited to
+   FU: see if my language is ok
+[open] change-05-capital-call-timing-and-fast-execution-mechanics | Requested drafting changes
+   Q: Capital call timing and fast execution mechanics
+[open/FU] change-06-successor-funds-parallel-funds-co-invests-and-spv-carveouts | Requested drafting changes
+   Q: Successor funds, parallel funds, co-invests, and SPV carveouts
+[resolved] q-001-will-the-fund-be-a-delaware-lp-or-delaware-llc | A. Entity structure and ownership
+   Q: Will the fund be a Delaware LP or Delaware LLC
+   A: Delaware LP
+[resolved] q-002-will-the-gp-be-fund-specific-for-each-fund | A. Entity structure and ownership
+   Q: Will the GP be fund-specific for each fund
+   A: fund specific
+[resolved] q-003-will-there-be-a-single-platform-manager-llc-across-all-funds | A. Entity structure and ownership
+   Q: Will there be a single platform Manager LLC across all funds
+   A: yes single manager llc
+[resolved] q-004-will-there-be-a-sponsor-holdco-above-the-manager-and-gp-entities | A. Entity structure and ownership
+   Q: Will there be a Sponsor HoldCo above the Manager and GP entities
+   A: yes
+[resolved] q-005-do-we-need-a-fund-specific-carryco-sponsorco-or-can-carry-be-split-in- | A. Entity structure and ownership
+   Q: Do we need a fund-specific CarryCo/SponsorCo, or can carry be split in the GP LLC operating agreement
+   A: Thinking we go to a separate CarryCo
+   FU: review with lawyer
+[open/FU] q-006-if-carryco-is-used-does-it-own-the-gp-llc-or-merely-receive-carry-econ | A. Entity structure and ownership
+   Q: If CarryCo is used, does it own the GP LLC or merely receive carry economics from the GP
+[open] q-007-who-has-voting-control-at-each-level-gp-manager-sponsor-holdco-carryco | A. Entity structure and ownership
+   Q: Who has voting control at each level: GP, Manager, Sponsor HoldCo, CarryCo
+   A: we 
+[resolved] q-008-can-non-voting-economic-participants-receive-carry-without-governance- | A. Entity structure and ownership
+   Q: Can non-voting economic participants receive carry without governance rights
+   A: Yes, I would like it to be possible for non-voting participants in the GP receive carry w/o governance. For example, if someone helps bring in capital. 
+[open/FU] q-009-how-are-clawback-obligations-allocated-among-ultimate-carry-recipients | A. Entity structure and ownership
+   Q: How are clawback obligations allocated among ultimate carry recipients
+   FU: ask the lawyer about this
+[resolved] q-014-will-placement-fees-organization-expenses-transaction-fees-or-monitori | B. Fund economics
+   Q: Will placement fees, organization expenses, transaction fees, or monitoring fees offset management fees
+   A: Ideally the placement fees are paid by the LPs.
+   FU: how do we set aside money for this/take it out of the LP pool? Can we bake it into an all in price for the asset?
+[resolved] q-017-european-waterfall-or-deal-by-deal-waterfall | B. Fund economics
+   Q: European waterfall or deal-by-deal waterfall
+   A: european seems fine ask the guys though
+[resolved] q-020-what-counts-as-a-late-stage-private-technology-company | C. Investment mandate and whitelist
+   Q: What counts as a late-stage private technology company
+   A: We are going to whitelist companies.
+[resolved] q-021-will-the-fund-be-limited-to-a-schedule-a-whitelist-of-companies | C. Investment mandate and whitelist
+   Q: Will the fund be limited to a Schedule A whitelist of companies
+   A: yes
+[resolved] q-022-who-can-add-or-remove-whitelist-companies-and-with-what-approval | C. Investment mandate and whitelist
+   Q: Who can add or remove whitelist companies, and with what approval
+   A: With limited partner consent, come up with structure
+[resolved] q-023-can-the-fund-invest-in-companies-outside-the-whitelist-with-lpac-or-ma | C. Investment mandate and whitelist
+   Q: Can the fund invest in companies outside the whitelist with LPAC or majority LP approval
+   A: yes
+[resolved] q-024-can-the-fund-invest-in-spv-interests-tender-vehicles-forward-contracts | C. Investment mandate and whitelist
+   Q: Can the fund invest in SPV interests, tender vehicles, forward contracts, contractual rights, or secondary-access vehicles
+   A: yes
+[resolved/FU] q-025-can-the-fund-invest-in-non-u-s-companies-or-non-u-s-holding-structures | C. Investment mandate and whitelist
+   Q: Can the fund invest in non-U.S. companies or non-U.S. holding structures
+   A: yes, flag for follow up though
+   FU: does this introduce any legal issues
+[open] q-027-will-the-fund-allow-follow-on-investments-after-the-investment-period | C. Investment mandate and whitelist
+   Q: Will the fund allow follow-on investments after the investment period
+   A: fifth anniversary of initial closing, majority interest, 
+[open] q-028-will-there-be-sector-exclusions-or-esg-prohibited-activity-restriction | C. Investment mandate and whitelist
+   Q: Will there be sector exclusions or ESG/prohibited activity restrictions
+[open/FU] q-029-how-should-transfer-restrictions-rofrs-company-consent-tender-rules-an | C. Investment mandate and whitelist
+   Q: How should transfer restrictions, ROFRs, company consent, tender rules, and lockups be disclosed
+[open] q-032-what-is-the-emergency-special-capital-call-notice-period-for-time-sens | D. Capital calls, speed, and warehousing
+   Q: What is the emergency/special capital call notice period for time-sensitive secondary deals
+[open] q-033-can-the-gp-call-capital-for-deposits-broken-deal-expenses-legal-dilige | D. Capital calls, speed, and warehousing
+   Q: Can the GP call capital for deposits, broken-deal expenses, legal diligence, and reserves
+[open] q-034-what-default-remedies-apply-if-an-lp-misses-a-capital-call | D. Capital calls, speed, and warehousing
+   Q: What default remedies apply if an LP misses a capital call
+[open] q-035-can-the-fund-borrow-under-a-bridge-facility-or-subscription-line | D. Capital calls, speed, and warehousing
+   Q: Can the fund borrow under a bridge facility or subscription line
+[open] q-036-can-the-gp-or-affiliate-advance-funds-to-the-fund | D. Capital calls, speed, and warehousing
+   Q: Can the GP or affiliate advance funds to the fund
+[open] q-038-what-approvals-are-needed-for-warehoused-investments | D. Capital calls, speed, and warehousing
+   Q: What approvals are needed for warehoused investments
+[open] q-039-how-are-warehousing-costs-interest-legal-fees-and-conflict-disclosures | D. Capital calls, speed, and warehousing
+   Q: How are warehousing costs, interest, legal fees, and conflict disclosures handled
+[open/FU] q-040-who-can-solicit-lps | E. Buy-side placement / capital formation
+   Q: Who can solicit LPs
+[open/FU] q-041-must-any-compensated-lp-placement-be-through-a-registered-broker-deale | E. Buy-side placement / capital formation
+   Q: Must any compensated LP placement be through a registered broker-dealer
+[resolved] q-042-can-non-bd-finders-or-consultants-be-used-and-under-what-restrictions | E. Buy-side placement / capital formation
+   Q: Can non-BD finders or consultants be used, and under what restrictions
+   A: yes ideally, and we would like to potentially give carry
+[open] q-043-can-placement-compensation-include-cash-fees-management-fee-sharing-ca | E. Buy-side placement / capital formation
+   Q: Can placement compensation include cash fees, management fee sharing, carried interest, revenue share, or expense reimbursement
+[open] q-044-is-compensation-paid-by-the-fund-gp-manager-carryco-or-affiliate | E. Buy-side placement / capital formation
+   Q: Is compensation paid by the Fund, GP, Manager, CarryCo, or affiliate
+[open] q-045-is-the-compensation-treated-as-fund-expense-manager-expense-or-gp-carr | E. Buy-side placement / capital formation
+   Q: Is the compensation treated as Fund Expense, Manager expense, or GP/carry sharing
+[open] q-046-will-placement-linked-carry-require-disclosure-in-the-ppm-and-or-term- | E. Buy-side placement / capital formation
+   Q: Will placement-linked carry require disclosure in the PPM and/or term sheet
+[open] q-047-will-placement-parties-receive-a-tail-on-lps-introduced-before-termina | E. Buy-side placement / capital formation
+   Q: Will placement parties receive a tail on LPs introduced before termination
+[resolved] q-048-who-approves-offering-materials-and-investor-communications | E. Buy-side placement / capital formation
+   Q: Who approves offering materials and investor communications
+   A: Management LLC
+[open/FU] q-049-how-will-506-b-relationship-rules-or-506-c-verification-rules-be-handl | E. Buy-side placement / capital formation
+   Q: How will 506(b) relationship rules or 506(c) verification rules be handled
+   FU: ask about pros/cons here
+[open] q-050-who-can-source-secondary-opportunities | F. Sell-side sourcing / origination
+   Q: Who can source secondary opportunities
+[open] q-051-can-sourcing-parties-receive-cash-fees-deal-by-deal-carry-fund-carry-o | F. Sell-side sourcing / origination
+   Q: Can sourcing parties receive cash fees, deal-by-deal carry, fund carry, or revenue share
+[open] q-052-can-a-deal-source-negotiate-terms-or-only-introduce-opportunities | F. Sell-side sourcing / origination
+   Q: Can a deal source negotiate terms, or only introduce opportunities
+[open] q-053-can-a-deal-source-also-represent-sellers | F. Sell-side sourcing / origination
+   Q: Can a deal source also represent sellers
+[open/FU] q-054-do-deal-source-payments-create-broker-dealer-concerns | F. Sell-side sourcing / origination
+   Q: Do deal-source payments create broker-dealer concerns
+[open] q-055-are-sourcing-fees-fund-expenses-or-manager-gp-expenses | F. Sell-side sourcing / origination
+   Q: Are sourcing fees Fund Expenses or Manager/GP expenses
+[open] q-056-are-there-exclusivity-non-circumvention-or-tail-periods | F. Sell-side sourcing / origination
+   Q: Are there exclusivity, non-circumvention, or tail periods
+[open] q-057-what-disclosures-are-required-for-affiliated-or-related-party-sourcing | F. Sell-side sourcing / origination
+   Q: What disclosures are required for affiliated or related-party sourcing
+[open] q-058-how-are-conflicts-handled-if-a-source-also-participates-in-another-veh | F. Sell-side sourcing / origination
+   Q: How are conflicts handled if a source also participates in another vehicle
+[open] q-059-who-has-authority-to-approve-sourced-deals | F. Sell-side sourcing / origination
+   Q: Who has authority to approve sourced deals
+[open] q-061-what-counts-as-a-prohibited-substantially-similar-blind-pool-fund | G. Future funds, SPVs, and allocations
+   Q: What counts as a prohibited substantially similar blind-pool fund
+[open] q-062-what-carveouts-are-needed-for-co-invest-vehicles-single-deal-spvs-feed | G. Future funds, SPVs, and allocations
+   Q: What carveouts are needed for co-invest vehicles, single-deal SPVs, feeders, blockers, alternative investment vehicles, holding vehicles, and overflow vehicles
+[open] q-063-can-the-manager-manage-multiple-funds-at-once | G. Future funds, SPVs, and allocations
+   Q: Can the Manager manage multiple funds at once
+[open] q-064-how-are-opportunities-allocated-among-fund-i-fund-ii-co-invests-parall | G. Future funds, SPVs, and allocations
+   Q: How are opportunities allocated among Fund I, Fund II, co-invests, parallel funds, SPVs, affiliates, and insiders
+[open] q-065-can-lps-get-co-investment-rights | G. Future funds, SPVs, and allocations
+   Q: Can LPs get co-investment rights
+[open] q-066-can-insiders-invest-personally-alongside-the-fund | G. Future funds, SPVs, and allocations
+   Q: Can insiders invest personally alongside the fund
+[open] q-067-can-the-fund-invest-through-a-vehicle-that-charges-its-own-fees-carry | G. Future funds, SPVs, and allocations
+   Q: Can the fund invest through a vehicle that charges its own fees/carry
+[open] q-068-will-lpac-approval-be-needed-for-certain-conflicts-or-allocation-decis | G. Future funds, SPVs, and allocations
+   Q: Will LPAC approval be needed for certain conflicts or allocation decisions
+[open] q-069-will-the-manager-rely-on-an-investment-adviser-exemption-or-register | H. Regulatory, compliance, and operations
+   Q: Will the manager rely on an investment adviser exemption or register
+[open] q-070-what-state-level-adviser-requirements-apply | H. Regulatory, compliance, and operations
+   Q: What state-level adviser requirements apply
+[open/FU] q-071-who-handles-aml-kyc-and-bad-actor-checks | H. Regulatory, compliance, and operations
+   Q: Who handles AML/KYC and bad actor checks
+[open] q-072-who-is-fund-administrator | H. Regulatory, compliance, and operations
+   Q: Who is fund administrator
+[open] q-075-who-values-private-positions-and-spv-interests | H. Regulatory, compliance, and operations
+   Q: Who values private positions and SPV interests
+[open] q-076-what-cyber-privacy-data-room-procedures-are-needed | H. Regulatory, compliance, and operations
+   Q: What cyber/privacy/data-room procedures are needed
+[open] q-077-what-insurance-and-indemnity-coverage-should-be-maintained | H. Regulatory, compliance, and operations
+   Q: What insurance and indemnity coverage should be maintained
+[open] q-078-what-records-must-be-kept-for-placement-sourcing-investment-decisions- | H. Regulatory, compliance, and operations
+   Q: What records must be kept for placement, sourcing, investment decisions, valuation, and conflicts
+[open] gap-006-side-letter-and-mfn-policy | I. Fund lifecycle and governance (gap review)
+   Q: Side letter and MFN policy
+[open] gap-007-subsequent-closing-true-up-and-interest | I. Fund lifecycle and governance (gap review)
+   Q: Subsequent-closing true-up and interest
+[open] gap-008-recycling-and-reinvestment-of-proceeds | J. Distributions, liability, and tax (gap review)
+   Q: Recycling and reinvestment of proceeds
+[open] gap-009-in-kind-distributions-of-non-marketable-private-shares | J. Distributions, liability, and tax (gap review)
+   Q: In-kind distributions of non-marketable private shares
+[open] gap-011-tax-exempt-and-non-u-s-investor-accommodations | J. Distributions, liability, and tax (gap review)
+   Q: Tax-exempt and non-U.S. investor accommodations

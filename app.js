@@ -1713,7 +1713,7 @@
         continue;
       }
       if (isNoteInner(item.inner)) {
-        segs.push({ kind: "note", text: item.inner });
+        segs.push({ kind: "note", text: item.inner, range: [abs(item.start), abs(item.end)] });
         i += 1;
         continue;
       }
@@ -1746,7 +1746,9 @@
         const path = nextPath();
         const options = runItems.map((it, k) => ({
           label: plainLabel(it.inner),
-          nodes: parseClauseLevel(it.inner, `${path}:${k}`, abs(it.innerStart))
+          nodes: parseClauseLevel(it.inner, `${path}:${k}`, abs(it.innerStart)),
+          range: [abs(it.start), abs(it.end)],
+          innerRange: [abs(it.innerStart), abs(it.end) - 1]
         }));
         const last = runItems[runItems.length - 1];
         segs.push({ kind: "election", type: "choice", path, options, range: [abs(item.start), abs(last.end)] });
@@ -3472,4 +3474,13 @@
   }
 
   init();
+
+  // Read-only parser/resolver internals for export tooling (scripts/build_export_data.mjs).
+  window.ORRICK_INTERNALS = {
+    parseClauseTokens,
+    resolveNodes,
+    resolveElection,
+    countElections,
+    clauseFinalText
+  };
 })();
